@@ -1,6 +1,6 @@
 # AngularJS Multiselect
 
-AngularJS multiselect component based off [ngOptions](https://docs.angularjs.org/api/ng/directive/ngOptions).
+AngularJS multiselect component based off [`ngOptions`](https://docs.angularjs.org/api/ng/directive/ngOptions).
 
 ## Dependencies
 
@@ -8,7 +8,7 @@ AngularJS multiselect component based off [ngOptions](https://docs.angularjs.org
 * [Bootstrap](http://getbootstrap.com/) v3.3.5 for dropdown styles
 * [UI Bootstrap](http://angular-ui.github.io/bootstrap/) v0.14.0+ for dropdown functionality
 
-## Usage
+## Development
 
 1. Install dependencies
 
@@ -22,9 +22,24 @@ AngularJS multiselect component based off [ngOptions](https://docs.angularjs.org
 
         gulp serve
 
+## Usage
+
+The interface for this directive is based off [`ngOptions`](https://docs.angularjs.org/api/ng/directive/ngOptions):
+
+```html
+<amo-multiselect
+    ng-model="app.myModel"
+    options="option.id as option.label for option in app.myOptions">
+</amo-multiselect>
+```
+
+where the value of `options` is of the following form: `[`_`select`_ **`as`**`]` _`label`_ **`for`** _`value`_ **`in`** _`array`_
+
 ## Roadmap
 
 - [ ] Search filter
 - [ ] Select/deselect all
 - [ ] Label customization
 - [ ] Unit tests & automated tests
+- [ ] Isolated build/distribution process
+- [ ] Documentation
