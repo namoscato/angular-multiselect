@@ -31,8 +31,10 @@
             // Methods
             self.getLabel = getLabel;
             self.getOption = getOption;
+            self.getOptionsExpression = getOptionsExpression;
             self.getOptions = getOptions;
             self.getValue = getValue;
+            self.setOptions = setOptions;
 
             // Initialization
             initialize();
@@ -75,6 +77,16 @@
 
             /**
              * @ngdoc method
+             * @name AmoMultiselectFactory#getOptionsExpression
+             * @description Returns the options expression
+             * @returns {String}
+             */
+            function getOptionsExpression() {
+                return _parse.optionsExpression;
+            }
+
+            /**
+             * @ngdoc method
              * @name AmoMultiselectFactory#getOptions
              * @description Returns the array of options
              * @returns {*}
@@ -107,14 +119,27 @@
 
                 _parse = {
                     labelFunction: $parse(expression[2]),
-                    options: $parse(expression[4])(scope),
+                    optionsExpression: expression[4],
                     selectFunction: $parse(angular.isDefined(expression[1]) ? expression[1] : expression[3]),
                     value: expression[3]
                 };
+            }
 
-                if (!angular.isArray(_parse.options)) {
-                    throw new Error('Expected "' + expression[3] + '" to be Array');
+            /**
+             * @ngdoc method
+             * @name AmoMultiselectFactory#setOptions
+             * @description Sets the options array
+             * @param {Array} options
+             * @returns {Array} Reference to `options`
+             */
+            function setOptions(options) {
+                if (!angular.isArray(options)) {
+                    throw new Error('Expected "' + _parse.optionsExpression + '" to be Array');
                 }
+
+                _parse.options = options;
+
+                return _parse.options;
             }
 
             return self;

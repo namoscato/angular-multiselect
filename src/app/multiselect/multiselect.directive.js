@@ -38,10 +38,6 @@
             var multiselect = new AmoMultiselectFactory(attrs.options, parentScope),
                 scope = parentScope.$new();
 
-            parentScope.$on('$destroy', function() {
-                scope.$destroy();
-            });
-
             // Variables
             scope.options = [];
 
@@ -59,6 +55,42 @@
              */
             function addLabel(option) {
                 _labels.push(multiselect.getLabel(option));
+            }
+
+            /**
+             * @name amoMultiselect#exposeOptions
+             * @description Exposes the multiselect options
+             */
+            function exposeOptions() {
+                var i,
+                    selected,
+                    value;
+
+                _labels.length = 0;
+                scope.options.length = 0;
+
+                // Iterate through original options and create exposed model
+                multiselect.getOptions().forEach(function(option, index) {
+                    selected = false;
+                    value = multiselect.getValue(option);
+
+                    for (i = 0; i < _selectedOptions.length; i++) {
+                        if (angular.equals(_selectedOptions[i], value)) {
+                            selected = true;
+                            addLabel(option);
+                            break;
+                        }
+                    }
+
+                    scope.options.push({
+                        id: index,
+                        label: multiselect.getLabel(option),
+                        value: value,
+                        selected: selected
+                    });
+                });
+
+                setSelectedLabel();
             }
 
             /**
@@ -95,57 +127,33 @@
              */
             function initialize() {
                 element.append($compile('<amo-multiselect-dropdown></amo-multiselect-dropdown>')(scope));
+
+                parentScope.$on('$destroy', function() {
+                    scope.$destroy();
+                });
+
+                // Watch for option array changes
+                scope.$watch(multiselect.getOptionsExpression(), function(options) {
+                    multiselect.setOptions(options);
+                    exposeOptions();
+                }, true);
                 
                 // Watch for (external) model changes
                 scope.$watch(function() {
                     return ngModelController.$modelValue;
-                }, onNgModelChange, true)
-            }
-
-            /**
-             * @name amoMultiselect#onNgModelChange
-             * @description Handler called when `ngModelController.$modelValue` changes
-             * @param {Array} modelValue
-             */
-            function onNgModelChange(modelValue) {
-                var i,
-                    selected,
-                    value;
-
-                // TODO: Determine if there is a better way to do this
-                if (_isInternalChange) {
-                    _isInternalChange = false;
-                    return;
-                }
-
-                if (angular.isArray(modelValue)) {
-                    _labels.length = 0;
-                    _selectedOptions = modelValue;
-                    scope.options.length = 0;
-                }
-
-                // Iterate through original options and create exposed model
-                multiselect.getOptions().forEach(function(option, index) {
-                    selected = false;
-                    value = multiselect.getValue(option);
-
-                    for (i = 0; i < _selectedOptions.length; i++) {
-                        if (angular.equals(_selectedOptions[i], value)) {
-                            selected = true;
-                            addLabel(option);
-                            break;
-                        }
+                }, function(modelValue) {
+                    // TODO: Determine if there is a better way to do this
+                    if (_isInternalChange) {
+                        _isInternalChange = false;
+                        return;
                     }
 
-                    scope.options.push({
-                        id: index,
-                        label: multiselect.getLabel(option),
-                        value: value,
-                        selected: selected
-                    });
-                });
+                    if (angular.isArray(modelValue)) {
+                        _selectedOptions = modelValue;
+                    }
 
-                setSelectedLabel();
+                    exposeOptions();
+                }, true);
             }
 
             /**

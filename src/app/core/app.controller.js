@@ -51,7 +51,7 @@
         function addObject() {
             self.optionsObject.push({
                 id: self.optionsObject.length + 1,
-                label: 'Option ' + self.optionsObject.length
+                label: 'Option ' + (self.optionsObject.length + 1)
             });
         }
     }
