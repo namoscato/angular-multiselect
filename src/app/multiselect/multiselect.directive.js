@@ -2,17 +2,17 @@
     'use strict';
 
     angular
-        .module('amoscato.multiselect')
-        .directive('multiselect', MultiselectDirective);
+        .module('amo.multiselect')
+        .directive('amoMultiselect', MultiselectDirective);
 
     /**
      * @ngdoc directive
-     * @module amoscato.multiselect
-     * @name multiselect
+     * @module amo.multiselect
+     * @name amoMultiselect
      * @requires $compile
-     * @requires $parse
+     * @requires AmoMultiselectFactory
      */
-    function MultiselectDirective($compile, $parse) {
+    function MultiselectDirective($compile, AmoMultiselectFactory) {
 
         return {
             link: link,
@@ -22,7 +22,7 @@
         };
 
         /**
-         * @name multiselect#link
+         * @name amoMultiselect#link
          * @description Directive's link function
          * @param {Object} parentScope Angular scope object
          * @param {Object} element jQuery object
@@ -35,7 +35,8 @@
                 _optionHash = {},
                 _selectedOptions = [];
 
-            var scope = parentScope.$new();
+            var multiselect = new AmoMultiselectFactory(attrs.options, parentScope),
+                scope = parentScope.$new();
 
             parentScope.$on('$destroy', function() {
                 scope.$destroy();
@@ -53,7 +54,7 @@
 
             /**
              * @ngdoc method
-             * @name multiselect#exposeSelectedOptions
+             * @name amoMultiselect#exposeSelectedOptions
              * @description Exposes the selected options
              */
             function exposeSelectedOptions() {
@@ -63,8 +64,7 @@
                 scope.options.forEach(function(option, index) {
                     if (!option.selected) { return; }
 
-                    // use _label_
-                    _labels.push(_optionHash[index]);
+                    _labels.push(multiselect.getLabel(_optionHash[index]));
 
                     // use _select_ regex thing
                     _selectedOptions.push(_optionHash[index]);
@@ -76,55 +76,48 @@
             }
 
             /**
-             * @name multiselect#initialize
+             * @name amoMultiselect#initialize
              * @description Initializes the directive
              */
             function initialize() {
-                var expression = attrs.options.match(/(\S+) for (\S+) in (\S+)/),
-                    options;
+                element.append($compile('<amo-multiselect-dropdown></amo-multiselect-dropdown>')(scope));
 
-                if (expression === null) {
-                    throw new Error('Expected expression in form of "_label_ for _value_ in _array_"');
-                }
-
-                options = $parse(expression[3])(parentScope);
-
-                if (!angular.isArray(options)) {
-                    throw new Error('Expected "' + expression[3] + '" to be Array');
-                }
-
-                element.append($compile('<multiselect-dropdown></multiselect-dropdown>')(scope));
-
-                ngModelController.$render = function() {
-                    var selectedOptionsHash = {};
-
-                    if (angular.isArray(ngModelController.$modelValue)) {
-                        _labels.length = 0;
-                        _selectedOptions = ngModelController.$modelValue;
-
-                        _selectedOptions.forEach(function(option) {
-                            selectedOptionsHash[option] = true;
-
-                            _labels.push(option);
-                        });
-                    }
-
-                    options.forEach(function(option, index) {
-                        _optionHash[index] = option;
-
-                        scope.options.push({
-                            id: index,
-                            label: option,
-                            selected: Boolean(selectedOptionsHash[option])
-                        });
-                    });
-
-                    setSelectedLabel();
-                };
+                ngModelController.$render = onNgModelRender;
             }
 
             /**
-             * @name multiselect#setSelectedLabel
+             * @name amoMultiselect#onNgModelRender
+             * @description Handler called on `ngModelController.$render`
+             */
+            function onNgModelRender() {
+                var selectedOptionsHash = {};
+
+                if (angular.isArray(ngModelController.$modelValue)) {
+                    _labels.length = 0;
+                    _selectedOptions = ngModelController.$modelValue;
+
+                    _selectedOptions.forEach(function(option) {
+                        selectedOptionsHash[option] = true;
+
+                        _labels.push(multiselect.getLabel(option));
+                    });
+                }
+
+                multiselect.getOptions().forEach(function(option, index) {
+                    _optionHash[index] = option;
+
+                    scope.options.push({
+                        id: index,
+                        label: multiselect.getLabel(option),
+                        selected: Boolean(selectedOptionsHash[option])
+                    });
+                });
+
+                setSelectedLabel();
+            }
+
+            /**
+             * @name amoMultiselect#setSelectedLabel
              * @description Sets the selected label
              */
             function setSelectedLabel() {
@@ -139,7 +132,7 @@
 
             /**
              * @ngdoc method
-             * @name multiselect#toggleSelectedState
+             * @name amoMultiselect#toggleSelectedState
              * @description Toggles the selected state of the option with the specified ID
              * @param {Event} clickEvent JavaScript click event
              * @param {*} option Selected option

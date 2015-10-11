@@ -3,3 +3,7 @@
 // --------------------------------------------------
 
 @import "bootstrap";
+
+body {
+    margin: $grid-gutter-width;
+}

@@ -2,13 +2,13 @@
     'use strict';
 
     angular
-        .module('amoscato.multiselect')
-        .directive('multiselectDropdown', MultiselectDropdownDirective);
+        .module('amo.multiselect')
+        .directive('amoMultiselectDropdown', MultiselectDropdownDirective);
 
     /**
      * @ngdoc directive
-     * @module amoscato.multiselect
-     * @name multiselectDropdown
+     * @module amo.multiselect
+     * @name amoMultiselectDropdown
      */
     function MultiselectDropdownDirective() {
 
@@ -19,7 +19,7 @@
         };
 
         /**
-         * @name multiselectDropdown#link
+         * @name amoMultiselectDropdown#link
          * @description Directive's link function
          * @param {Object} scope Angular scope object
          * @param {Object} element jQuery object
@@ -32,7 +32,7 @@
 
             /**
              * @ngdoc method
-             * @name multiselectDropdown#toggleSelectedState
+             * @name amoMultiselectDropdown#toggleSelectedState
              * @description Toggles the selected state of the option with the specified ID
              * @param {Event} clickEvent JavaScript click event
              * @param {*} option Selected option

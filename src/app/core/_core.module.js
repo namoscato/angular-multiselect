@@ -7,7 +7,7 @@
      * @name multiselectDemo.core
      */
     angular.module('multiselectDemo.core', [
-        'amoscato.multiselect'
+        'amo.multiselect'
     ]);
 
 })();

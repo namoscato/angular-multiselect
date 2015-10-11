@@ -3,10 +3,10 @@
 
     /**
      * @ngdoc module
-     * @module amoscato.multiselect
-     * @name amoscato.multiselect
+     * @module amo.multiselect
+     * @name amo.multiselect
      */
-    angular.module('amoscato.multiselect', [
+    angular.module('amo.multiselect', [
         'ui.bootstrap.dropdown'
     ]);
 

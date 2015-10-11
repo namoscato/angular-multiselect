@@ -14,6 +14,20 @@
         var self = this;
 
         self.modelStringTwo = ['Two'];
+        self.optionsObject = [
+            {
+                id: 1,
+                label: 'One'
+            },
+            {
+                id: 2,
+                label: 'Two'
+            },
+            {
+                id: 3,
+                label: 'Three'
+            }
+        ];
         self.optionsString = [
             'One',
             'Two',

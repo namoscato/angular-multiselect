@@ -9,24 +9,54 @@
     </head>
     <body ng-app="multiselectDemo">
         <div ng-controller="AppController as app">
+            <h1>AngularJS Multiselect</h1>
+            <p class="lead">AngularJS multiselect component based off <a href="https://docs.angularjs.org/api/ng/directive/ngOptions" target="_blank">ngOptions</a>.</p>
             <div class="panel panel-default">
                 <div class="panel-heading">Simple Array of Strings</div>
                 <div class="panel-body">
-                    <multiselect
-                        ng-model="app.modelStringOne"
-                        options="option for option in app.optionsString">
-                    </multiselect>
-                    <pre>{{ app.modelStringOne }}</pre>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <amo-multiselect
+                                ng-model="app.modelStringOne"
+                                options="option for option in app.optionsString">
+                            </amo-multiselect>
+                        </div>
+                        <div class="col-md-6">
+                            <pre>{{ app.modelStringOne }}</pre>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">Initialized Array of Strings</div>
                 <div class="panel-body">
-                    <multiselect
-                        ng-model="app.modelStringTwo"
-                        options="option for option in app.optionsString">
-                    </multiselect>
-                    <pre>{{ app.modelStringTwo }}</pre>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <amo-multiselect
+                                ng-model="app.modelStringTwo"
+                                options="option for option in app.optionsString">
+                            </amo-multiselect>
+                        </div>
+                        <div class="col-md-6">
+                            <pre>{{ app.modelStringTwo }}</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">Array of Objects</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <amo-multiselect
+                                ng-model="app.modelObject"
+                                options="option.label for option in app.optionsObject">
+                            </amo-multiselect>
+                        </div>
+                        <div class="col-md-6">
+                            <pre>{{ app.modelObject }}</pre>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
