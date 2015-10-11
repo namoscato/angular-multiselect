@@ -42,6 +42,7 @@
             scope.options = [];
 
             // Methods
+            scope.getSelectedCount = getSelectedCount;
             scope.exposeSelectedOptions = exposeSelectedOptions;
 
             // Initialization
@@ -119,6 +120,16 @@
                 ngModelController.$setViewValue(_selectedOptions);
 
                 setSelectedLabel();
+            }
+
+            /**
+             * @ngdoc method
+             * @name amoMultiselect#initialize
+             * @description Returns the count of selected options
+             * @returns {Number}
+             */
+            function getSelectedCount() {
+                return _selectedOptions.length;
             }
 
             /**

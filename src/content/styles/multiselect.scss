@@ -2,14 +2,55 @@
 // AngularJS Multiselect Styles
 // --------------------------------------------------
 
+@import "bootstrap/variables";
+
 .btn-group-multiselect {
+    $width: 250px;
+
+    .dropdown-toggle {
+        text-align: left;
+        width: $width;
+
+        .text {
+            display: inline-block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            vertical-align: middle;
+            width: $width - 60;
+        }
+
+        .badge,
+        .caret {
+            position: absolute;
+        }
+
+        .badge {
+            background-color: $gray-light;
+            border-radius: 3px;
+            padding: 4px 5px;
+            right: 22px;
+            top: 5px;
+        }
+
+        .caret {
+            right: 8px;
+            top: 13px;
+        }
+    }
+
     .dropdown-menu {
+        max-height: 225px;
+        overflow: auto;
+        width: $width;
+
         > li > a {
             cursor: pointer;
+            padding: 5px 12px;
         }
 
         input[type="checkbox"] {
             pointer-events: none;
+            margin: 0 3px 0 0;
         }
     }
 }
