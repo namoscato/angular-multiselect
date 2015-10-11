@@ -13,6 +13,13 @@
     function AppController() {
         var self = this;
 
+        self.modelObject = [
+            {
+                id: 2,
+                label: 'Two'
+            }
+        ];
+        self.modelObjectProperty = [2];
         self.modelStringTwo = ['Two'];
         self.optionsObject = [
             {
@@ -33,6 +40,20 @@
             'Two',
             'Three'
         ];
+
+        self.addObject = addObject;
+
+        /**
+         * @ngdoc method
+         * @name AppController#addObject
+         * @description Adds an object to the `optionsObject` array
+         */
+        function addObject() {
+            self.optionsObject.push({
+                id: self.optionsObject.length + 1,
+                label: 'Option ' + self.optionsObject.length
+            });
+        }
     }
 
 })();

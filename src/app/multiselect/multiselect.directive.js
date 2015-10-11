@@ -31,8 +31,8 @@
          */
         function link(parentScope, element, attrs, ngModelController) {
 
-            var _labels = [],
-                _optionHash = {},
+            var _isInternalChange,
+                _labels = [],
                 _selectedOptions = [];
 
             var multiselect = new AmoMultiselectFactory(attrs.options, parentScope),
@@ -47,10 +47,19 @@
 
             // Methods
             scope.exposeSelectedOptions = exposeSelectedOptions;
-            scope.toggleSelectedState = toggleSelectedState;
 
             // Initialization
             initialize();
+
+            /**
+             * @ngdoc method
+             * @name amoMultiselect#addLabel
+             * @description Adds the formatted label for the specified option
+             * @param {*} option
+             */
+            function addLabel(option) {
+                _labels.push(multiselect.getLabel(option));
+            }
 
             /**
              * @ngdoc method
@@ -58,17 +67,22 @@
              * @description Exposes the selected options
              */
             function exposeSelectedOptions() {
+                var option;
+
                 _labels.length = 0;
                 _selectedOptions.length = 0;
 
-                scope.options.forEach(function(option, index) {
-                    if (!option.selected) { return; }
+                scope.options.forEach(function(optionModel, index) {
+                    if (!optionModel.selected) { return; }
 
-                    _labels.push(multiselect.getLabel(_optionHash[index]));
+                    option = multiselect.getOption(index);
 
-                    // use _select_ regex thing
-                    _selectedOptions.push(_optionHash[index]);
+                    addLabel(option);
+
+                    _selectedOptions.push(multiselect.getValue(option));
                 });
+
+                _isInternalChange = true; // Prevent unnecessary $watch logic
 
                 ngModelController.$setViewValue(_selectedOptions);
 
@@ -81,35 +95,53 @@
              */
             function initialize() {
                 element.append($compile('<amo-multiselect-dropdown></amo-multiselect-dropdown>')(scope));
-
-                ngModelController.$render = onNgModelRender;
+                
+                // Watch for (external) model changes
+                scope.$watch(function() {
+                    return ngModelController.$modelValue;
+                }, onNgModelChange, true)
             }
 
             /**
-             * @name amoMultiselect#onNgModelRender
-             * @description Handler called on `ngModelController.$render`
+             * @name amoMultiselect#onNgModelChange
+             * @description Handler called when `ngModelController.$modelValue` changes
+             * @param {Array} modelValue
              */
-            function onNgModelRender() {
-                var selectedOptionsHash = {};
+            function onNgModelChange(modelValue) {
+                var i,
+                    selected,
+                    value;
 
-                if (angular.isArray(ngModelController.$modelValue)) {
-                    _labels.length = 0;
-                    _selectedOptions = ngModelController.$modelValue;
-
-                    _selectedOptions.forEach(function(option) {
-                        selectedOptionsHash[option] = true;
-
-                        _labels.push(multiselect.getLabel(option));
-                    });
+                // TODO: Determine if there is a better way to do this
+                if (_isInternalChange) {
+                    _isInternalChange = false;
+                    return;
                 }
 
+                if (angular.isArray(modelValue)) {
+                    _labels.length = 0;
+                    _selectedOptions = modelValue;
+                    scope.options.length = 0;
+                }
+
+                // Iterate through original options and create exposed model
                 multiselect.getOptions().forEach(function(option, index) {
-                    _optionHash[index] = option;
+                    selected = false;
+                    value = multiselect.getValue(option);
+
+                    for (i = 0; i < _selectedOptions.length; i++) {
+                        if (angular.equals(_selectedOptions[i], value)) {
+                            selected = true;
+                            addLabel(option);
+                            break;
+                        }
+                    }
 
                     scope.options.push({
                         id: index,
                         label: multiselect.getLabel(option),
-                        selected: Boolean(selectedOptionsHash[option])
+                        value: value,
+                        selected: selected
                     });
                 });
 
@@ -128,22 +160,6 @@
                 }
 
                 scope.selectedLabel = label;
-            }
-
-            /**
-             * @ngdoc method
-             * @name amoMultiselect#toggleSelectedState
-             * @description Toggles the selected state of the option with the specified ID
-             * @param {Event} clickEvent JavaScript click event
-             * @param {*} option Selected option
-             */
-            function toggleSelectedState(clickEvent, option) {
-                clickEvent.stopPropagation();
-
-                option.selected = !option.selected;
-
-                // TODO: Optimize
-                exposeSelectedOptions();
             }
         }
     }

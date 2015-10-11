@@ -42,7 +42,6 @@
 
                 option.selected = !option.selected;
 
-                // TODO: Optimize
                 scope.exposeSelectedOptions();
             }
         }
