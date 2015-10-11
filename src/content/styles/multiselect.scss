@@ -1,0 +1,11 @@
+//
+// AngularJS Multiselect Styles
+// --------------------------------------------------
+
+.btn-group-multiselect {
+    .dropdown-menu {
+        > li > a {
+            cursor: pointer;
+        }
+    }
+}
