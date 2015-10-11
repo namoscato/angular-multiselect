@@ -9,43 +9,50 @@
      * @ngdoc directive
      * @module amoscato.multiselect
      * @name multiselect
+     * @requires $compile
      * @requires $parse
      */
-    function MultiselectDirective($parse) {
+    function MultiselectDirective($compile, $parse) {
 
         return {
             link: link,
-            restrict: 'E',
             replace: true,
-            require: '?ngModel',
-            terminal: true,
-            templateUrl: 'app/multiselect/multiselect.html'
+            restrict: 'E',
+            require: 'ngModel'
         };
 
         /**
          * @name multiselect#link
          * @description Directive's link function
-         * @param {Object} scope Angular scope object
+         * @param {Object} parentScope Angular scope object
          * @param {Object} element jQuery object
          * @param {Object} attrs Hash object of attribute names and values
          * @param {Object} ngModelController
          */
-        function link(scope, element, attrs, ngModelController) {
+        function link(parentScope, element, attrs, ngModelController) {
 
             var _labels = [],
                 _optionHash = {},
                 _selectedOptions = [];
 
+            var scope = parentScope.$new();
+
+            parentScope.$on('$destroy', function() {
+                scope.$destroy();
+            });
+
             // Variables
             scope.options = [];
 
             // Methods
+            scope.exposeSelectedOptions = exposeSelectedOptions;
             scope.toggleSelectedState = toggleSelectedState;
 
             // Initialization
             initialize();
 
             /**
+             * @ngdoc method
              * @name multiselect#exposeSelectedOptions
              * @description Exposes the selected options
              */
@@ -80,27 +87,37 @@
                     throw new Error('Expected expression in form of "_label_ for _value_ in _array_"');
                 }
 
-                options = $parse(expression[3])(scope);
+                options = $parse(expression[3])(parentScope);
 
                 if (!angular.isArray(options)) {
                     throw new Error('Expected "' + expression[3] + '" to be Array');
                 }
 
-                options.forEach(function(option, index) {
-                    _optionHash[index] = option;
-
-                    scope.options.push({
-                        id: index,
-                        label: option
-                    });
-                });
+                element.append($compile('<multiselect-dropdown></multiselect-dropdown>')(scope));
 
                 ngModelController.$render = function() {
+                    var selectedOptionsHash = {};
+
                     if (angular.isArray(ngModelController.$modelValue)) {
+                        _labels.length = 0;
                         _selectedOptions = ngModelController.$modelValue;
 
-                        // TODO: Set `selected` property of selected options
+                        _selectedOptions.forEach(function(option) {
+                            selectedOptionsHash[option] = true;
+
+                            _labels.push(option);
+                        });
                     }
+
+                    options.forEach(function(option, index) {
+                        _optionHash[index] = option;
+
+                        scope.options.push({
+                            id: index,
+                            label: option,
+                            selected: Boolean(selectedOptionsHash[option])
+                        });
+                    });
 
                     setSelectedLabel();
                 };

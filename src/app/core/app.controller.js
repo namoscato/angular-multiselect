@@ -13,7 +13,8 @@
     function AppController() {
         var self = this;
 
-        self.options = [
+        self.modelStringTwo = ['Two'];
+        self.optionsString = [
             'One',
             'Two',
             'Three'

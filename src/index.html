@@ -10,13 +10,23 @@
     <body ng-app="multiselectDemo">
         <div ng-controller="AppController as app">
             <div class="panel panel-default">
-                <div class="panel-heading">Basic Example</div>
+                <div class="panel-heading">Simple Array of Strings</div>
                 <div class="panel-body">
                     <multiselect
-                        ng-model="app.model"
-                        options="option for option in app.options">
+                        ng-model="app.modelStringOne"
+                        options="option for option in app.optionsString">
                     </multiselect>
-                    <pre>{{ app.model }}</pre>
+                    <pre>{{ app.modelStringOne }}</pre>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">Initialized Array of Strings</div>
+                <div class="panel-body">
+                    <multiselect
+                        ng-model="app.modelStringTwo"
+                        options="option for option in app.optionsString">
+                    </multiselect>
+                    <pre>{{ app.modelStringTwo }}</pre>
                 </div>
             </div>
         </div>
