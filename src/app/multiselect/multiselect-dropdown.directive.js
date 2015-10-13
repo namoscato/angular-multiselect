@@ -34,12 +34,9 @@
              * @ngdoc method
              * @name amoMultiselectDropdown#toggleSelectedState
              * @description Toggles the selected state of the option with the specified ID
-             * @param {Event} clickEvent JavaScript click event
              * @param {*} option Selected option
              */
-            function toggleSelectedState(clickEvent, option) {
-                clickEvent.stopPropagation();
-
+            function toggleSelectedState(option) {
                 option.selected = !option.selected;
 
                 scope.exposeSelectedOptions();

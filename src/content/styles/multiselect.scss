@@ -39,18 +39,45 @@
     }
 
     .dropdown-menu {
-        max-height: 225px;
-        overflow: auto;
+        padding: 0;
         width: $width;
-
-        > li > a {
-            cursor: pointer;
-            padding: 5px 12px;
-        }
 
         input[type="checkbox"] {
             pointer-events: none;
             margin: 0 3px 0 0;
+        }
+
+        .form-control {
+            border-left: none;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            border-right: none;
+            border-top: none;
+        }
+    }
+
+    .dropdown-menu-list {
+        margin: 0;
+        max-height: 225px;
+        overflow: auto;
+        padding: 5px 0;
+
+        > li > a {
+            clear: both;
+            color: $dropdown-link-color;
+            font-weight: normal;
+            cursor: pointer;
+            display: block;
+            line-height: $line-height-base;
+            padding: 5px 12px;
+            white-space: nowrap;
+
+            &:hover,
+            &:focus {
+                background-color: $dropdown-link-hover-bg;
+                color: $dropdown-link-hover-color;
+                text-decoration: none;
+            }
         }
     }
 }

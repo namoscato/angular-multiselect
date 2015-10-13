@@ -40,6 +40,7 @@
 
             // Variables
             scope.options = [];
+            scope.search = {};
 
             // Methods
             scope.getSelectedCount = getSelectedCount;

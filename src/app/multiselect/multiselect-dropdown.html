@@ -1,4 +1,7 @@
-<div class="btn-group btn-group-multiselect" uib-dropdown>
+<div
+    class="btn-group btn-group-multiselect"
+    auto-close="outsideClick"
+    uib-dropdown>
     <button
         type="button"
         class="btn btn-default"
@@ -7,12 +10,19 @@
         <span class="badge" ng-bind="getSelectedCount()"></span>
         <span class="caret"></span>
     </button>
-    <ul class="uib-dropdown-menu">
-        <li ng-repeat="option in options">
-            <a ng-click="toggleSelectedState($event, option)">
-                <input type="checkbox" ng-model="option.selected">
-                <span ng-bind="option.label"></span>
-            </a>
-        </li>
-    </ul>
+    <div class="uib-dropdown-menu">
+        <input
+            type="text"
+            class="form-control"
+            ng-model="search.label"
+            placeholder="Search...">
+        <ul class="dropdown-menu-list list-unstyled">
+            <li ng-repeat="option in options | filter : search">
+                <a ng-click="toggleSelectedState(option)">
+                    <input type="checkbox" ng-model="option.selected">
+                    <span ng-bind="option.label"></span>
+                </a>
+            </li>
+        </ul>
+    </div>
 </div>
