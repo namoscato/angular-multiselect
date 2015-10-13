@@ -17,6 +17,13 @@
             ng-model="search.label"
             placeholder="Search...">
         <ul class="dropdown-menu-list list-unstyled">
+            <li>
+                <a ng-click="toggleAllSelectedState()">
+                    <input type="checkbox" ng-model="isAllSelected">
+                    <span ng-bind="getSelectAllLabel()"></span>
+                </a>
+            </li>
+            <li class="divider"></li>
             <li ng-repeat="option in options | filter : search">
                 <a ng-click="toggleSelectedState(option)">
                     <input type="checkbox" ng-model="option.selected">

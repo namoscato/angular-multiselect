@@ -37,7 +37,6 @@ where the value of `options` is of the following form: `[`_`select`_ **`as`**`]`
 
 ## Roadmap
 
-- [ ] Select/deselect all
 - [ ] Label customization
 - [ ] Unit tests & automated tests
 - [ ] Isolated build/distribution process

@@ -28,7 +28,34 @@
         function link(scope, element, attrs) {
 
             // Methods
+            scope.getSelectAllLabel = getSelectAllLabel;
+            scope.toggleAllSelectedState = toggleAllSelectedState;
             scope.toggleSelectedState = toggleSelectedState;
+
+            /**
+             * @ngdoc method
+             * @name amoMultiselect#getSelectAllLabel
+             * @description Returns the select/deselect all label
+             * @returns {String}
+             */
+            function getSelectAllLabel() {
+                return (scope.isAllSelected ? 'Deselect' : 'Select') + ' All';
+            }
+
+            /**
+             * @ngdoc method
+             * @name amoMultiselect#toggleAllSelectedState
+             * @description Toggles the selected state for all options
+             */
+            function toggleAllSelectedState() {
+                scope.isAllSelected = !scope.isAllSelected;
+
+                scope.options.forEach(function(option) {
+                    option.selected = scope.isAllSelected;
+                });
+
+                scope.exposeSelectedOptions();
+            }
 
             /**
              * @ngdoc method

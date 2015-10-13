@@ -44,7 +44,7 @@
 
         input[type="checkbox"] {
             pointer-events: none;
-            margin: 0 3px 0 0;
+            margin: 0 4px 0 0;
         }
 
         .form-control {
@@ -53,6 +53,10 @@
             border-bottom-right-radius: 0;
             border-right: none;
             border-top: none;
+        }
+
+        .divider {
+            margin: 5px 0;
         }
     }
 
