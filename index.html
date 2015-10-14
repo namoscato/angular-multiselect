@@ -70,8 +70,14 @@
                                 options="option.id as option.label for option in app.optionsObject">
                             </amo-multiselect>
                             <amo-multiselect
+                                deselect-all-text="Deselect Everything"
                                 ng-model="app.modelObjectProperty"
-                                options="option.id as option.label for option in app.optionsObject">
+                                on-change="app.onChange(label)"
+                                on-toggle-dropdown="app.onToggleDropdown(isOpen)"
+                                options="option.id as option.label for option in app.optionsObject"
+                                search-text="Filter Items"
+                                select-text="Select Custom Items"
+                                select-all-text="Select Everything">
                             </amo-multiselect>
                         </div>
                         <div class="col-md-6">

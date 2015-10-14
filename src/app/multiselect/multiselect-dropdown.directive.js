@@ -39,7 +39,7 @@
              * @returns {String}
              */
             function getSelectAllLabel() {
-                return (scope.isAllSelected ? 'Deselect' : 'Select') + ' All';
+                return scope.isAllSelected ? scope.text.deselectAll : scope.text.selectAll;
             }
 
             /**
@@ -50,7 +50,7 @@
             function toggleAllSelectedState() {
                 scope.isAllSelected = !scope.isAllSelected;
 
-                scope.options.forEach(function(option) {
+                scope.optionsFiltered.forEach(function(option) {
                     option.selected = scope.isAllSelected;
                 });
 
