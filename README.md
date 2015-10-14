@@ -28,8 +28,14 @@ The interface for this directive is based off [`ngOptions`](https://docs.angular
 
 ```html
 <amo-multiselect
-    ng-model="app.myModel"
-    options="option.id as option.label for option in app.myOptions">
+    ng-model="app.model"
+    options="option.id as option.label for option in app.options"
+    on-change="app.onChange(label)"
+    on-toggle-dropdown="app.onToggleDropdown(isOpen)"
+    search-text="Search..."
+    select-text="Select..."
+    select-all-text="Select All"
+    deselect-all-text="Deselect All">
 </amo-multiselect>
 ```
 
@@ -37,7 +43,7 @@ where the value of `options` is of the following form: `[`_`select`_ **`as`**`]`
 
 ## Roadmap
 
-- [ ] Change, open and close callbacks
+- [ ] Add support for older library versions
 - [ ] Unit tests & automated tests
 - [ ] Isolated build/distribution process
 - [ ] Documentation

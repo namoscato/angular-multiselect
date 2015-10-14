@@ -72,6 +72,8 @@
                             <amo-multiselect
                                 deselect-all-text="Deselect Everything"
                                 ng-model="app.modelObjectProperty"
+                                on-change="app.onChange(label)"
+                                on-toggle-dropdown="app.onToggleDropdown(isOpen)"
                                 options="option.id as option.label for option in app.optionsObject"
                                 search-text="Filter Items"
                                 select-text="Select Custom Items"

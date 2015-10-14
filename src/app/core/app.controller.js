@@ -42,6 +42,8 @@
         ];
 
         self.addObject = addObject;
+        self.onChange = onChange;
+        self.onToggleDropdown = onToggleDropdown;
 
         /**
          * @ngdoc method
@@ -53,6 +55,26 @@
                 id: self.optionsObject.length + 1,
                 label: 'Option ' + (self.optionsObject.length + 1)
             });
+        }
+
+        /**
+         * @ngdoc method
+         * @name AppController#onChange
+         * @description Handler executed when multiselect control changes
+         * @param {String} label
+         */
+        function onChange(label) {
+            console.log('onChange', label);
+        }
+
+        /**
+         * @ngdoc method
+         * @name AppController#onToggleDropdown
+         * @description Handler executed when dropdown opens or closes
+         * @param {Boolean} isOpen
+         */
+        function onToggleDropdown(isOpen) {
+            console.log('onToggleDropdown', isOpen);
         }
     }
 

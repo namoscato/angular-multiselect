@@ -10,9 +10,10 @@
      * @module amo.multiselect
      * @name amoMultiselect
      * @requires $compile
+     * @requires $parse
      * @requires AmoMultiselectFactory
      */
-    function MultiselectDirective($compile, AmoMultiselectFactory) {
+    function MultiselectDirective($compile, $parse, AmoMultiselectFactory) {
 
         return {
             link: link,
@@ -33,6 +34,8 @@
 
             var _isInternalChange,
                 _labels = [],
+                _onChange = attrs.onChange ? $parse(attrs.onChange) : angular.noop,
+                _onToggleDropdown = attrs.onToggleDropdown ? $parse(attrs.onToggleDropdown) : angular.noop,
                 _selectedOptions = [];
 
             var multiselect = new AmoMultiselectFactory(attrs.options, parentScope),
@@ -50,6 +53,7 @@
             // Methods
             scope.getSelectedCount = getSelectedCount;
             scope.exposeSelectedOptions = exposeSelectedOptions;
+            scope.onToggleDropdown = onToggleDropdown;
 
             // Initialization
             initialize();
@@ -125,7 +129,9 @@
 
                 ngModelController.$setViewValue(_selectedOptions);
 
-                setSelectedLabel();
+                _onChange(scope, {
+                    label: setSelectedLabel()
+                });
             }
 
             /**
@@ -174,8 +180,20 @@
             }
 
             /**
+             * @ngdoc method
+             * @name amoMultiselect#onToggleDropdown
+             * @description Handler executed when dropdown opens or closes
+             */
+            function onToggleDropdown(isOpen) {
+                _onToggleDropdown(scope, {
+                    isOpen: isOpen
+                });
+            }
+
+            /**
              * @name amoMultiselect#setSelectedLabel
              * @description Sets the selected label
+             * @returns {String} New label
              */
             function setSelectedLabel() {
                 var label = attrs.selectText || 'Select...';
@@ -185,6 +203,8 @@
                 }
 
                 scope.selectedLabel = label;
+
+                return label;
             }
         }
     }
