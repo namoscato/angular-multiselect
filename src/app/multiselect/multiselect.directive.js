@@ -41,6 +41,11 @@
             // Variables
             scope.options = [];
             scope.search = {};
+            scope.text = {
+                deselectAll: attrs.deselectAllText || 'Deselect All',
+                search: attrs.searchText || 'Search...',
+                selectAll: attrs.selectAllText || 'Select All',
+            };
 
             // Methods
             scope.getSelectedCount = getSelectedCount;
@@ -173,7 +178,7 @@
              * @description Sets the selected label
              */
             function setSelectedLabel() {
-                var label = 'Select...';
+                var label = attrs.selectText || 'Select...';
 
                 if (_labels.length > 0) {
                     label = _labels.join(', ');
