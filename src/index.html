@@ -71,6 +71,7 @@
                             </amo-multiselect>
                             <amo-multiselect
                                 deselect-all-text="Deselect Everything"
+                                label="app.label"
                                 ng-model="app.modelObjectProperty"
                                 on-change="app.onChange(label)"
                                 on-toggle-dropdown="app.onToggleDropdown(isOpen)"
@@ -82,6 +83,7 @@
                         </div>
                         <div class="col-md-6">
                             <pre>{{ app.modelObjectProperty }}</pre>
+                            <pre>{{ app.label }}</pre>
                         </div>
                     </div>
                 </div>

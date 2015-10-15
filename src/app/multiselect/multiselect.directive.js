@@ -32,7 +32,8 @@
          */
         function link(parentScope, element, attrs, ngModelController) {
 
-            var _isInternalChange,
+            var _exposeLabel = attrs.label ? $parse(attrs.label) : angular.noop,
+                _isInternalChange,
                 _labels = [],
                 _onChange = attrs.onChange ? $parse(attrs.onChange) : angular.noop,
                 _onToggleDropdown = attrs.onToggleDropdown ? $parse(attrs.onToggleDropdown) : angular.noop,
@@ -203,6 +204,10 @@
                 }
 
                 scope.selectedLabel = label;
+
+                if (angular.isFunction(_exposeLabel.assign)) {
+                    _exposeLabel.assign(parentScope, label);
+                }
 
                 return label;
             }
