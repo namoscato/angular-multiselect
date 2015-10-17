@@ -15,7 +15,7 @@
         return {
             link: link,
             restrict: 'E',
-            templateUrl: 'src/app/multiselect/multiselect-dropdown.html'
+            templateUrl: 'multiselect/multiselect-dropdown.html'
         };
 
         /**
@@ -26,11 +26,12 @@
          * @param {Object} attrs Hash object of attribute names and values
          */
         function link(scope, element, attrs) {
+            var self = scope.multiselectDropdown;
 
             // Methods
-            scope.getSelectAllLabel = getSelectAllLabel;
-            scope.toggleAllSelectedState = toggleAllSelectedState;
-            scope.toggleSelectedState = toggleSelectedState;
+            self.getSelectAllLabel = getSelectAllLabel;
+            self.toggleAllSelectedState = toggleAllSelectedState;
+            self.toggleSelectedState = toggleSelectedState;
 
             /**
              * @ngdoc method
@@ -39,7 +40,7 @@
              * @returns {String}
              */
             function getSelectAllLabel() {
-                return scope.isAllSelected ? scope.text.deselectAll : scope.text.selectAll;
+                return self.isAllSelected ? self.text.deselectAll : self.text.selectAll;
             }
 
             /**
@@ -48,13 +49,13 @@
              * @description Toggles the selected state for all options
              */
             function toggleAllSelectedState() {
-                scope.isAllSelected = !scope.isAllSelected;
+                self.isAllSelected = !self.isAllSelected;
 
-                scope.optionsFiltered.forEach(function(option) {
-                    option.selected = scope.isAllSelected;
+                self.optionsFiltered.forEach(function(option) {
+                    option.selected = self.isAllSelected;
                 });
 
-                scope.exposeSelectedOptions();
+                self.exposeSelectedOptions();
             }
 
             /**
@@ -66,7 +67,7 @@
             function toggleSelectedState(option) {
                 option.selected = !option.selected;
 
-                scope.exposeSelectedOptions();
+                self.exposeSelectedOptions();
             }
         }
     }

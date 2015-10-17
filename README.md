@@ -32,6 +32,7 @@ The interface for this directive is based off [`ngOptions`](https://docs.angular
     options="option.id as option.label for option in app.options"
     on-change="app.onChange(label)"
     on-toggle-dropdown="app.onToggleDropdown(isOpen)"
+    label="app.label"
     search-text="Search..."
     select-text="Select..."
     select-all-text="Select All"
@@ -41,9 +42,14 @@ The interface for this directive is based off [`ngOptions`](https://docs.angular
 
 where the value of `options` is of the following form: `[`_`select`_ **`as`**`]` _`label`_ **`for`** _`value`_ **`in`** _`array`_
 
+## Running Tests
+
+Install the [Karma](http://karma-runner.github.io/) commandline interface (`karma-cli`) globally and run:
+
+    karma start
+
 ## Roadmap
 
 - [ ] Add support for older library versions
-- [ ] Unit tests & automated tests
-- [ ] Isolated build/distribution process
+- [ ] Cleanup build process
 - [ ] Documentation

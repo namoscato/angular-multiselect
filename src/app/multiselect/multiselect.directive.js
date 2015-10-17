@@ -32,28 +32,32 @@
          */
         function link(parentScope, element, attrs, ngModelController) {
 
-            var _isInternalChange,
+            var _exposeLabel = attrs.label ? $parse(attrs.label) : angular.noop,
+                _isInternalChange,
                 _labels = [],
                 _onChange = attrs.onChange ? $parse(attrs.onChange) : angular.noop,
                 _onToggleDropdown = attrs.onToggleDropdown ? $parse(attrs.onToggleDropdown) : angular.noop,
                 _selectedOptions = [];
 
             var multiselect = new AmoMultiselectFactory(attrs.options, parentScope),
-                scope = parentScope.$new();
+                scope = parentScope.$new(),
+                self = {};
+
+            scope.multiselectDropdown = self;
 
             // Variables
-            scope.options = [];
-            scope.search = {};
-            scope.text = {
+            self.options = [];
+            self.search = {};
+            self.text = {
                 deselectAll: attrs.deselectAllText || 'Deselect All',
                 search: attrs.searchText || 'Search...',
                 selectAll: attrs.selectAllText || 'Select All',
             };
 
             // Methods
-            scope.getSelectedCount = getSelectedCount;
-            scope.exposeSelectedOptions = exposeSelectedOptions;
-            scope.onToggleDropdown = onToggleDropdown;
+            self.getSelectedCount = getSelectedCount;
+            self.exposeSelectedOptions = exposeSelectedOptions;
+            self.onToggleDropdown = onToggleDropdown;
 
             // Initialization
             initialize();
@@ -78,7 +82,7 @@
                     value;
 
                 _labels.length = 0;
-                scope.options.length = 0;
+                self.options.length = 0;
 
                 // Iterate through original options and create exposed model
                 multiselect.getOptions().forEach(function(option, index) {
@@ -93,7 +97,7 @@
                         }
                     }
 
-                    scope.options.push({
+                    self.options.push({
                         id: index,
                         label: multiselect.getLabel(option),
                         value: value,
@@ -115,7 +119,7 @@
                 _labels.length = 0;
                 _selectedOptions.length = 0;
 
-                scope.options.forEach(function(optionModel, index) {
+                self.options.forEach(function(optionModel, index) {
                     if (!optionModel.selected) { return; }
 
                     option = multiselect.getOption(index);
@@ -156,13 +160,13 @@
                 });
 
                 // Watch for option array changes
-                scope.$watch(multiselect.getOptionsExpression(), function(options) {
+                parentScope.$watch(multiselect.getOptionsExpression(), function(options) {
                     multiselect.setOptions(options);
                     exposeOptions();
                 }, true);
                 
                 // Watch for (external) model changes
-                scope.$watch(function() {
+                parentScope.$watch(function() {
                     return ngModelController.$modelValue;
                 }, function(modelValue) {
                     // TODO: Determine if there is a better way to do this
@@ -202,7 +206,11 @@
                     label = _labels.join(', ');
                 }
 
-                scope.selectedLabel = label;
+                self.selectedLabel = label;
+
+                if (angular.isFunction(_exposeLabel.assign)) {
+                    _exposeLabel.assign(parentScope, label);
+                }
 
                 return label;
             }

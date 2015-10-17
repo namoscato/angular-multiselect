@@ -4,8 +4,7 @@
         <base href="/angular-multiselect/"></base>
         <meta charset="utf-8">
         <title>AngularJS Multiselect</title>
-        <link rel="stylesheet" href="src/dist/css/app.css" /> 
-        <link rel="stylesheet" href="src/dist/css/multiselect.css" /> 
+        <link rel="stylesheet" href="dist/css/app.css" />
     </head>
     <body ng-app="multiselectDemo">
         <div ng-controller="AppController as app">
@@ -71,6 +70,7 @@
                             </amo-multiselect>
                             <amo-multiselect
                                 deselect-all-text="Deselect Everything"
+                                label="app.label"
                                 ng-model="app.modelObjectProperty"
                                 on-change="app.onChange(label)"
                                 on-toggle-dropdown="app.onToggleDropdown(isOpen)"
@@ -82,6 +82,7 @@
                         </div>
                         <div class="col-md-6">
                             <pre>{{ app.modelObjectProperty }}</pre>
+                            <pre>{{ app.label }}</pre>
                         </div>
                     </div>
                 </div>
