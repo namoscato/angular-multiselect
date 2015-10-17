@@ -1,32 +1,32 @@
 <div
     class="btn-group btn-group-multiselect"
     auto-close="outsideClick"
-    on-toggle="onToggleDropdown(open)"
+    on-toggle="multiselectDropdown.onToggleDropdown(open)"
     uib-dropdown>
     <button
         type="button"
         class="btn btn-default"
         uib-dropdown-toggle>
-        <span class="text" ng-bind="selectedLabel"></span>
-        <span class="badge" ng-bind="getSelectedCount()"></span>
+        <span class="text" ng-bind="multiselectDropdown.selectedLabel"></span>
+        <span class="badge" ng-bind="multiselectDropdown.getSelectedCount()"></span>
         <span class="caret"></span>
     </button>
     <div class="uib-dropdown-menu">
         <input
             type="text"
             class="form-control"
-            ng-model="search.label"
-            placeholder="{{ text.search }}">
+            ng-model="multiselectDropdown.search.label"
+            placeholder="{{ multiselectDropdown.text.search }}">
         <ul class="dropdown-menu-list list-unstyled">
             <li>
-                <a ng-click="toggleAllSelectedState()">
-                    <input type="checkbox" ng-model="isAllSelected">
-                    <span ng-bind="getSelectAllLabel()"></span>
+                <a ng-click="multiselectDropdown.toggleAllSelectedState()">
+                    <input type="checkbox" ng-model="multiselectDropdown.isAllSelected">
+                    <span ng-bind="multiselectDropdown.getSelectAllLabel()"></span>
                 </a>
             </li>
             <li class="divider"></li>
-            <li ng-repeat="option in optionsFiltered = (options | filter : search)">
-                <a ng-click="toggleSelectedState(option)">
+            <li ng-repeat="option in multiselectDropdown.optionsFiltered = (multiselectDropdown.options | filter : multiselectDropdown.search)">
+                <a ng-click="multiselectDropdown.toggleSelectedState(option)">
                     <input type="checkbox" ng-model="option.selected">
                     <span ng-bind="option.label"></span>
                 </a>

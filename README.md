@@ -32,6 +32,7 @@ The interface for this directive is based off [`ngOptions`](https://docs.angular
     options="option.id as option.label for option in app.options"
     on-change="app.onChange(label)"
     on-toggle-dropdown="app.onToggleDropdown(isOpen)"
+    label="app.label"
     search-text="Search..."
     select-text="Select..."
     select-all-text="Select All"
