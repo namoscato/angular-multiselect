@@ -157,7 +157,7 @@
                 });
 
                 // Watch for option array changes
-                scope.$watch(multiselect.getOptionsExpression(), function(options) {
+                parentScope.$watch(multiselect.getOptionsExpression(), function(options) {
                     multiselect.setOptions(options);
                     exposeOptions();
                 }, true);

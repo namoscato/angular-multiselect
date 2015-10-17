@@ -1,7 +1,9 @@
 'use strict';
 
-var del = require('del'),
+var addStream = require('add-stream'),
+    del = require('del'),
     gulp = require('gulp'),
+    gulpAngularTemplateCache = require('gulp-angular-templatecache'),
     gulpConcat = require('gulp-concat'),
     gulpHelp = require('gulp-help')(gulp),
     gulpJshint = require('gulp-jshint'),
@@ -24,7 +26,8 @@ gulp.task('all', 'Generates documentation and builds application', [
 ]);
 
 /**
- * 
+ * @name clean
+ * @description Cleans the build directory
  */
 gulp.task('clean', 'Cleans the build directory', function() {
     return del([
@@ -34,7 +37,7 @@ gulp.task('clean', 'Cleans the build directory', function() {
 });
 
 /**
- * @name styles
+ * @name css
  * @description Compile SASS
  */
 gulp.task('css', 'Compile SASS', function() {
@@ -51,7 +54,7 @@ gulp.task('css', 'Compile SASS', function() {
 });
 
 /**
- * @name app
+ * @name js:app
  * @description Compiles the application JavaScript
  */
 gulp.task('js:app', 'Compiles the application JavaScript', function() {
@@ -59,7 +62,6 @@ gulp.task('js:app', 'Compiles the application JavaScript', function() {
         gulp.src('src/app/**/*.module.js'),
         gulp.src([
             'src/app/**/*.js',
-            'src/dist/docs/js/*.js',
             '!src/app/**/*.module.js'
         ]));
 
@@ -67,7 +69,39 @@ gulp.task('js:app', 'Compiles the application JavaScript', function() {
 });
 
 /**
- * @name app
+ * @name js:dist
+ * @description Builds the directive JavaScript and template
+ */
+gulp.task('js:dist', 'Builds the directive JavaScript and template', ['js:dist:compressed']);
+
+/**
+ * @name js:dist:compressed
+ * @description Concatenates and minifies the directive JavaScript and template
+ */
+gulp.task('js:dist:compressed', false, ['js:dist:uncompressed'], function() {
+    var stream = gulp.src('src/dist/js/multiselect.js');
+
+    return compileJavaScript(stream, 'multiselect');
+});
+
+/**
+ * @name js:dist:uncompressed
+ * @description Concatenates the directive JavaScript and template
+ */
+gulp.task('js:dist:uncompressed', false, function() {
+    var stream = streamqueue({objectMode: true},
+        gulp.src('src/app/multiselect/**/*.module.js'),
+        gulp.src('src/app/multiselect/**/*.js'))
+        .pipe(addStream.obj(gulp
+            .src('src/app/**/*.html')
+            .pipe(gulpAngularTemplateCache('templates.js')
+        )));
+
+    return compileJavaScript(stream, 'multiselect', false);
+});
+
+/**
+ * @name js:libs
  * @description Compiles the third party JavaScript
  */
 gulp.task('js:libs', 'Compiles the third party JavaScript', function() {
@@ -75,14 +109,14 @@ gulp.task('js:libs', 'Compiles the third party JavaScript', function() {
         gulp.src('src/scripts/angular/angular.js'),
         gulp.src([
             'src/scripts/**/*.js',
-            '!src/scripts/angular/angular.js'
+            '!src/scripts/angular/*.js'
         ]));
 
     return compileJavaScript(stream, 'vendor');
 });
 
 /**
- * @name lint
+ * @name js:lint
  * @description Run JSHint to check for JavaScript code quality
  */
 gulp.task('js:lint', 'Run JSHint to check for JavaScript code quality', function() {
@@ -128,14 +162,25 @@ gulp.task('watch', 'Watches for changes and recompiles', function() {
  * @name compileJavaScript
  * @param {Object} stream Stream object
  * @param {String} name Name of output file
+ * @param {Boolean} [uglify=true]
  */
-function compileJavaScript(stream, name) {
-    stream
-        .pipe(gulpConcat(name + '.js'))
-        .pipe(gulpUglify({
-            compress: false,
-            mangle: false
-        }))
-        .pipe(gulpRename(name + '.min.js'))
-        .pipe(gulp.dest('src/dist/js'));
+function compileJavaScript(stream, name, uglify) {
+    var outputPath = 'src/dist/js';
+
+    if (typeof uglify === 'undefined') {
+        uglify = true;
+    }
+
+    stream = stream.pipe(gulpConcat(name + '.js'));
+
+    if (uglify) {
+        stream = stream
+            .pipe(gulpUglify({
+                compress: false,
+                mangle: false
+            }))
+            .pipe(gulpRename(name + '.min.js'));
+    }
+
+    return stream.pipe(gulp.dest(outputPath));
 }
