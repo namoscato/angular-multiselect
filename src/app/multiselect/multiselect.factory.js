@@ -3,10 +3,10 @@
 
     angular
         .module('amo.multiselect')
-        .service('AmoMultiselectFactory', MultiselectFactory);
+        .factory('AmoMultiselectFactory', MultiselectFactory);
 
     /**
-     * @ngdoc service
+     * @ngdoc factory
      * @module amo.multiselect
      * @name AmoMultiselectFactory
      * @requires $parse
