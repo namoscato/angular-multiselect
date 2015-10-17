@@ -1,3 +1,6 @@
 .sass-cache
 node_modules
-src/dist
+src/dist/**/*.css
+src/dist/**/*.js
+!src/dist/css/multiselect.css
+!src/dist/js/multiselect*.js

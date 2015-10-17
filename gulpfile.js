@@ -14,34 +14,27 @@ var addStream = require('add-stream'),
     gulpWebserver = require('gulp-webserver'),
     streamqueue = require('streamqueue');
 
-/**
- * @name all
- * @description Generates documentation and builds application
- */
-gulp.task('all', 'Generates documentation and builds application', [
-    'css',
+gulp.task('all', 'Build application', [
+    'css:app',
     'js:app',
     'js:libs',
     'js:lint'
 ]);
 
-/**
- * @name clean
- * @description Cleans the build directory
- */
-gulp.task('clean', 'Cleans the build directory', function() {
+gulp.task('dist', 'Build multiselect', [
+    'css:dist',
+    'js:dist'
+]);
+
+gulp.task('clean', 'Clean build directory', function() {
     return del([
         'src/dist/css/*',
         'src/dist/js/*'
     ]);
 });
 
-/**
- * @name css
- * @description Compile SASS
- */
-gulp.task('css', 'Compile SASS', function() {
-    gulp.src('src/content/styles/*.scss')
+gulp.task('css:app', 'Compile application SASS', function() {
+    gulp.src('src/content/styles/app.scss')
         .pipe(gulpSass().on('error', gulpSass.logError))
         .pipe(gulpMinifyCss({
             advanced: false,
@@ -53,58 +46,55 @@ gulp.task('css', 'Compile SASS', function() {
         .pipe(gulp.dest('src/dist/css'));
 });
 
-/**
- * @name js:app
- * @description Compiles the application JavaScript
- */
-gulp.task('js:app', 'Compiles the application JavaScript', function() {
+gulp.task('css:dist', 'Compile multiselect SASS', function() {
+    gulp.src('src/content/styles/multiselect.scss')
+        .pipe(gulpSass().on('error', gulpSass.logError))
+        .pipe(gulp.dest('src/dist/css'));
+});
+
+gulp.task('js:app', 'Compile application JavaScript', function() {
     var stream = streamqueue({objectMode: true},
         gulp.src('src/app/**/*.module.js'),
         gulp.src([
             'src/app/**/*.js',
             '!src/app/**/*.module.js'
-        ]));
+        ]))
+        .pipe(addStream.obj(gulp.src('src/app/**/*.html')
+            .pipe(gulpAngularTemplateCache('templates.js', {
+                module: 'amo.multiselect'
+            })
+        )));
 
     return compileJavaScript(stream, 'app');
 });
 
-/**
- * @name js:dist
- * @description Builds the directive JavaScript and template
- */
-gulp.task('js:dist', 'Builds the directive JavaScript and template', ['js:dist:compressed']);
+gulp.task('js:dist', 'Build directive JavaScript and template', [
+    'js:dist:compressed'
+]);
 
-/**
- * @name js:dist:compressed
- * @description Concatenates and minifies the directive JavaScript and template
- */
 gulp.task('js:dist:compressed', false, ['js:dist:uncompressed'], function() {
     var stream = gulp.src('src/dist/js/multiselect.js');
 
     return compileJavaScript(stream, 'multiselect');
 });
 
-/**
- * @name js:dist:uncompressed
- * @description Concatenates the directive JavaScript and template
- */
 gulp.task('js:dist:uncompressed', false, function() {
     var stream = streamqueue({objectMode: true},
         gulp.src('src/app/multiselect/**/*.module.js'),
-        gulp.src('src/app/multiselect/**/*.js'))
-        .pipe(addStream.obj(gulp
-            .src('src/app/**/*.html')
-            .pipe(gulpAngularTemplateCache('templates.js')
+        gulp.src([
+            'src/app/multiselect/**/*.js',
+            '!src/app/multiselect/**/*.module.js'
+        ]))
+        .pipe(addStream.obj(gulp.src('src/app/**/*.html')
+            .pipe(gulpAngularTemplateCache('templates.js', {
+                module: 'amo.multiselect'
+            })
         )));
 
     return compileJavaScript(stream, 'multiselect', false);
 });
 
-/**
- * @name js:libs
- * @description Compiles the third party JavaScript
- */
-gulp.task('js:libs', 'Compiles the third party JavaScript', function() {
+gulp.task('js:libs', 'Compile third party JavaScript', function() {
     var stream = streamqueue({objectMode: true},
         gulp.src('src/scripts/angular/angular.js'),
         gulp.src([
@@ -115,21 +105,13 @@ gulp.task('js:libs', 'Compiles the third party JavaScript', function() {
     return compileJavaScript(stream, 'vendor');
 });
 
-/**
- * @name js:lint
- * @description Run JSHint to check for JavaScript code quality
- */
 gulp.task('js:lint', 'Run JSHint to check for JavaScript code quality', function() {
     gulp.src('src/app/**/*.js')
         .pipe(gulpJshint())
         .pipe(gulpJshint.reporter('default'));
 });
 
-/**
- * @name serve
- * @description Runs a local webserver with livereload
- */
-gulp.task('serve', 'Runs a local webserver', [], function() {
+gulp.task('serve', 'Run a local webserver', function() {
     gulp.src('src')
         .pipe(gulpWebserver({
             fallback: 'index.html',
@@ -138,11 +120,7 @@ gulp.task('serve', 'Runs a local webserver', [], function() {
         }));
 });
 
-/**
- * @name watch
- * @description Watches for changes and rebuilds
- */
-gulp.task('watch', 'Watches for changes and recompiles', function() {
+gulp.task('watch', 'Watch for changes and recompile', function() {
     gulp.watch(['src/app/**/*.js'], [
         'js:app',
         'js:lint'
@@ -153,7 +131,7 @@ gulp.task('watch', 'Watches for changes and recompiles', function() {
     ]);
 
     gulp.watch(['src/content/styles/**/*.scss'], [
-        'css'
+        'css:app'
     ]);
 });
 

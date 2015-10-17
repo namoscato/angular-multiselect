@@ -15,7 +15,7 @@
         return {
             link: link,
             restrict: 'E',
-            templateUrl: 'app/multiselect/multiselect-dropdown.html'
+            templateUrl: 'multiselect/multiselect-dropdown.html'
         };
 
         /**

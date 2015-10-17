@@ -1,4 +1,4 @@
-describe('amoMultiselect', function() {
+describe('AmoMultiselectFactory', function() {
     var result,
         target,
         targetConstructor;
