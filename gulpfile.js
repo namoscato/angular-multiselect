@@ -126,6 +126,10 @@ gulp.task('watch', 'Watch for changes and recompile', function() {
         'js:lint'
     ]);
 
+    gulp.watch(['src/app/**/*.html'], [
+        'js:app'
+    ]);
+
     gulp.watch(['src/scripts/**/*.js'], [
         'js:libs'
     ]);
