@@ -8,6 +8,8 @@ AngularJS multiselect component based off [`ngOptions`](https://docs.angularjs.o
 * [Bootstrap](http://getbootstrap.com/) v3.3.5 for dropdown styles
 * [UI Bootstrap](http://angular-ui.github.io/bootstrap/) v0.14.0+ for dropdown functionality
 
+_Note that [`backport`](https://github.com/namoscato/angular-multiselect/tree/backport) supports older versions of these dependencies._
+
 ## Development
 
 1. Install dependencies
@@ -50,6 +52,5 @@ Install the [Karma](http://karma-runner.github.io/) commandline interface (`karm
 
 ## Roadmap
 
-- [ ] Add support for older library versions
 - [ ] Cleanup build process
 - [ ] Documentation
