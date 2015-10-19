@@ -2,11 +2,13 @@
 
 AngularJS multiselect component based off [`ngOptions`](https://docs.angularjs.org/api/ng/directive/ngOptions).
 
+**Note:** This branch with backported dependencies is _not_ maintained.
+
 ## Dependencies
 
-* [AngularJS](https://angularjs.org/) v1.4.7
+* [AngularJS](https://angularjs.org/) v1.2.28
 * [Bootstrap](http://getbootstrap.com/) v3.3.5 for dropdown styles
-* [UI Bootstrap](http://angular-ui.github.io/bootstrap/) v0.14.0+ for dropdown functionality
+* [UI Bootstrap](http://angular-ui.github.io/bootstrap/) v0.10.0 for dropdown functionality
 
 ## Development
 
@@ -31,7 +33,6 @@ The interface for this directive is based off [`ngOptions`](https://docs.angular
     ng-model="app.model"
     options="option.id as option.label for option in app.options"
     on-change="app.onChange(label)"
-    on-toggle-dropdown="app.onToggleDropdown(isOpen)"
     label="app.label"
     search-text="Search..."
     select-text="Select..."
@@ -50,6 +51,5 @@ Install the [Karma](http://karma-runner.github.io/) commandline interface (`karm
 
 ## Roadmap
 
-- [ ] Add support for older library versions
 - [ ] Cleanup build process
 - [ ] Documentation

@@ -1,17 +1,10 @@
-<div
-    class="btn-group btn-group-multiselect"
-    auto-close="outsideClick"
-    on-toggle="multiselectDropdown.onToggleDropdown(open)"
-    uib-dropdown>
-    <button
-        type="button"
-        class="btn btn-default"
-        uib-dropdown-toggle>
+<div class="btn-group btn-group-multiselect dropdown">
+    <button type="button" class="btn btn-default dropdown-toggle">
         <span class="text" ng-bind="multiselectDropdown.selectedLabel"></span>
         <span class="badge" ng-bind="multiselectDropdown.getSelectedCount()"></span>
         <span class="caret"></span>
     </button>
-    <div class="uib-dropdown-menu">
+    <div class="dropdown-menu" amo-multiselect-dropdown-menu>
         <input
             type="text"
             class="form-control"

@@ -43,7 +43,6 @@
 
         self.addObject = addObject;
         self.onChange = onChange;
-        self.onToggleDropdown = onToggleDropdown;
 
         /**
          * @ngdoc method
@@ -65,16 +64,6 @@
          */
         function onChange(label) {
             console.log('onChange', label);
-        }
-
-        /**
-         * @ngdoc method
-         * @name AppController#onToggleDropdown
-         * @description Handler executed when dropdown opens or closes
-         * @param {Boolean} isOpen
-         */
-        function onToggleDropdown(isOpen) {
-            console.log('onToggleDropdown', isOpen);
         }
     }
 

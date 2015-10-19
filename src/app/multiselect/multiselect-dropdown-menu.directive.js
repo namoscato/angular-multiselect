@@ -1,0 +1,34 @@
+(function() {
+    'use strict';
+
+    angular
+        .module('amo.multiselect')
+        .directive('amoMultiselectDropdownMenu', MultiselectDropdownMenuDirective);
+
+    /**
+     * @ngdoc directive
+     * @module amo.multiselect
+     * @name amoMultiselectDropdownMenu
+     */
+    function MultiselectDropdownMenuDirective() {
+
+        return {
+            link: link,
+            restrict: 'A'
+        };
+
+        /**
+         * @name amoMultiselectDropdownMenu#link
+         * @description Directive's link function
+         * @param {Object} scope Angular scope object
+         * @param {Object} element jQuery object
+         * @param {Object} attrs Hash object of attribute names and values
+         */
+        function link(scope, element, attrs) {
+            element.on('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+    }
+
+})();
