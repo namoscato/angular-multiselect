@@ -12,7 +12,7 @@ describe('amoMultiselect', function() {
     var optionsMock;
 
     beforeEach(module('amo.multiselect'));
-    beforeEach(module('app/multiselect/multiselect-dropdown.html'));
+    beforeEach(module('multiselect/multiselect-dropdown.html'));
 
     beforeEach(function() {
         amoMultiselectFactoryInstanceSpy = jasmine.createSpyObj('AmoMultiselectFactory()', [
