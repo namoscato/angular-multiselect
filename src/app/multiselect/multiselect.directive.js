@@ -46,6 +46,7 @@
             scope.multiselectDropdown = self;
 
             // Variables
+            self.identifier = attrs.id;
             self.options = [];
             self.search = {};
             self.text = {
