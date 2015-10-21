@@ -51,14 +51,14 @@
             self.search = {};
             self.text = {
                 deselectAll: attrs.deselectAllText || 'Deselect All',
-                search: attrs.searchText || 'Search...',
-                selectAll: attrs.selectAllText || 'Select All',
+                search: attrs.searchText || 'Search...'
             };
 
             // Methods
             self.getSelectedCount = getSelectedCount;
             self.exposeSelectedOptions = exposeSelectedOptions;
             self.hasSelectedItems = hasSelectedItems;
+            self.hasSelectedMultipleItems = hasSelectedMultipleItems;
             self.onToggleDropdown = onToggleDropdown;
 
             // Initialization
@@ -193,6 +193,16 @@
              */
             function hasSelectedItems() {
                 return _selectedOptions.length > 0;
+            }
+
+            /**
+             * @ngdoc method
+             * @name amoMultiselect#hasSelectedMultipleItems
+             * @description Determines whether or not multiple items are selected
+             * @returns {Boolean}
+             */
+            function hasSelectedMultipleItems() {
+                return _selectedOptions.length > 1;
             }
 
             /**

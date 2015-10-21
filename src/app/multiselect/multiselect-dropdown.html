@@ -2,7 +2,7 @@
     amo-multiselect-dropdown-menu
     class="btn-group btn-group-multiselect dropdown"
     ng-attr-title="{{ multiselectDropdown.selectedLabel }}"
-    ng-class="{ 'state-selected': multiselectDropdown.hasSelectedItems() }"
+    ng-class="{ 'state-selected-multiple': multiselectDropdown.hasSelectedMultipleItems() }"
     on-toggle="multiselectDropdown.onToggleDropdown(open)">
     <button
         type="button"
@@ -21,9 +21,10 @@
             placeholder="{{ multiselectDropdown.text.search }}">
         <ul class="dropdown-menu-list list-unstyled">
             <li>
-                <a ng-click="multiselectDropdown.toggleAllSelectedState()">
-                    <input type="checkbox" ng-model="multiselectDropdown.isAllSelected">
-                    <span ng-bind="multiselectDropdown.getSelectAllLabel()"></span>
+                <a
+                    ng-bind="multiselectDropdown.text.deselectAll"
+                    ng-class="{ 'text-muted': !multiselectDropdown.hasSelectedItems() }"
+                    ng-click="multiselectDropdown.deselectAll()">
                 </a>
             </li>
             <li class="divider"></li>

@@ -7,7 +7,7 @@
 .btn-group-multiselect {
     $width: 250px;
 
-    &.state-selected {
+    &.state-multiple-selected {
         .dropdown-toggle {
             .text {
                 width: $width - 60;
@@ -88,6 +88,10 @@
             line-height: $line-height-base;
             padding: 5px 12px;
             white-space: nowrap;
+
+            &.text-muted {
+                color: $text-muted;
+            }
 
             &:hover,
             &:focus {

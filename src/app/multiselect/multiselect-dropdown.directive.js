@@ -29,30 +29,17 @@
             var self = scope.multiselectDropdown;
 
             // Methods
-            self.getSelectAllLabel = getSelectAllLabel;
-            self.toggleAllSelectedState = toggleAllSelectedState;
+            self.deselectAll = deselectAll;
             self.toggleSelectedState = toggleSelectedState;
 
             /**
              * @ngdoc method
-             * @name amoMultiselect#getSelectAllLabel
-             * @description Returns the select/deselect all label
-             * @returns {String}
+             * @name amoMultiselect#deselectAll
+             * @description Deselects all items
              */
-            function getSelectAllLabel() {
-                return self.isAllSelected ? self.text.deselectAll : self.text.selectAll;
-            }
-
-            /**
-             * @ngdoc method
-             * @name amoMultiselect#toggleAllSelectedState
-             * @description Toggles the selected state for all options
-             */
-            function toggleAllSelectedState() {
-                self.isAllSelected = !self.isAllSelected;
-
+            function deselectAll() {
                 self.optionsFiltered.forEach(function(option) {
-                    option.selected = self.isAllSelected;
+                    option.selected = false;
                 });
 
                 self.exposeSelectedOptions();
