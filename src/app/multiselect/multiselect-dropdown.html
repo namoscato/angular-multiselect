@@ -1,6 +1,7 @@
 <div
     amo-multiselect-dropdown-menu
     class="btn-group btn-group-multiselect dropdown"
+    ng-attr-title="{{ multiselectDropdown.selectedLabel }}"
     ng-class="{ 'state-selected': multiselectDropdown.hasSelectedItems() }"
     on-toggle="multiselectDropdown.onToggleDropdown(open)">
     <button
