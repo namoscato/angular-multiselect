@@ -1,10 +1,16 @@
-<div class="btn-group btn-group-multiselect dropdown">
-    <button type="button" class="btn btn-default dropdown-toggle">
+<div
+    amo-multiselect-dropdown-menu
+    class="btn-group btn-group-multiselect dropdown"
+    on-toggle="multiselectDropdown.onToggleDropdown(open)">
+    <button
+        type="button"
+        class="btn btn-default dropdown-toggle"
+        data-toggle="dropdown">
         <span class="text" ng-bind="multiselectDropdown.selectedLabel"></span>
         <span class="badge" ng-bind="multiselectDropdown.getSelectedCount()"></span>
         <span class="caret"></span>
     </button>
-    <div class="dropdown-menu" amo-multiselect-dropdown-menu>
+    <div class="dropdown-menu">
         <input
             type="text"
             class="form-control"

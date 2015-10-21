@@ -6,8 +6,6 @@
      * @module amo.multiselect
      * @name amo.multiselect
      */
-    angular.module('amo.multiselect', [
-        'ui.bootstrap.dropdownToggle'
-    ]);
+    angular.module('amo.multiselect', []);
 
 })();

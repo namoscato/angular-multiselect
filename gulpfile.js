@@ -96,9 +96,11 @@ gulp.task('js:dist:uncompressed', false, function() {
 
 gulp.task('js:libs', 'Compile third party JavaScript', function() {
     var stream = streamqueue({objectMode: true},
+        gulp.src('src/scripts/jquery/jquery.js'),
         gulp.src('src/scripts/angular/angular.js'),
         gulp.src([
             'src/scripts/**/*.js',
+            '!src/scripts/jquery/jquery.js',
             '!src/scripts/angular/*.js'
         ]));
 

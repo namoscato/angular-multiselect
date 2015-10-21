@@ -14,7 +14,10 @@
 
         return {
             link: link,
-            restrict: 'A'
+            restrict: 'A',
+            scope: {
+                onToggle: '&'
+            }
         };
 
         /**
@@ -25,8 +28,16 @@
          * @param {Object} attrs Hash object of attribute names and values
          */
         function link(scope, element, attrs) {
-            element.on('click', function(e) {
+            element.on('click', '.dropdown-menu', function(e) {
                 e.stopPropagation();
+            });
+
+            element.on('show.bs.dropdown', function(e) {
+                scope.onToggle({ open: true });
+            });
+
+            element.on('hide.bs.dropdown', function(e) {
+                scope.onToggle({ open: false });
             });
         }
     }
