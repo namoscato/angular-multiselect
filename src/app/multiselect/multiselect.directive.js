@@ -57,6 +57,7 @@
             // Methods
             self.getSelectedCount = getSelectedCount;
             self.exposeSelectedOptions = exposeSelectedOptions;
+            self.hasSelectedItems = hasSelectedItems;
             self.onToggleDropdown = onToggleDropdown;
 
             // Initialization
@@ -185,6 +186,16 @@
 
             /**
              * @ngdoc method
+             * @name amoMultiselect#hasSelectedItems
+             * @description Determines whether or not items are selected
+             * @returns {Boolean}
+             */
+            function hasSelectedItems() {
+                return _selectedOptions.length > 0;
+            }
+
+            /**
+             * @ngdoc method
              * @name amoMultiselect#onToggleDropdown
              * @description Handler executed when dropdown opens or closes
              */
@@ -203,7 +214,17 @@
                 var label = attrs.selectText || 'Select...';
 
                 if (_labels.length > 0) {
-                    label = _labels.join(', ');
+                    if (angular.isDefined(_labels[0])) { // Support undefined labels
+                        label = _labels.join(', ');
+                    } else {
+                        label = _labels.length + ' ';
+
+                        if (_labels.length === 1) {
+                            label += attrs.selectedSuffixSingularText || 'item';
+                        } else {
+                            label += attrs.selectedSuffixText || attrs.selectedSuffixSingularText || 'items';
+                        }
+                    }
                 }
 
                 self.selectedLabel = label;

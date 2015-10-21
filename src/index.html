@@ -74,10 +74,12 @@
                                 ng-model="app.modelObjectProperty"
                                 on-change="app.onChange(label)"
                                 on-toggle-dropdown="app.onToggleDropdown(isOpen)"
-                                options="option.id as option.label for option in app.optionsObject"
+                                options="option.id as option.label for option in app.optionsObjectDefer"
                                 search-text="Filter Items"
                                 select-text="Select Custom Items"
-                                select-all-text="Select Everything">
+                                select-all-text="Select Everything"
+                                selected-suffix-singular-text="thing"
+                                selected-suffix-text="things">
                             </amo-multiselect>
                         </div>
                         <div class="col-md-6">

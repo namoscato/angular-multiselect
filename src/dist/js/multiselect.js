@@ -191,6 +191,7 @@
             // Methods
             self.getSelectedCount = getSelectedCount;
             self.exposeSelectedOptions = exposeSelectedOptions;
+            self.hasSelectedItems = hasSelectedItems;
             self.onToggleDropdown = onToggleDropdown;
 
             // Initialization
@@ -319,6 +320,16 @@
 
             /**
              * @ngdoc method
+             * @name amoMultiselect#hasSelectedItems
+             * @description Determines whether or not items are selected
+             * @returns {Boolean}
+             */
+            function hasSelectedItems() {
+                return _selectedOptions.length > 0;
+            }
+
+            /**
+             * @ngdoc method
              * @name amoMultiselect#onToggleDropdown
              * @description Handler executed when dropdown opens or closes
              */
@@ -337,7 +348,17 @@
                 var label = attrs.selectText || 'Select...';
 
                 if (_labels.length > 0) {
-                    label = _labels.join(', ');
+                    if (angular.isDefined(_labels[0])) { // Support undefined labels
+                        label = _labels.join(', ');
+                    } else {
+                        label = _labels.length + ' ';
+
+                        if (_labels.length === 1) {
+                            label += attrs.selectedSuffixSingularText || 'item';
+                        } else {
+                            label += attrs.selectedSuffixText || attrs.selectedSuffixSingularText || 'items';
+                        }
+                    }
                 }
 
                 self.selectedLabel = label;
@@ -503,4 +524,4 @@
 
 })();
 
-angular.module("amo.multiselect").run(["$templateCache", function($templateCache) {$templateCache.put("multiselect/multiselect-dropdown.html","<div\n    amo-multiselect-dropdown-menu\n    class=\"btn-group btn-group-multiselect dropdown\"\n    on-toggle=\"multiselectDropdown.onToggleDropdown(open)\">\n    <button\n        type=\"button\"\n        class=\"btn btn-default dropdown-toggle\"\n        data-toggle=\"dropdown\">\n        <span class=\"text\" ng-bind=\"multiselectDropdown.selectedLabel\"></span>\n        <span class=\"badge\" ng-bind=\"multiselectDropdown.getSelectedCount()\"></span>\n        <span class=\"caret\"></span>\n    </button>\n    <div class=\"dropdown-menu\">\n        <input\n            type=\"text\"\n            class=\"form-control\"\n            ng-model=\"multiselectDropdown.search.label\"\n            placeholder=\"{{ multiselectDropdown.text.search }}\">\n        <ul class=\"dropdown-menu-list list-unstyled\">\n            <li>\n                <a ng-click=\"multiselectDropdown.toggleAllSelectedState()\">\n                    <input type=\"checkbox\" ng-model=\"multiselectDropdown.isAllSelected\">\n                    <span ng-bind=\"multiselectDropdown.getSelectAllLabel()\"></span>\n                </a>\n            </li>\n            <li class=\"divider\"></li>\n            <li ng-repeat=\"option in multiselectDropdown.optionsFiltered = (multiselectDropdown.options | filter : multiselectDropdown.search)\">\n                <a ng-click=\"multiselectDropdown.toggleSelectedState(option)\">\n                    <input type=\"checkbox\" ng-model=\"option.selected\">\n                    <span ng-bind=\"option.label\"></span>\n                </a>\n            </li>\n        </ul>\n    </div>\n</div>\n");}]);
+angular.module("amo.multiselect").run(["$templateCache", function($templateCache) {$templateCache.put("multiselect/multiselect-dropdown.html","<div\n    amo-multiselect-dropdown-menu\n    class=\"btn-group btn-group-multiselect dropdown\"\n    ng-class=\"{ \'state-selected\': multiselectDropdown.hasSelectedItems() }\"\n    on-toggle=\"multiselectDropdown.onToggleDropdown(open)\">\n    <button\n        type=\"button\"\n        class=\"btn btn-default dropdown-toggle\"\n        data-toggle=\"dropdown\">\n        <span class=\"text\" ng-bind=\"multiselectDropdown.selectedLabel\"></span>\n        <span class=\"badge\" ng-bind=\"multiselectDropdown.getSelectedCount()\"></span>\n        <span class=\"caret\"></span>\n    </button>\n    <div class=\"dropdown-menu\">\n        <input\n            type=\"text\"\n            class=\"form-control\"\n            ng-model=\"multiselectDropdown.search.label\"\n            placeholder=\"{{ multiselectDropdown.text.search }}\">\n        <ul class=\"dropdown-menu-list list-unstyled\">\n            <li>\n                <a ng-click=\"multiselectDropdown.toggleAllSelectedState()\">\n                    <input type=\"checkbox\" ng-model=\"multiselectDropdown.isAllSelected\">\n                    <span ng-bind=\"multiselectDropdown.getSelectAllLabel()\"></span>\n                </a>\n            </li>\n            <li class=\"divider\"></li>\n            <li ng-repeat=\"option in multiselectDropdown.optionsFiltered = (multiselectDropdown.options | filter : multiselectDropdown.search)\">\n                <a ng-click=\"multiselectDropdown.toggleSelectedState(option)\">\n                    <input type=\"checkbox\" ng-model=\"option.selected\">\n                    <span ng-bind=\"option.label\"></span>\n                </a>\n            </li>\n        </ul>\n    </div>\n</div>\n");}]);
