@@ -235,7 +235,7 @@
                             label = _labels.join(', ');
 
                             if (_labels.length > 1) {
-                                label += ', ';
+                                label += ',';
                             }
 
                             label += ' and ' + lastLabel;
