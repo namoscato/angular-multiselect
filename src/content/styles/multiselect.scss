@@ -7,6 +7,18 @@
 .btn-group-multiselect {
     $width: 250px;
 
+    &.state-selected-multiple {
+        .dropdown-toggle {
+            .text {
+                width: $width - 60;
+            }
+
+            .badge {
+                display: inline-block;
+            }
+        }
+    }
+
     .dropdown-toggle {
         text-align: left;
         width: $width;
@@ -16,7 +28,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             vertical-align: middle;
-            width: $width - 60;
+            width: 97%;
         }
 
         .badge,
@@ -27,6 +39,7 @@
         .badge {
             background-color: $gray-light;
             border-radius: 3px;
+            display: none;
             padding: 4px 5px;
             right: 22px;
             top: 5px;

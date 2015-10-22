@@ -12,8 +12,9 @@
      * @requires $compile
      * @requires $parse
      * @requires AmoMultiselectFactory
+     * @requires amoMultiselectFormatService
      */
-    function MultiselectDirective($compile, $parse, AmoMultiselectFactory) {
+    function MultiselectDirective($compile, $parse, AmoMultiselectFactory, amoMultiselectFormatService) {
 
         return {
             link: link,
@@ -57,6 +58,7 @@
             // Methods
             self.getSelectedCount = getSelectedCount;
             self.exposeSelectedOptions = exposeSelectedOptions;
+            self.hasSelectedMultipleItems = hasSelectedMultipleItems;
             self.onToggleDropdown = onToggleDropdown;
 
             // Initialization
@@ -149,6 +151,16 @@
             }
 
             /**
+             * @ngdoc method
+             * @name amoMultiselect#hasSelectedMultipleItems
+             * @description Determines whether or not multiple items are selected
+             * @returns {Boolean}
+             */
+            function hasSelectedMultipleItems() {
+                return getSelectedCount() > 1;
+            }
+
+            /**
              * @name amoMultiselect#initialize
              * @description Initializes the directive
              */
@@ -203,7 +215,11 @@
                 var label = attrs.selectText || 'Select...';
 
                 if (_labels.length > 0) {
-                    label = _labels.join(', ');
+                    if (angular.isDefined(_labels[0])) { // Support undefined labels
+                        label = amoMultiselectFormatService.joinLabels(_labels);
+                    } else {
+                        label = amoMultiselectFormatService.pluralize(_labels, attrs.selectedSuffixText, attrs.selectedSuffixSingularText || attrs.selectedSuffixText);
+                    }
                 }
 
                 self.selectedLabel = label;

@@ -1,6 +1,8 @@
 <div
     class="btn-group btn-group-multiselect"
     auto-close="outsideClick"
+    ng-attr-title="{{ multiselectDropdown.selectedLabel }}"
+    ng-class="{ 'state-selected-multiple': multiselectDropdown.hasSelectedMultipleItems() }"
     on-toggle="multiselectDropdown.onToggleDropdown(open)"
     uib-dropdown>
     <button

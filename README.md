@@ -38,7 +38,9 @@ The interface for this directive is based off [`ngOptions`](https://docs.angular
     search-text="Search..."
     select-text="Select..."
     select-all-text="Select All"
-    deselect-all-text="Deselect All">
+    deselect-all-text="Deselect All"
+    selected-suffix-singular-text="thing"
+    selected-suffix-text="things">
 </amo-multiselect>
 ```
 

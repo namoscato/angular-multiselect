@@ -1,3 +1,9 @@
+.btn-group-multiselect.state-selected-multiple .dropdown-toggle .text {
+  width: 190px; }
+
+.btn-group-multiselect.state-selected-multiple .dropdown-toggle .badge {
+  display: inline-block; }
+
 .btn-group-multiselect .dropdown-toggle {
   text-align: left;
   width: 250px; }
@@ -6,13 +12,14 @@
     overflow: hidden;
     text-overflow: ellipsis;
     vertical-align: middle;
-    width: 190px; }
+    width: 97%; }
   .btn-group-multiselect .dropdown-toggle .badge,
   .btn-group-multiselect .dropdown-toggle .caret {
     position: absolute; }
   .btn-group-multiselect .dropdown-toggle .badge {
     background-color: #777777;
     border-radius: 3px;
+    display: none;
     padding: 4px 5px;
     right: 22px;
     top: 5px; }

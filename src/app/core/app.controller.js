@@ -9,8 +9,9 @@
      * @ngdoc controller
      * @module multiselectDemo.core
      * @name AppController
+     * @requires $timeout
      */
-    function AppController() {
+    function AppController($timeout) {
         var self = this;
 
         self.modelObject = [
@@ -20,7 +21,7 @@
             }
         ];
         self.modelObjectProperty = [2];
-        self.modelStringTwo = ['Two'];
+        self.modelStringTwo = ['One', 'Two'];
         self.optionsObject = [
             {
                 id: 1,
@@ -33,6 +34,17 @@
             {
                 id: 3,
                 label: 'Three'
+            }
+        ];
+        self.optionsObjectDefer = [
+            {
+                id: 1
+            },
+            {
+                id: 2
+            },
+            {
+                id: 3
             }
         ];
         self.optionsString = [
@@ -75,6 +87,12 @@
          */
         function onToggleDropdown(isOpen) {
             console.log('onToggleDropdown', isOpen);
+
+            if (isOpen) {
+                $timeout(function() {
+                    self.optionsObjectDefer = self.optionsObject;
+                }, 300);
+            }
         }
     }
 
