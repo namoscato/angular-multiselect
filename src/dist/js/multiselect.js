@@ -343,11 +343,25 @@
              * @returns {String} New label
              */
             function setSelectedLabel() {
-                var label = attrs.selectText || 'Select...';
+                var label = attrs.selectText || 'Select...',
+                    lastLabel;
 
                 if (_labels.length > 0) {
                     if (angular.isDefined(_labels[0])) { // Support undefined labels
-                        label = _labels.join(', ');
+                        if (_labels.length === 1) {
+                            label = _labels[0];
+                        } else {
+                            lastLabel = _labels.pop();
+                            
+                            label = _labels.join(', ');
+
+                            if (_labels.length > 1) {
+                                label += ', ';
+                            }
+
+                            label += ' and ' + lastLabel;
+                        } 
+
                     } else {
                         label = _labels.length + ' ';
 

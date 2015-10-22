@@ -325,11 +325,11 @@ describe('amoMultiselect', function() {
             });
 
             it('should display comma separated list of labels', function() {
-                expect(target.selectedLabel).toEqual('LABEL One, LABEL Two');
+                expect(target.selectedLabel).toEqual('LABEL One and LABEL Two');
             });
 
             it('the default comma separated list of values', function() {
-                expect(parentScope.label).toEqual('LABEL One, LABEL Two');
+                expect(parentScope.label).toEqual('LABEL One and LABEL Two');
             });
         });
     });
