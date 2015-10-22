@@ -8,6 +8,8 @@ AngularJS multiselect component based off [`ngOptions`](https://docs.angularjs.o
 * [Bootstrap](http://getbootstrap.com/) v3.3.5 for dropdown styles
 * [UI Bootstrap](http://angular-ui.github.io/bootstrap/) v0.14.0+ for dropdown functionality
 
+_Note that [`backport`](https://github.com/namoscato/angular-multiselect/tree/backport) supports older versions of these dependencies._
+
 ## Development
 
 1. Install dependencies
@@ -36,7 +38,9 @@ The interface for this directive is based off [`ngOptions`](https://docs.angular
     search-text="Search..."
     select-text="Select..."
     select-all-text="Select All"
-    deselect-all-text="Deselect All">
+    deselect-all-text="Deselect All"
+    selected-suffix-singular-text="thing"
+    selected-suffix-text="things">
 </amo-multiselect>
 ```
 
@@ -50,6 +54,5 @@ Install the [Karma](http://karma-runner.github.io/) commandline interface (`karm
 
 ## Roadmap
 
-- [ ] Add support for older library versions
 - [ ] Cleanup build process
 - [ ] Documentation

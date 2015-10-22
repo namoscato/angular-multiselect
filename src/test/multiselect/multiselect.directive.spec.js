@@ -7,12 +7,13 @@ describe('amoMultiselect', function() {
     var html;
 
     var amoMultiselectFactorySpy,
-        amoMultiselectFactoryInstanceSpy;
+        amoMultiselectFactoryInstanceSpy,
+        amoMultiselectFormatServiceSpy;
 
     var optionsMock;
 
     beforeEach(module('amo.multiselect'));
-    beforeEach(module('app/multiselect/multiselect-dropdown.html'));
+    beforeEach(module('multiselect/multiselect-dropdown.html'));
 
     beforeEach(function() {
         amoMultiselectFactoryInstanceSpy = jasmine.createSpyObj('AmoMultiselectFactory()', [
@@ -43,11 +44,21 @@ describe('amoMultiselect', function() {
     });
 
     beforeEach(module(function($provide) {
-        $provide.service('AmoMultiselectFactory', function() {
+        $provide.factory('AmoMultiselectFactory', function() {
             amoMultiselectFactorySpy = jasmine.createSpy('AmoMultiselectFactory');
             amoMultiselectFactorySpy.and.returnValue(amoMultiselectFactoryInstanceSpy);
 
             return amoMultiselectFactorySpy;
+        });
+
+        $provide.service('amoMultiselectFormatService', function() {
+            amoMultiselectFormatServiceSpy = jasmine.createSpyObj('amoMultiselectFormatService', [
+                'joinLabels',
+                'pluralize'
+            ]);
+            amoMultiselectFormatServiceSpy.joinLabels.and.returnValue('JOIN');
+            amoMultiselectFormatServiceSpy.pluralize.and.returnValue('PLURALIZE');
+            return amoMultiselectFormatServiceSpy;
         });
     }));
 
@@ -325,12 +336,46 @@ describe('amoMultiselect', function() {
                 });
             });
 
-            it('should display comma separated list of labels', function() {
-                expect(target.selectedLabel).toEqual('LABEL One, LABEL Two');
+            it('should join labels', function() {
+                expect(amoMultiselectFormatServiceSpy.joinLabels).toHaveBeenCalledWith([
+                    'LABEL One',
+                    'LABEL Two'
+                ]);
             });
 
-            it('the default comma separated list of values', function() {
-                expect(parentScope.label).toEqual('LABEL One, LABEL Two');
+            it('should display labels', function() {
+                expect(target.selectedLabel).toEqual('JOIN');
+            });
+
+            it('the labels should be exposed', function() {
+                expect(parentScope.label).toEqual('JOIN');
+            });
+        });
+
+        describe('and labels are undefined', function() {
+            beforeEach(function() {
+                amoMultiselectFactoryInstanceSpy.getLabel.and.returnValue();
+
+                compile('<amo-multiselect label="label" selected-suffix-text="items" selected-suffix-singular-text="item" ng-model="model" options="option for option in options"></amo-multiselect>', {
+                    model: ['VALUE One', 'VALUE Two'],
+                    options: optionsMock
+                });
+            });
+
+            it('should join labels', function() {
+                expect(amoMultiselectFormatServiceSpy.pluralize).toHaveBeenCalledWith(
+                    [undefined, undefined],
+                    'items',
+                    'item'
+                );
+            });
+
+            it('should display labels', function() {
+                expect(target.selectedLabel).toEqual('PLURALIZE');
+            });
+
+            it('the labels should be exposed', function() {
+                expect(parentScope.label).toEqual('PLURALIZE');
             });
         });
     });
@@ -407,7 +452,7 @@ describe('amoMultiselect', function() {
             });
 
             it('should call onChange handler', function() {
-                expect(onChangeSpy).toHaveBeenCalledWith('LABEL Two');
+                expect(onChangeSpy).toHaveBeenCalledWith('JOIN');
             });
         });
     });
@@ -480,7 +525,7 @@ describe('amoMultiselect', function() {
         });
 
         it('should call onChange handler', function() {
-            expect(onChangeSpy).toHaveBeenCalledWith('LABEL One, LABEL Two');
+            expect(onChangeSpy).toHaveBeenCalledWith('JOIN');
         });
     });
 
