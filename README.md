@@ -1,10 +1,10 @@
-# AngularJS Multiselect
+# AngularJS Multiselect [![Build Status](https://travis-ci.org/namoscato/angular-multiselect.svg?branch=master)](https://travis-ci.org/namoscato/angular-multiselect)
 
 AngularJS multiselect component based off [`ngOptions`](https://docs.angularjs.org/api/ng/directive/ngOptions).
 
 ## Dependencies
 
-* [AngularJS](https://angularjs.org/) v1.4.7
+* [AngularJS](https://angularjs.org/) v1.4.8
 * [Bootstrap](http://getbootstrap.com/) v3.3.5 for dropdown styles
 * [UI Bootstrap](http://angular-ui.github.io/bootstrap/) v0.14.0+ for dropdown functionality
 

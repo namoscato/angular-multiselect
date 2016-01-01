@@ -1,7 +1,7 @@
 {
   "name": "angular-multiselect",
   "license": "MIT",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "AngularJS Multiselect Build Process",
   "scripts": {
     "pretest": "gulp all",
