@@ -6,7 +6,8 @@ describe('amoMultiselect', function() {
 
     var html;
 
-    var amoMultiselectFactorySpy,
+    var timeoutSpy,
+        amoMultiselectFactorySpy,
         amoMultiselectFactoryInstanceSpy;
 
     var optionsMock;
@@ -43,6 +44,11 @@ describe('amoMultiselect', function() {
     });
 
     beforeEach(module(function($provide) {
+        $provide.service('$timeout', function() {
+            timeoutSpy = jasmine.createSpy('$timeout');
+            return timeoutSpy;
+        });
+
         $provide.service('AmoMultiselectFactory', function() {
             amoMultiselectFactorySpy = jasmine.createSpy('AmoMultiselectFactory');
             amoMultiselectFactorySpy.and.returnValue(amoMultiselectFactoryInstanceSpy);
@@ -411,22 +417,56 @@ describe('amoMultiselect', function() {
         });
     });
 
-    describe('When toggling the dropdown and the "onToggleDropdown" attribute is set', function() {
-        var onToggleDropdownSpy;
+    describe('When toggling the dropdown', function() {
+        describe('to open', function() {
+            beforeEach(function() {
+                compile('<amo-multiselect ng-model="model" options="option for option in options"></amo-multiselect>', {
+                    options: optionsMock
+                });
 
-        beforeEach(function() {
-            onToggleDropdownSpy = jasmine.createSpy('onToggleDropdown');
-
-            compile('<amo-multiselect on-toggle-dropdown="onToggleDropdown(isOpen)" ng-model="model" options="option for option in options"></amo-multiselect>', {
-                onToggleDropdown: onToggleDropdownSpy,
-                options: optionsMock
+                target.onToggleDropdown(true);
             });
 
-            expect(target.onToggleDropdown('IS OPEN'));
+            it('should do nothing', function() {
+                expect(timeoutSpy).not.toHaveBeenCalled();
+            });
         });
 
-        it('should call the onToggleDropdown handler', function() {
-            expect(onToggleDropdownSpy).toHaveBeenCalledWith('IS OPEN');
+        describe('to closed', function() {
+            beforeEach(function() {
+                compile('<amo-multiselect ng-model="model" options="option for option in options"></amo-multiselect>', {
+                    options: optionsMock
+                });
+
+                target.search = 'SEARCH';
+
+                target.onToggleDropdown(false);
+
+                timeoutSpy.calls.argsFor(0)[0]();
+            });
+
+            it('should clear search', function() {
+                expect(target.search).toEqual({});
+            });
+        });
+
+        describe('and the "onToggleDropdown" attribute is set', function() {
+            var onToggleDropdownSpy;
+
+            beforeEach(function() {
+                onToggleDropdownSpy = jasmine.createSpy('onToggleDropdown');
+
+                compile('<amo-multiselect on-toggle-dropdown="onToggleDropdown(isOpen)" ng-model="model" options="option for option in options"></amo-multiselect>', {
+                    onToggleDropdown: onToggleDropdownSpy,
+                    options: optionsMock
+                });
+
+                target.onToggleDropdown('IS OPEN');
+            });
+
+            it('should call the onToggleDropdown handler', function() {
+                expect(onToggleDropdownSpy).toHaveBeenCalledWith('IS OPEN');
+            });
         });
     });
 
@@ -440,7 +480,7 @@ describe('amoMultiselect', function() {
                 options: optionsMock
             });
 
-            expect(target.deselectAll());
+            target.deselectAll();
         });
 
         it('should check all options', function() {
