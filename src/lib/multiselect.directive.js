@@ -11,10 +11,11 @@
      * @name amoMultiselect
      * @requires $compile
      * @requires $parse
+     * @requires $timeout
      * @requires AmoMultiselectFactory
      * @requires amoMultiselectFormatService
      */
-    function MultiselectDirective($compile, $parse, AmoMultiselectFactory, amoMultiselectFormatService) {
+    function MultiselectDirective($compile, $parse, $timeout, AmoMultiselectFactory, amoMultiselectFormatService) {
 
         return {
             link: link,
@@ -201,6 +202,12 @@
              * @description Handler executed when dropdown opens or closes
              */
             function onToggleDropdown(isOpen) {
+                if (!isOpen) {
+                    $timeout(function() {
+                        self.search = {};
+                    });
+                }
+
                 _onToggleDropdown(scope, {
                     isOpen: isOpen
                 });

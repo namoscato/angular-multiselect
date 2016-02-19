@@ -5,9 +5,9 @@ var addStream = require('add-stream'),
     gulp = require('gulp'),
     gulpAngularTemplateCache = require('gulp-angular-templatecache'),
     gulpConcat = require('gulp-concat'),
+    gulpCssnano = require('gulp-cssnano'),
     gulpHelp = require('gulp-help')(gulp),
     gulpJshint = require('gulp-jshint'),
-    gulpMinifyCss = require('gulp-minify-css'),
     gulpRename = require('gulp-rename'),
     gulpSass = require('gulp-sass'),
     gulpUglify = require('gulp-uglify'),
@@ -36,13 +36,7 @@ gulp.task('clean', 'Clean build directory', function() {
 gulp.task('css:app', 'Compile application SASS', function() {
     gulp.src('src/content/styles/app.scss')
         .pipe(gulpSass().on('error', gulpSass.logError))
-        .pipe(gulpMinifyCss({
-            advanced: false,
-            aggressiveMerging: false,
-            keepSpecialComments: false,
-            rebase: false,
-            sourceMap: false
-        }))
+        .pipe(gulpCssnano())
         .pipe(gulp.dest('src/dist/css'));
 });
 
@@ -54,14 +48,18 @@ gulp.task('css:dist', 'Compile multiselect SASS', function() {
 
 gulp.task('js:app', 'Compile application JavaScript', function() {
     var stream = streamqueue({objectMode: true},
+        gulp.src('src/lib/**/*.module.js'),
         gulp.src('src/app/**/*.module.js'),
         gulp.src([
+            'src/lib/**/*.js',
             'src/app/**/*.js',
+            '!src/lib/**/*.module.js',
             '!src/app/**/*.module.js'
         ]))
-        .pipe(addStream.obj(gulp.src('src/app/**/*.html')
+        .pipe(addStream.obj(gulp.src('src/lib/**/*.html')
             .pipe(gulpAngularTemplateCache('templates.js', {
-                module: 'amo.multiselect'
+                module: 'amo.multiselect',
+                root: 'multiselect'
             })
         )));
 
@@ -80,14 +78,15 @@ gulp.task('js:dist:compressed', false, ['js:dist:uncompressed'], function() {
 
 gulp.task('js:dist:uncompressed', false, function() {
     var stream = streamqueue({objectMode: true},
-        gulp.src('src/app/multiselect/**/*.module.js'),
+        gulp.src('src/lib/**/*.module.js'),
         gulp.src([
-            'src/app/multiselect/**/*.js',
-            '!src/app/multiselect/**/*.module.js'
+            'src/lib/**/*.js',
+            '!src/lib/**/*.module.js'
         ]))
-        .pipe(addStream.obj(gulp.src('src/app/**/*.html')
+        .pipe(addStream.obj(gulp.src('src/lib/**/*.html')
             .pipe(gulpAngularTemplateCache('templates.js', {
-                module: 'amo.multiselect'
+                module: 'amo.multiselect',
+                root: 'multiselect'
             })
         )));
 
@@ -96,17 +95,17 @@ gulp.task('js:dist:uncompressed', false, function() {
 
 gulp.task('js:libs', 'Compile third party JavaScript', function() {
     var stream = streamqueue({objectMode: true},
-        gulp.src('src/scripts/angular/angular.js'),
-        gulp.src([
-            'src/scripts/**/*.js',
-            '!src/scripts/angular/*.js'
-        ]));
+        gulp.src('node_modules/angular/angular.js'),
+        gulp.src('node_modules/angular-ui-bootstrap/ui-bootstrap-tpls.js'));
 
     return compileJavaScript(stream, 'vendor');
 });
 
 gulp.task('js:lint', 'Run JSHint to check for JavaScript code quality', function() {
-    gulp.src('src/app/**/*.js')
+    gulp.src([
+        'src/app/**/*.js',
+        'src/lib/**/*.js'
+    ])
         .pipe(gulpJshint())
         .pipe(gulpJshint.reporter('default'));
 });
@@ -121,17 +120,16 @@ gulp.task('serve', 'Run a local webserver', function() {
 });
 
 gulp.task('watch', 'Watch for changes and recompile', function() {
-    gulp.watch(['src/app/**/*.js'], [
+    gulp.watch([
+        'src/app/**/*.js',
+        'src/lib/**/*.js'
+    ], [
         'js:app',
         'js:lint'
     ]);
 
-    gulp.watch(['src/app/**/*.html'], [
+    gulp.watch(['src/lib/**/*.html'], [
         'js:app'
-    ]);
-
-    gulp.watch(['src/scripts/**/*.js'], [
-        'js:libs'
     ]);
 
     gulp.watch(['src/content/styles/**/*.scss'], [
