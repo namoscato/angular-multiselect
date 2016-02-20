@@ -13,9 +13,10 @@
   },
   "devDependencies": {
     "add-stream": "^1.0.0",
-    "angular": "^1.4.8",
+    "angular": "^1.5.0",
     "angular-mocks": "^1.4.8",
-    "angular-ui-bootstrap": "^0.14.3",
+    "angular-ui-bootstrap": "1.1.2",
+    "bootstrap-sass": "^3.3.6",
     "del": "^2.0.2",
     "gulp": "^3.9.0",
     "gulp-angular-templatecache": "^1.8.0",
@@ -32,8 +33,7 @@
     "karma": "^0.13.11",
     "karma-chrome-launcher": "^0.2.1",
     "karma-jasmine": "^0.3.6",
-    "karma-phantomjs-launcher": "^0.2.2",
-    "phantomjs": "^1.9.19",
-    "streamqueue": "^1.1.1"
+    "karma-phantomjs-launcher": "^1.0.0",
+    "phantomjs-prebuilt": "^2.1.4"
   }
 }

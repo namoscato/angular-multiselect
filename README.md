@@ -4,9 +4,9 @@ AngularJS multiselect component based off [`ngOptions`](https://docs.angularjs.o
 
 ## Dependencies
 
-* [AngularJS](https://angularjs.org/) v1.4.8
-* [Bootstrap](http://getbootstrap.com/) v3.3.5 for dropdown styles
-* [UI Bootstrap](http://angular-ui.github.io/bootstrap/) v0.14.0+ for dropdown functionality
+* [AngularJS](https://angularjs.org/) v1.5.0
+* [Bootstrap](http://getbootstrap.com/) v3.3.6 for dropdown styles
+* [UI Bootstrap](http://angular-ui.github.io/bootstrap/) v1.1.2 for dropdown functionality
 
 _Note that [`backport`](https://github.com/namoscato/angular-multiselect/tree/backport) supports older versions of these dependencies._
 
@@ -51,8 +51,3 @@ where the value of `options` is of the following form: `[`_`select`_ **`as`**`]`
 Install the [Karma](http://karma-runner.github.io/) commandline interface (`karma-cli`) globally and run:
 
     karma start
-
-## Roadmap
-
-- [ ] Cleanup build process
-- [ ] Documentation
