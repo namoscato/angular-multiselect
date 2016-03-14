@@ -34,6 +34,7 @@
         function link(parentScope, element, attrs, ngModelController) {
 
             var _exposeLabel = attrs.label ? $parse(attrs.label) : angular.noop,
+                _groupsHash = {},
                 _isInternalChange,
                 _labels = [],
                 _onChange = attrs.onChange ? $parse(attrs.onChange) : angular.noop,
@@ -48,6 +49,7 @@
 
             // Variables
             self.identifier = attrs.id;
+            self.groups = [];
             self.options = [];
             self.search = {};
             self.text = {
@@ -56,10 +58,11 @@
             };
 
             // Methods
-            self.getSelectedCount = getSelectedCount;
             self.exposeSelectedOptions = exposeSelectedOptions;
+            self.getSelectedCount = getSelectedCount;
             self.hasSelectedItems = hasSelectedItems;
             self.hasSelectedMultipleItems = hasSelectedMultipleItems;
+            self.isGrouped = multiselect.isGrouped();
             self.onToggleDropdown = onToggleDropdown;
 
             // Initialization
@@ -84,6 +87,8 @@
                     selected,
                     value;
 
+                _groupsHash = {};
+                self.groups.length = 0;
                 _labels.length = 0;
                 self.options.length = 0;
 
@@ -100,13 +105,25 @@
                         }
                     }
 
-                    self.options.push({
+                    var optionObj = {
                         id: index,
                         label: multiselect.getLabel(option),
                         value: value,
                         selected: selected
-                    });
+                    };
+
+                    if (self.isGrouped) {
+                        optionObj.group = multiselect.getGroup(option);
+                    } else {
+                        optionObj.group = 'ungrouped';
+                    }
+
+                    _groupsHash[optionObj.group] = true;
+                    self.options.push(optionObj);
                 });
+
+                // Set the groups array
+                self.groups = Object.keys(_groupsHash);
 
                 setSelectedLabel();
             }

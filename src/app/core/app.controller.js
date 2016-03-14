@@ -20,6 +20,13 @@
                 label: 'Two'
             }
         ];
+        self.modelObjectCategorized = [
+            {
+                category: 'Pizza',
+                id: 2,
+                label: 'Two'
+            }
+        ];
         self.modelObjectProperty = [2];
         self.modelStringTwo = ['Two'];
         self.optionsObject = [
@@ -32,6 +39,23 @@
                 label: 'Two'
             },
             {
+                id: 3,
+                label: 'Three'
+            }
+        ];
+        self.optionsObjectCategorized = [
+            {
+                category: 'Pizza',
+                id: 1,
+                label: 'One'
+            },
+            {
+                category: 'Pizza',
+                id: 2,
+                label: 'Two'
+            },
+            {
+                category: 'Hamburger',
                 id: 3,
                 label: 'Three'
             }

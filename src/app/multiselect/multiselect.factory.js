@@ -13,7 +13,14 @@
      */
     function MultiselectFactory($parse) {
 
-        var _optionsRegularExpression = /^\s*(?:(\S+)\s+as\s+)?(\S+)\s+for\s+(\S+)\s+in\s+(\S+)\s*$/;
+        var _optionsRegularExpression = /^\s*(?:(\S+)\s+as\s+)?(\S+)(?:\s+group\s+by\s+([\s\S]+?))?\s+for\s+(\S+)\s+in\s+(\S+)\s*$/;
+        // regex legend:               //000000011111000000000022222000000000000000000033333333330000000000044444000000005555500000
+        // 0: non-captured
+        // 1: label alias
+        // 2: label
+        // 3: group by
+        // 4: value
+        // 5: options
         
         /**
          * @ngdoc method
@@ -29,15 +36,28 @@
             var _parse;
 
             // Methods
+            self.getGroup = getGroup;
             self.getLabel = getLabel;
             self.getOption = getOption;
             self.getOptionsExpression = getOptionsExpression;
             self.getOptions = getOptions;
             self.getValue = getValue;
+            self.isGrouped = isGrouped;
             self.setOptions = setOptions;
 
             // Initialization
             initialize();
+
+            /**
+             * @ngdoc method
+             * @name AmoMultiselectFactory#getGroup
+             * @description Returns the group by expression
+             * @param {Object} option
+             * @returns {*}
+             */
+            function getGroup(option) {
+                return option[_parse.groupByExpression];
+            }
 
             /**
              * @ngdoc method
@@ -107,6 +127,16 @@
             }
 
             /**
+             * @ngdoc method
+             * @name AmoMultiselectFactory#isGrouped
+             * @description Tells if the multiselect is grouped
+             * @returns {Boolean}
+             */
+            function isGrouped() {
+                return _parse.groupByExpression !== undefined;
+            }
+
+            /**
              * @name AmoMultiselectFactory#initialize
              * @description Initializes the multiselect factory constructor
              */
@@ -114,14 +144,15 @@
                 var expression = options.match(_optionsRegularExpression);
 
                 if (expression === null) {
-                    throw new Error('Expected "' + options + '" to be in form of "[_select_ as] _label_ for _value_ in _array_"');
+                    throw new Error('Expected "' + options + '" to be in form of "[_select_ as][group by _groupByExpression_] _label_ for _value_ in _array_"');
                 }
 
                 _parse = {
+                    groupByExpression: expression[3],
                     labelFunction: $parse(expression[2]),
-                    optionsExpression: expression[4],
-                    selectFunction: $parse(angular.isDefined(expression[1]) ? expression[1] : expression[3]),
-                    value: expression[3]
+                    optionsExpression: expression[5],
+                    selectFunction: $parse(angular.isDefined(expression[1]) ? expression[1] : expression[4]),
+                    value: expression[4]
                 };
             }
 

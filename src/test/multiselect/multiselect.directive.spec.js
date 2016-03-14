@@ -17,11 +17,13 @@ describe('amoMultiselect', function() {
 
     beforeEach(function() {
         amoMultiselectFactoryInstanceSpy = jasmine.createSpyObj('AmoMultiselectFactory()', [
+            'getGroup',
             'getOption',
             'getOptions',
             'getOptionsExpression',
             'getLabel',
             'getValue',
+            'isGrouped',
             'setOptions',
         ]);
 
@@ -98,6 +100,7 @@ describe('amoMultiselect', function() {
             it('should expose options', function() {
                 expect(target.options).toEqual([
                     {
+                        group: 'ungrouped',
                         id: 0,
                         label: 'LABEL One',
                         value: 'VALUE One',
@@ -105,6 +108,7 @@ describe('amoMultiselect', function() {
                         $$hashKey: jasmine.any(String)
                     },
                     {
+                        group: 'ungrouped',
                         id: 1,
                         label: 'LABEL Two',
                         value: 'VALUE Two',
@@ -136,6 +140,7 @@ describe('amoMultiselect', function() {
                 it('should add option', function() {
                     expect(target.options).toEqual([
                         {
+                            group: 'ungrouped',
                             id: 0,
                             label: 'LABEL One',
                             value: 'VALUE One',
@@ -143,6 +148,7 @@ describe('amoMultiselect', function() {
                             $$hashKey: jasmine.any(String)
                         },
                         {
+                            group: 'ungrouped',
                             id: 1,
                             label: 'LABEL Two',
                             value: 'VALUE Two',
@@ -150,6 +156,7 @@ describe('amoMultiselect', function() {
                             $$hashKey: jasmine.any(String)
                         },
                         {
+                            group: 'ungrouped',
                             id: 2,
                             label: 'LABEL Three',
                             value: 'VALUE Three',
@@ -174,6 +181,7 @@ describe('amoMultiselect', function() {
                 it('should mark option as selected', function() {
                     expect(target.options).toEqual([
                         {
+                            group: 'ungrouped',
                             id: 0,
                             label: 'LABEL One',
                             value: 'VALUE One',
@@ -181,6 +189,7 @@ describe('amoMultiselect', function() {
                             $$hashKey: jasmine.any(String)
                         },
                         {
+                            group: 'ungrouped',
                             id: 1,
                             label: 'LABEL Two',
                             value: 'VALUE Two',
@@ -207,6 +216,7 @@ describe('amoMultiselect', function() {
             it('should expose options', function() {
                 expect(target.options).toEqual([
                     {
+                        group: 'ungrouped',
                         id: 0,
                         label: 'LABEL One',
                         value: 'VALUE One',
@@ -214,6 +224,7 @@ describe('amoMultiselect', function() {
                         $$hashKey: jasmine.any(String)
                     },
                     {
+                        group: 'ungrouped',
                         id: 1,
                         label: 'LABEL Two',
                         value: 'VALUE Two',
@@ -265,6 +276,7 @@ describe('amoMultiselect', function() {
         it('should expose options', function() {
             expect(target.options).toEqual([
                 {
+                    group: 'ungrouped',
                     id: 0,
                     label: 'LABEL 1',
                     value: 'VALUE 1',
@@ -272,6 +284,7 @@ describe('amoMultiselect', function() {
                     $$hashKey: jasmine.any(String)
                 },
                 {
+                    group: 'ungrouped',
                     id: 1,
                     label: 'LABEL 2',
                     value: 'VALUE 2',
@@ -279,6 +292,7 @@ describe('amoMultiselect', function() {
                     $$hashKey: jasmine.any(String)
                 },
                 {
+                    group: 'ungrouped',
                     id: 2,
                     label: 'LABEL 3',
                     value: 'VALUE 3',
@@ -353,6 +367,7 @@ describe('amoMultiselect', function() {
             it('should check selected option', function() {
                 expect(target.options).toEqual([
                     {
+                        group: 'ungrouped',
                         id: 0,
                         label: 'LABEL One',
                         value: 'VALUE One',
@@ -360,6 +375,7 @@ describe('amoMultiselect', function() {
                         $$hashKey: jasmine.any(String)
                     },
                     {
+                        group: 'ungrouped',
                         id: 1,
                         label: 'LABEL Two',
                         value: 'VALUE Two',
@@ -387,6 +403,7 @@ describe('amoMultiselect', function() {
             it('should check selected option', function() {
                 expect(target.options).toEqual([
                     {
+                        group: 'ungrouped',
                         id: 0,
                         label: 'LABEL One',
                         value: 'VALUE One',
@@ -394,6 +411,7 @@ describe('amoMultiselect', function() {
                         $$hashKey: jasmine.any(String)
                     },
                     {
+                        group: 'ungrouped',
                         id: 1,
                         label: 'LABEL Two',
                         value: 'VALUE Two',
@@ -486,6 +504,7 @@ describe('amoMultiselect', function() {
         it('should check all options', function() {
             expect(target.options).toEqual([
                 {
+                    group: 'ungrouped',
                     id: 0,
                     label: 'LABEL One',
                     value: 'VALUE One',
@@ -493,6 +512,7 @@ describe('amoMultiselect', function() {
                     $$hashKey: jasmine.any(String)
                 },
                 {
+                    group: 'ungrouped',
                     id: 1,
                     label: 'LABEL Two',
                     value: 'VALUE Two',
