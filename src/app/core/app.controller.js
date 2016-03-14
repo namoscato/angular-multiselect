@@ -20,7 +20,7 @@
                 label: 'Two'
             }
         ];
-        self.modelObjectCategorized = [
+        self.modelObjectGrouped = [
             {
                 category: 'Pizza',
                 id: 2,
@@ -43,7 +43,7 @@
                 label: 'Three'
             }
         ];
-        self.optionsObjectCategorized = [
+        self.optionsObjectGrouped = [
             {
                 category: 'Pizza',
                 id: 1,

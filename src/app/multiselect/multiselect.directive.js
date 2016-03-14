@@ -14,7 +14,7 @@
      * @requires $timeout
      * @requires AmoMultiselectFactory
      */
-    function MultiselectDirective($compile, $parse, $timeout, AmoMultiselectFactory) {
+    function MultiselectDirective($compile, $filter, $parse, $timeout, AmoMultiselectFactory) {
 
         return {
             link: link,
@@ -63,6 +63,7 @@
             self.hasSelectedItems = hasSelectedItems;
             self.hasSelectedMultipleItems = hasSelectedMultipleItems;
             self.isGrouped = multiselect.isGrouped();
+            self.isGroupEmpty = isGroupEmpty;
             self.onToggleDropdown = onToggleDropdown;
 
             // Initialization
@@ -201,6 +202,17 @@
 
                     exposeOptions();
                 }, true);
+            }
+
+
+            /**
+             * @ngdoc method
+             * @name amoMultiselect#isGroupEmpty
+             * @description Determines whether or not items are selected
+             * @returns {Boolean}
+             */
+            function isGroupEmpty(group) {
+                return $filter('amoMultiselect')($filter('filter')(self.options, self.search), 'grouping', group).length === 0;
             }
 
             /**
