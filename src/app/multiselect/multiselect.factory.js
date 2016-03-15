@@ -13,8 +13,8 @@
      */
     function MultiselectFactory($parse) {
 
-        var _optionsRegularExpression = /^\s*(?:(\S+)\s+as\s+)?(\S+)(?:\s+group\s+by\s+([\s\S]+?))?\s+for\s+(\S+)\s+in\s+(\S+)\s*$/;
-        // regex legend:               //000000011111000000000022222000000000000000000033333333330000000000044444000000005555500000
+        var _optionsRegularExpression = /^\s*(?:(\S+)\s+as\s+)?(\S+)(?:\s+group\s+by\s+(\S+?))?\s+for\s+(\S+)\s+in\s+(\S+)\s*$/;
+        // regex legend:               //00000001111100000000002222200000000000000000003333330000000000044444000000005555500000
         // 0: non-captured
         // 1: label alias
         // 2: label

@@ -38,7 +38,7 @@
              * @description Deselects all items
              */
             function deselectAll() {
-                self.optionsFiltered.forEach(function(option) {
+                self.options.forEach(function(option) {
                     option.selected = false;
                 });
 
