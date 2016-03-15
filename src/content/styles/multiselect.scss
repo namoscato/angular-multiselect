@@ -70,6 +70,17 @@
         .divider {
             margin: 5px 0;
         }
+
+        .group-header {
+            background-color: #f7f9f9;
+            border-bottom: 1px solid #e6ebeb;
+            border-top: 1px solid #e6ebeb;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 6px 12px;
+            text-transform: uppercase;
+        }
+
     }
 
     .dropdown-menu-list {
