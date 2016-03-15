@@ -119,12 +119,15 @@
                         optionObj.group = 'ungrouped';
                     }
 
-                    _groupsHash[optionObj.group] = true;
+                    if (!(optionObj.group in _groupsHash)) {
+                        // Build the groups array using the order in which
+                        // the groups appear in the options
+                        self.groups.push(optionObj.group);
+                        _groupsHash[optionObj.group] = true;
+                    }
+
                     self.options.push(optionObj);
                 });
-
-                // Set the groups array
-                self.groups = Object.keys(_groupsHash);
 
                 setSelectedLabel();
             }

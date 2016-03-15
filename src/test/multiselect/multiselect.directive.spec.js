@@ -200,7 +200,7 @@ describe('amoMultiselect', function() {
                 });
             });
         });
-        
+
         describe('with an item selected', function() {
             beforeEach(function() {
                 compile(html, {
@@ -272,7 +272,11 @@ describe('amoMultiselect', function() {
         it('should set selected count to 2', function() {
             expect(target.getSelectedCount()).toEqual(2);
         });
-        
+
+        it('should set the groups to their empty state', function() {
+            expect(target.groups).toEqual(['ungrouped']);
+        });
+
         it('should expose options', function() {
             expect(target.options).toEqual([
                 {
@@ -299,6 +303,61 @@ describe('amoMultiselect', function() {
                     selected: true,
                     $$hashKey: jasmine.any(String)
                 }
+            ]);
+        });
+    });
+
+    describe('When compiling the directive with an array of grouped objects with two items selected', function() {
+        var html;
+
+        beforeEach(function() {
+            amoMultiselectFactoryInstanceSpy.getGroup.and.callFake(function(option) {
+                return option.color;
+            });
+
+            amoMultiselectFactoryInstanceSpy.getLabel.and.callFake(function(option) {
+                return 'LABEL ' + option.label
+            });
+
+            amoMultiselectFactoryInstanceSpy.getValue.and.callFake(function(option) {
+                return 'VALUE ' + option.id
+            });
+
+            amoMultiselectFactoryInstanceSpy.isGrouped.and.callFake(function(option) {
+                return true;
+            });
+
+            optionsMock = [
+                { id: 0, color: 'Red', label: 'Maroon' },
+                { id: 1, color: 'Green', label: 'Lime' },
+                { id: 2, color: 'Red', label: 'Ruby' },
+                { id: 3, color: 'Blue', label: 'Azure' },
+                { id: 4, color: 'Red', label: 'Crimson' },
+                { id: 5, color: 'Blue', label: 'Sapphire' }
+            ];
+
+            compile('<amo-multiselect ng-model="model" options="option.id as option.label group by color for option in options"></amo-multiselect>', {
+                model: ['VALUE 4', 'VALUE 5'],
+                options: optionsMock
+            });
+        });
+
+        it('should set selected count to 2', function() {
+            expect(target.getSelectedCount()).toEqual(2);
+        });
+
+        it('should set the groups in the proper order', function() {
+            expect(target.groups).toEqual(['Red', 'Green', 'Blue']);
+        });
+
+        it('should expose options', function() {
+            expect(target.options).toEqual([
+                { id: 0, label: 'LABEL Maroon', value: 'VALUE 0', selected: false, group: 'Red', $$hashKey: jasmine.any(String) },
+                { id: 1, label: 'LABEL Lime', value: 'VALUE 1', selected: false, group: 'Green', $$hashKey: jasmine.any(String) },
+                { id: 2, label: 'LABEL Ruby', value: 'VALUE 2', selected: false, group: 'Red', $$hashKey: jasmine.any(String) },
+                { id: 3, label: 'LABEL Azure', value: 'VALUE 3', selected: false, group: 'Blue', $$hashKey: jasmine.any(String) },
+                { id: 4, label: 'LABEL Crimson', value: 'VALUE 4', selected: true, group: 'Red', $$hashKey: jasmine.any(String) },
+                { id: 5, label: 'LABEL Sapphire', value: 'VALUE 5', selected: true, group: 'Blue', $$hashKey: jasmine.any(String) }
             ]);
         });
     });
@@ -564,7 +623,7 @@ describe('amoMultiselect', function() {
             expect(scope.label).toEqual('SELECT');
         });
     });
-    
+
     function compile(html, locals) {
         amoMultiselectFactoryInstanceSpy.getOptions.and.returnValue(optionsMock);
 
