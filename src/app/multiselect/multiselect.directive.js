@@ -212,7 +212,7 @@
              * @returns {Boolean}
              */
             function isGroupEmpty(group) {
-                return $filter('amoMultiselect')($filter('filter')(self.options, self.search), 'grouping', group).length === 0;
+                return $filter('amoMultiselectGroup')($filter('filter')(self.options, self.search), group).length === 0;
             }
 
             /**

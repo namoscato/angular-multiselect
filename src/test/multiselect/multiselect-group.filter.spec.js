@@ -1,12 +1,12 @@
-describe('amoMultiselect', function() {
+describe('amoMultiselectGroupFilter', function() {
     var input,
         result,
         target;
 
     beforeEach(module('amo.multiselect'));
 
-    beforeEach(inject(function(amoMultiselectFilter) {
-        target = amoMultiselectFilter;
+    beforeEach(inject(function(amoMultiselectGroupFilter) {
+        target = amoMultiselectGroupFilter;
     }));
 
     describe('When grouping', function() {
@@ -23,7 +23,7 @@ describe('amoMultiselect', function() {
                     { id: 1, group: 'One' },
                     { id: 2, group: 'Two' }
                 ];
-                result = target(input, 'grouping', group);
+                result = target(input, group);
             });
 
             it('should return only objects in the group', function() {
