@@ -119,7 +119,7 @@
                         optionObj.group = 'ungrouped';
                     }
 
-                    if (!(optionObj.group in _groupsHash)) {
+                    if (angular.isUndefined(_groupsHash[optionObj.group])) {
                         // Build the groups array using the order in which
                         // the groups appear in the options
                         self.groups.push(optionObj.group);
@@ -212,6 +212,7 @@
              * @ngdoc method
              * @name amoMultiselect#isGroupEmpty
              * @description Determines whether or not items are selected
+             * @param {String} group
              * @returns {Boolean}
              */
             function isGroupEmpty(group) {

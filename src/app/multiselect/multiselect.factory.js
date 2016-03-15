@@ -129,11 +129,11 @@
             /**
              * @ngdoc method
              * @name AmoMultiselectFactory#isGrouped
-             * @description Tells if the multiselect is grouped
+             * @description Determines whether or not the multiselect is grouped
              * @returns {Boolean}
              */
             function isGrouped() {
-                return _parse.groupByExpression !== undefined;
+                return angular.isDefined(_parse.groupByExpression);
             }
 
             /**
@@ -144,7 +144,7 @@
                 var expression = options.match(_optionsRegularExpression);
 
                 if (expression === null) {
-                    throw new Error('Expected "' + options + '" to be in form of "[_select_ as][group by _groupByExpression_] _label_ for _value_ in _array_"');
+                    throw new Error('Expected "' + options + '" to be in form of "[_select_ as] [group by _groupByExpression_] _label_ for _value_ in _array_"');
                 }
 
                 _parse = {

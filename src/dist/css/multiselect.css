@@ -19,7 +19,6 @@
   .btn-group-multiselect .dropdown-toggle .badge {
     background-color: #777777;
     border-radius: 3px;
-    display: none;
     padding: 4px 5px;
     right: 22px;
     top: 5px; }
@@ -41,6 +40,14 @@
     border-top: none; }
   .btn-group-multiselect .dropdown-menu .divider {
     margin: 5px 0; }
+  .btn-group-multiselect .dropdown-menu .group-header {
+    background-color: #f7f9f9;
+    border-bottom: 1px solid #e6ebeb;
+    border-top: 1px solid #e6ebeb;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 6px 12px;
+    text-transform: uppercase; }
 
 .btn-group-multiselect .dropdown-menu-list {
   margin: 0;

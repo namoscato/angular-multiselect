@@ -96,7 +96,7 @@
              * @description Deselects all items
              */
             function deselectAll() {
-                self.optionsFiltered.forEach(function(option) {
+                self.options.forEach(function(option) {
                     option.selected = false;
                 });
 
@@ -124,6 +124,43 @@
 
     angular
         .module('amo.multiselect')
+        .filter('amoMultiselectGroup', AmoMultiselectGroupFilter);
+
+    /**
+     * @ngdoc filter
+     * @module amo.multiselect
+     * @name amoMultiselectGroup
+     */
+    function AmoMultiselectGroupFilter() {
+
+        /**
+         * @name amoMultiselectGroup#groupingFilter
+         * @description Returns options that are in the specified group
+         * @param {Array} options
+         * @param {String} group
+         * @returns {Array}
+         */
+        function groupingFilter(options, group) {
+            var output = [];
+
+            options.forEach(function(option) {
+                if (option.group === group) {
+                    output.push(option);
+                }
+            });
+
+            return output;
+        }
+
+        return groupingFilter;
+    }
+})();
+
+(function() {
+    'use strict';
+
+    angular
+        .module('amo.multiselect')
         .directive('amoMultiselect', MultiselectDirective);
 
     /**
@@ -135,7 +172,7 @@
      * @requires $timeout
      * @requires AmoMultiselectFactory
      */
-    function MultiselectDirective($compile, $parse, $timeout, AmoMultiselectFactory) {
+    function MultiselectDirective($compile, $filter, $parse, $timeout, AmoMultiselectFactory) {
 
         return {
             link: link,
@@ -155,6 +192,7 @@
         function link(parentScope, element, attrs, ngModelController) {
 
             var _exposeLabel = attrs.label ? $parse(attrs.label) : angular.noop,
+                _groupsHash = {},
                 _isInternalChange,
                 _labels = [],
                 _onChange = attrs.onChange ? $parse(attrs.onChange) : angular.noop,
@@ -169,6 +207,7 @@
 
             // Variables
             self.identifier = attrs.id;
+            self.groups = [];
             self.options = [];
             self.search = {};
             self.text = {
@@ -177,10 +216,12 @@
             };
 
             // Methods
-            self.getSelectedCount = getSelectedCount;
             self.exposeSelectedOptions = exposeSelectedOptions;
+            self.getSelectedCount = getSelectedCount;
             self.hasSelectedItems = hasSelectedItems;
             self.hasSelectedMultipleItems = hasSelectedMultipleItems;
+            self.isGrouped = multiselect.isGrouped();
+            self.isGroupEmpty = isGroupEmpty;
             self.onToggleDropdown = onToggleDropdown;
 
             // Initialization
@@ -205,6 +246,8 @@
                     selected,
                     value;
 
+                _groupsHash = {};
+                self.groups.length = 0;
                 _labels.length = 0;
                 self.options.length = 0;
 
@@ -221,12 +264,27 @@
                         }
                     }
 
-                    self.options.push({
+                    var optionObj = {
                         id: index,
                         label: multiselect.getLabel(option),
                         value: value,
                         selected: selected
-                    });
+                    };
+
+                    if (self.isGrouped) {
+                        optionObj.group = multiselect.getGroup(option);
+                    } else {
+                        optionObj.group = 'ungrouped';
+                    }
+
+                    if (angular.isUndefined(_groupsHash[optionObj.group])) {
+                        // Build the groups array using the order in which
+                        // the groups appear in the options
+                        self.groups.push(optionObj.group);
+                        _groupsHash[optionObj.group] = true;
+                    }
+
+                    self.options.push(optionObj);
                 });
 
                 setSelectedLabel();
@@ -305,6 +363,18 @@
 
                     exposeOptions();
                 }, true);
+            }
+
+
+            /**
+             * @ngdoc method
+             * @name amoMultiselect#isGroupEmpty
+             * @description Determines whether or not items are selected
+             * @param {String} group
+             * @returns {Boolean}
+             */
+            function isGroupEmpty(group) {
+                return $filter('amoMultiselectGroup')($filter('filter')(self.options, self.search), group).length === 0;
             }
 
             /**
@@ -408,7 +478,14 @@
      */
     function MultiselectFactory($parse) {
 
-        var _optionsRegularExpression = /^\s*(?:(\S+)\s+as\s+)?(\S+)\s+for\s+(\S+)\s+in\s+(\S+)\s*$/;
+        var _optionsRegularExpression = /^\s*(?:(\S+)\s+as\s+)?(\S+)(?:\s+group\s+by\s+(\S+?))?\s+for\s+(\S+)\s+in\s+(\S+)\s*$/;
+        // regex legend:               //00000001111100000000002222200000000000000000003333330000000000044444000000005555500000
+        // 0: non-captured
+        // 1: label alias
+        // 2: label
+        // 3: group by
+        // 4: value
+        // 5: options
         
         /**
          * @ngdoc method
@@ -424,15 +501,28 @@
             var _parse;
 
             // Methods
+            self.getGroup = getGroup;
             self.getLabel = getLabel;
             self.getOption = getOption;
             self.getOptionsExpression = getOptionsExpression;
             self.getOptions = getOptions;
             self.getValue = getValue;
+            self.isGrouped = isGrouped;
             self.setOptions = setOptions;
 
             // Initialization
             initialize();
+
+            /**
+             * @ngdoc method
+             * @name AmoMultiselectFactory#getGroup
+             * @description Returns the group by expression
+             * @param {Object} option
+             * @returns {*}
+             */
+            function getGroup(option) {
+                return option[_parse.groupByExpression];
+            }
 
             /**
              * @ngdoc method
@@ -502,6 +592,16 @@
             }
 
             /**
+             * @ngdoc method
+             * @name AmoMultiselectFactory#isGrouped
+             * @description Determines whether or not the multiselect is grouped
+             * @returns {Boolean}
+             */
+            function isGrouped() {
+                return angular.isDefined(_parse.groupByExpression);
+            }
+
+            /**
              * @name AmoMultiselectFactory#initialize
              * @description Initializes the multiselect factory constructor
              */
@@ -509,14 +609,15 @@
                 var expression = options.match(_optionsRegularExpression);
 
                 if (expression === null) {
-                    throw new Error('Expected "' + options + '" to be in form of "[_select_ as] _label_ for _value_ in _array_"');
+                    throw new Error('Expected "' + options + '" to be in form of "[_select_ as] [group by _groupByExpression_] _label_ for _value_ in _array_"');
                 }
 
                 _parse = {
+                    groupByExpression: expression[3],
                     labelFunction: $parse(expression[2]),
-                    optionsExpression: expression[4],
-                    selectFunction: $parse(angular.isDefined(expression[1]) ? expression[1] : expression[3]),
-                    value: expression[3]
+                    optionsExpression: expression[5],
+                    selectFunction: $parse(angular.isDefined(expression[1]) ? expression[1] : expression[4]),
+                    value: expression[4]
                 };
             }
 
@@ -543,4 +644,4 @@
 
 })();
 
-angular.module("amo.multiselect").run(["$templateCache", function($templateCache) {$templateCache.put("multiselect/multiselect-dropdown.html","<div\n    amo-multiselect-dropdown-menu\n    class=\"btn-group btn-group-multiselect dropdown\"\n    ng-attr-title=\"{{ multiselectDropdown.selectedLabel }}\"\n    ng-class=\"{ \'state-selected-multiple\': multiselectDropdown.hasSelectedMultipleItems() }\"\n    on-toggle=\"multiselectDropdown.onToggleDropdown(open)\">\n    <button\n        type=\"button\"\n        class=\"btn btn-default dropdown-toggle\"\n        data-toggle=\"dropdown\"\n        ng-attr-data-beh=\"multiselect-{{ multiselectDropdown.identifier }}\">\n        <span class=\"text\" ng-bind=\"multiselectDropdown.selectedLabel\"></span>\n        <span class=\"badge\" ng-bind=\"multiselectDropdown.getSelectedCount()\"></span>\n        <span class=\"caret\"></span>\n    </button>\n    <div class=\"dropdown-menu\">\n        <input\n            type=\"text\"\n            class=\"form-control\"\n            ng-model=\"multiselectDropdown.search.label\"\n            placeholder=\"{{ multiselectDropdown.text.search }}\">\n        <ul class=\"dropdown-menu-list list-unstyled\">\n            <li>\n                <a\n                    ng-bind=\"multiselectDropdown.text.deselectAll\"\n                    ng-class=\"{ \'text-muted\': !multiselectDropdown.hasSelectedItems() }\"\n                    ng-click=\"multiselectDropdown.deselectAll()\">\n                </a>\n            </li>\n            <li class=\"divider\"></li>\n            <li ng-repeat=\"option in multiselectDropdown.optionsFiltered = (multiselectDropdown.options | filter : multiselectDropdown.search)\">\n                <a ng-click=\"multiselectDropdown.toggleSelectedState(option)\">\n                    <input type=\"checkbox\" ng-model=\"option.selected\">\n                    <span ng-bind=\"option.label\"></span>\n                </a>\n            </li>\n        </ul>\n    </div>\n</div>\n");}]);
+angular.module("amo.multiselect").run(["$templateCache", function($templateCache) {$templateCache.put("multiselect/multiselect-dropdown.html","<div\n    amo-multiselect-dropdown-menu\n    class=\"btn-group btn-group-multiselect dropdown\"\n    ng-attr-title=\"{{ multiselectDropdown.selectedLabel }}\"\n    ng-class=\"{ \'state-selected-multiple\': multiselectDropdown.hasSelectedMultipleItems() }\"\n    on-toggle=\"multiselectDropdown.onToggleDropdown(open)\">\n    <button\n        type=\"button\"\n        class=\"btn btn-default dropdown-toggle\"\n        data-toggle=\"dropdown\"\n        ng-attr-data-beh=\"multiselect-{{ multiselectDropdown.identifier }}\">\n        <span class=\"text\" ng-bind=\"multiselectDropdown.selectedLabel\"></span>\n        <span class=\"badge\" ng-bind=\"multiselectDropdown.getSelectedCount()\"></span>\n        <span class=\"caret\"></span>\n    </button>\n    <div class=\"dropdown-menu\">\n        <input\n            type=\"text\"\n            class=\"form-control\"\n            ng-model=\"multiselectDropdown.search.label\"\n            placeholder=\"{{ multiselectDropdown.text.search }}\">\n        <ul class=\"dropdown-menu-list list-unstyled\">\n            <li>\n                <a\n                    ng-bind=\"multiselectDropdown.text.deselectAll\"\n                    ng-class=\"{ \'text-muted\': !multiselectDropdown.hasSelectedItems() }\"\n                    ng-click=\"multiselectDropdown.deselectAll()\">\n                </a>\n            </li>\n            <li class=\"divider\" ng-if=\"!multiselectDropdown.isGrouped\"></li>\n            <li\n                class=\"group-header\"\n                ng-bind=\"group\"\n                ng-if=\"multiselectDropdown.isGrouped && !multiselectDropdown.isGroupEmpty(group)\"\n                ng-repeat-start=\"group in multiselectDropdown.groups\">\n            </li>\n            <li ng-repeat=\"option in multiselectDropdown.optionsFiltered = (multiselectDropdown.options | amoMultiselectGroup : group | filter : multiselectDropdown.search)\">\n                <a ng-click=\"multiselectDropdown.toggleSelectedState(option)\">\n                    <input type=\"checkbox\" ng-model=\"option.selected\">\n                    <span ng-bind=\"option.label\"></span>\n                </a>\n            </li>\n            <li ng-repeat-end></li>\n        </ul>\n    </div>\n</div>\n");}]);

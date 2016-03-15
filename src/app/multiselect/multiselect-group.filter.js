@@ -8,12 +8,12 @@
     /**
      * @ngdoc filter
      * @module amo.multiselect
-     * @name AmoMultiselectGroupFilter
+     * @name amoMultiselectGroup
      */
     function AmoMultiselectGroupFilter() {
 
         /**
-         * @name AmoMultiselectFilter#groupingFilter
+         * @name amoMultiselectGroup#groupingFilter
          * @description Returns options that are in the specified group
          * @param {Array} options
          * @param {String} group
@@ -23,7 +23,9 @@
             var output = [];
 
             options.forEach(function(option) {
-                if (option.group === group) output.push(option);
+                if (option.group === group) {
+                    output.push(option);
+                }
             });
 
             return output;
