@@ -4,25 +4,25 @@
 .btn-group-multiselect.state-multiple-selected .dropdown-toggle .badge {
   display: inline-block; }
 
-.btn-group-multiselect .dropdown-toggle {
+.btn-group-multiselect .btn-dropdown-toggle {
   text-align: left;
   width: 250px; }
-  .btn-group-multiselect .dropdown-toggle .text {
+  .btn-group-multiselect .btn-dropdown-toggle .text {
     display: inline-block;
     overflow: hidden;
     text-overflow: ellipsis;
     vertical-align: middle;
     width: 97%; }
-  .btn-group-multiselect .dropdown-toggle .badge,
-  .btn-group-multiselect .dropdown-toggle .caret {
+  .btn-group-multiselect .btn-dropdown-toggle .badge,
+  .btn-group-multiselect .btn-dropdown-toggle .caret {
     position: absolute; }
-  .btn-group-multiselect .dropdown-toggle .badge {
+  .btn-group-multiselect .btn-dropdown-toggle .badge {
     background-color: #777777;
     border-radius: 3px;
     padding: 4px 5px;
     right: 22px;
     top: 5px; }
-  .btn-group-multiselect .dropdown-toggle .caret {
+  .btn-group-multiselect .btn-dropdown-toggle .caret {
     right: 8px;
     top: 13px; }
 
