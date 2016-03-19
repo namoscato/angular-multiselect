@@ -4,6 +4,7 @@
         <base href="/"></base>
         <meta charset="utf-8">
         <title>AngularJS Multiselect</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
         <link rel="stylesheet" href="dist/css/app.css" />
     </head>
     <body ng-app="multiselectDemo">
@@ -79,11 +80,23 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <button class="btn btn-default" ng-click="app.addObject()" type="button">Add Item</button>
                             <amo-multiselect
                                 ng-model="app.modelObjectProperty"
                                 options="option.id as option.label for option in app.optionsObject">
                             </amo-multiselect>
+                            <button class="btn btn-default" ng-click="app.addObject()" type="button">Add Item</button>
+                        </div>
+                        <div class="col-md-6">
+                            <pre>{{ app.modelObjectProperty }}</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">Deferred Load, Events & Custom Text</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
                             <amo-multiselect
                                 id="state-param"
                                 deselect-all-text="Deselect Everything"
@@ -94,12 +107,12 @@
                                 options="option.id as option.label for option in app.optionsObjectDefer"
                                 search-text="Filter Items"
                                 select-text="Select Custom Items"
+                                select-all-text="Select Everything"
                                 selected-suffix-singular-text="thing"
                                 selected-suffix-text="things">
                             </amo-multiselect>
                         </div>
                         <div class="col-md-6">
-                            <pre>{{ app.modelObjectProperty }}</pre>
                             <pre>{{ app.label }}</pre>
                         </div>
                     </div>

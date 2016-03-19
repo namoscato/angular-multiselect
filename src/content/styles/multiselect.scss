@@ -2,12 +2,12 @@
 // AngularJS Multiselect Styles
 // --------------------------------------------------
 
-@import "bootstrap/variables";
+@import "./node_modules/bootstrap-sass/assets/stylesheets/bootstrap/variables";
 
 .btn-group-multiselect {
     $width: 250px;
 
-    &.state-multiple-selected {
+    &.state-multiple-selected { // &.state-selected-multiple {
         .dropdown-toggle {
             .text {
                 width: $width - 60;
@@ -39,6 +39,7 @@
         .badge {
             background-color: $gray-light;
             border-radius: 3px;
+            display: none;
             padding: 4px 5px;
             right: 22px;
             top: 5px;

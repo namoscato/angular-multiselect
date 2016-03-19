@@ -5,14 +5,44 @@ var addStream = require('add-stream'),
     gulp = require('gulp'),
     gulpAngularTemplateCache = require('gulp-angular-templatecache'),
     gulpConcat = require('gulp-concat'),
+    gulpCssnano = require('gulp-cssnano'),
     gulpHelp = require('gulp-help')(gulp),
     gulpJshint = require('gulp-jshint'),
-    gulpMinifyCss = require('gulp-minify-css'),
     gulpRename = require('gulp-rename'),
     gulpSass = require('gulp-sass'),
     gulpUglify = require('gulp-uglify'),
-    gulpWebserver = require('gulp-webserver'),
-    streamqueue = require('streamqueue');
+    gulpWebserver = require('gulp-webserver');
+
+var css = {
+    src: {
+        app: 'src/content/styles/app.scss',
+        dist: 'src/content/styles/multiselect.scss'
+    },
+    dest: 'src/dist/css'
+};
+
+var js = {
+    src: {
+        app: [
+            'src/lib/**/*.module.js',
+            'src/app/**/*.module.js',
+            'src/lib/**/*.js',
+            'src/app/**/*.js',
+        ],
+        dist: [
+            'src/lib/**/*.module.js',
+            'src/lib/**/*.js'
+        ],
+        libs: [
+            'src/scripts/jquery/jquery.js',
+            'src/scripts/angular/angular.js',
+            'src/scripts/**/*.js'
+            // 'node_modules/angular/angular.js',
+            // 'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js'
+        ],
+        templates: 'src/lib/**/*.html'
+    }
+};
 
 gulp.task('all', 'Build application', [
     'css:app',
@@ -28,40 +58,30 @@ gulp.task('dist', 'Build multiselect', [
 
 gulp.task('clean', 'Clean build directory', function() {
     return del([
-        'src/dist/css/*',
-        'src/dist/js/*'
+        css.dest + '/*',
+        js.dest + '/*'
     ]);
 });
 
 gulp.task('css:app', 'Compile application SASS', function() {
-    gulp.src('src/content/styles/app.scss')
+    gulp.src(css.src.app)
         .pipe(gulpSass().on('error', gulpSass.logError))
-        .pipe(gulpMinifyCss({
-            advanced: false,
-            aggressiveMerging: false,
-            keepSpecialComments: false,
-            rebase: false,
-            sourceMap: false
-        }))
-        .pipe(gulp.dest('src/dist/css'));
+        .pipe(gulpCssnano())
+        .pipe(gulp.dest(css.dest));
 });
 
 gulp.task('css:dist', 'Compile multiselect SASS', function() {
-    gulp.src('src/content/styles/multiselect.scss')
+    gulp.src(css.src.dist)
         .pipe(gulpSass().on('error', gulpSass.logError))
-        .pipe(gulp.dest('src/dist/css'));
+        .pipe(gulp.dest(css.dest));
 });
 
 gulp.task('js:app', 'Compile application JavaScript', function() {
-    var stream = streamqueue({objectMode: true},
-        gulp.src('src/app/**/*.module.js'),
-        gulp.src([
-            'src/app/**/*.js',
-            '!src/app/**/*.module.js'
-        ]))
-        .pipe(addStream.obj(gulp.src('src/app/**/*.html')
+    var stream = gulp.src(js.src.app)
+        .pipe(addStream.obj(gulp.src(js.src.templates)
             .pipe(gulpAngularTemplateCache('templates.js', {
-                module: 'amo.multiselect'
+                module: 'amo.multiselect',
+                root: 'multiselect'
             })
         )));
 
@@ -79,15 +99,11 @@ gulp.task('js:dist:compressed', false, ['js:dist:uncompressed'], function() {
 });
 
 gulp.task('js:dist:uncompressed', false, function() {
-    var stream = streamqueue({objectMode: true},
-        gulp.src('src/app/multiselect/**/*.module.js'),
-        gulp.src([
-            'src/app/multiselect/**/*.js',
-            '!src/app/multiselect/**/*.module.js'
-        ]))
-        .pipe(addStream.obj(gulp.src('src/app/**/*.html')
+    var stream = gulp.src(js.src.dist)
+        .pipe(addStream.obj(gulp.src(js.src.templates)
             .pipe(gulpAngularTemplateCache('templates.js', {
-                module: 'amo.multiselect'
+                module: 'amo.multiselect',
+                root: 'multiselect'
             })
         )));
 
@@ -95,20 +111,13 @@ gulp.task('js:dist:uncompressed', false, function() {
 });
 
 gulp.task('js:libs', 'Compile third party JavaScript', function() {
-    var stream = streamqueue({objectMode: true},
-        gulp.src('src/scripts/jquery/jquery.js'),
-        gulp.src('src/scripts/angular/angular.js'),
-        gulp.src([
-            'src/scripts/**/*.js',
-            '!src/scripts/jquery/jquery.js',
-            '!src/scripts/angular/*.js'
-        ]));
+    var stream = gulp.src(js.src.libs);
 
     return compileJavaScript(stream, 'vendor');
 });
 
 gulp.task('js:lint', 'Run JSHint to check for JavaScript code quality', function() {
-    gulp.src('src/app/**/*.js')
+    gulp.src(js.src.app)
         .pipe(gulpJshint())
         .pipe(gulpJshint.reporter('default'));
 });
@@ -123,22 +132,23 @@ gulp.task('serve', 'Run a local webserver', function() {
 });
 
 gulp.task('watch', 'Watch for changes and recompile', function() {
-    gulp.watch(['src/app/**/*.js'], [
-        'js:app',
-        'js:lint'
-    ]);
+    gulp.watch(
+        js.src.app,
+        [
+            'js:app',
+            'js:lint'
+        ]
+    );
 
-    gulp.watch(['src/app/**/*.html'], [
-        'js:app'
-    ]);
+    gulp.watch(
+        [js.src.templates],
+        ['js:app']
+    );
 
-    gulp.watch(['src/scripts/**/*.js'], [
-        'js:libs'
-    ]);
-
-    gulp.watch(['src/content/styles/**/*.scss'], [
-        'css:app'
-    ]);
+    gulp.watch(
+        ['src/content/styles/**/*.scss'],
+        ['css:app']
+    );
 });
 
 /**

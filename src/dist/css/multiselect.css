@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .btn-group-multiselect.state-multiple-selected .dropdown-toggle .text {
   width: 190px; }
 
@@ -5,6 +6,15 @@
   display: inline-block; }
 
 .btn-group-multiselect .btn-dropdown-toggle {
+=======
+.btn-group-multiselect.state-selected-multiple .dropdown-toggle .text {
+  width: 190px; }
+
+.btn-group-multiselect.state-selected-multiple .dropdown-toggle .badge {
+  display: inline-block; }
+
+.btn-group-multiselect .dropdown-toggle {
+>>>>>>> fc4652d0296cb1f1c5ab344a5e3427e722c0b1b3
   text-align: left;
   width: 250px; }
   .btn-group-multiselect .btn-dropdown-toggle .text {
@@ -13,12 +23,18 @@
     text-overflow: ellipsis;
     vertical-align: middle;
     width: 97%; }
+<<<<<<< HEAD
   .btn-group-multiselect .btn-dropdown-toggle .badge,
   .btn-group-multiselect .btn-dropdown-toggle .caret {
+=======
+  .btn-group-multiselect .dropdown-toggle .badge,
+  .btn-group-multiselect .dropdown-toggle .caret {
+>>>>>>> fc4652d0296cb1f1c5ab344a5e3427e722c0b1b3
     position: absolute; }
   .btn-group-multiselect .btn-dropdown-toggle .badge {
     background-color: #777777;
     border-radius: 3px;
+    display: none;
     padding: 4px 5px;
     right: 22px;
     top: 5px; }
@@ -63,8 +79,11 @@
     line-height: 1.42857;
     padding: 5px 12px;
     white-space: nowrap; }
+<<<<<<< HEAD
     .btn-group-multiselect .dropdown-menu-list > li > a.text-muted {
       color: #777777; }
+=======
+>>>>>>> fc4652d0296cb1f1c5ab344a5e3427e722c0b1b3
     .btn-group-multiselect .dropdown-menu-list > li > a:hover, .btn-group-multiselect .dropdown-menu-list > li > a:focus {
       background-color: #f5f5f5;
       color: #262626;

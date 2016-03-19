@@ -28,7 +28,7 @@
             }
         ];
         self.modelObjectProperty = [2];
-        self.modelStringTwo = ['Two'];
+        self.modelStringTwo = ['One', 'Two'];
         self.optionsObject = [
             {
                 id: 1,

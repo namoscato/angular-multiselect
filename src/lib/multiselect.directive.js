@@ -10,11 +10,13 @@
      * @module amo.multiselect
      * @name amoMultiselect
      * @requires $compile
+     * @requires $filter
      * @requires $parse
      * @requires $timeout
      * @requires AmoMultiselectFactory
+     * @requires amoMultiselectFormatService
      */
-    function MultiselectDirective($compile, $filter, $parse, $timeout, AmoMultiselectFactory) {
+    function MultiselectDirective($compile, $filter, $parse, $timeout, AmoMultiselectFactory, amoMultiselectFormatService) {
 
         return {
             link: link,
@@ -173,6 +175,16 @@
             }
 
             /**
+             * @ngdoc method
+             * @name amoMultiselect#hasSelectedMultipleItems
+             * @description Determines whether or not multiple items are selected
+             * @returns {Boolean}
+             */
+            function hasSelectedMultipleItems() {
+                return getSelectedCount() > 1;
+            }
+
+            /**
              * @name amoMultiselect#initialize
              * @description Initializes the directive
              */
@@ -231,16 +243,6 @@
 
             /**
              * @ngdoc method
-             * @name amoMultiselect#hasSelectedMultipleItems
-             * @description Determines whether or not multiple items are selected
-             * @returns {Boolean}
-             */
-            function hasSelectedMultipleItems() {
-                return _selectedOptions.length > 1;
-            }
-
-            /**
-             * @ngdoc method
              * @name amoMultiselect#onToggleDropdown
              * @description Handler executed when dropdown opens or closes
              */
@@ -267,28 +269,9 @@
 
                 if (_labels.length > 0) {
                     if (angular.isDefined(_labels[0])) { // Support undefined labels
-                        if (_labels.length === 1) {
-                            label = _labels[0];
-                        } else {
-                            lastLabel = _labels.pop();
-                            
-                            label = _labels.join(', ');
-
-                            if (_labels.length > 1) {
-                                label += ',';
-                            }
-
-                            label += ' and ' + lastLabel;
-                        } 
-
+                        label = amoMultiselectFormatService.joinLabels(_labels);
                     } else {
-                        label = _labels.length + ' ';
-
-                        if (_labels.length === 1) {
-                            label += attrs.selectedSuffixSingularText || 'item';
-                        } else {
-                            label += attrs.selectedSuffixText || attrs.selectedSuffixSingularText || 'items';
-                        }
+                        label = amoMultiselectFormatService.pluralize(_labels, attrs.selectedSuffixText, attrs.selectedSuffixSingularText || attrs.selectedSuffixText);
                     }
                 }
 

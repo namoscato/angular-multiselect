@@ -1,8 +1,6 @@
-# AngularJS Multiselect
+# AngularJS Multiselect [![Build Status](https://travis-ci.org/namoscato/angular-multiselect.svg?branch=backport)](https://travis-ci.org/namoscato/angular-multiselect)
 
 AngularJS multiselect component based off [`ngOptions`](https://docs.angularjs.org/api/ng/directive/ngOptions), backported to work with AngularJS v1.2.28 and Bootstrap's jQuery plugin.
-
-**Note:** This branch with backported dependencies is _not_ maintained.
 
 ## Dependencies
 
@@ -38,7 +36,9 @@ The interface for this directive is based off [`ngOptions`](https://docs.angular
     search-text="Search..."
     select-text="Select..."
     select-all-text="Select All"
-    deselect-all-text="Deselect All">
+    deselect-all-text="Deselect All"
+    selected-suffix-singular-text="thing"
+    selected-suffix-text="things">
 </amo-multiselect>
 ```
 
@@ -49,8 +49,3 @@ where the value of `options` is of the following form: `[`_`select`_ **`as`**`]`
 Install the [Karma](http://karma-runner.github.io/) commandline interface (`karma-cli`) globally and run:
 
     karma start
-
-## Roadmap
-
-- [ ] Cleanup build process
-- [ ] Documentation
