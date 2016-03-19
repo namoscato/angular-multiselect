@@ -1,7 +1,7 @@
-.btn-group-multiselect.state-multiple-selected .dropdown-toggle .text {
+.btn-group-multiselect.state-selected-multiple .btn-dropdown-toggle .text {
   width: 190px; }
 
-.btn-group-multiselect.state-multiple-selected .dropdown-toggle .badge {
+.btn-group-multiselect.state-selected-multiple .btn-dropdown-toggle .badge {
   display: inline-block; }
 
 .btn-group-multiselect .btn-dropdown-toggle {

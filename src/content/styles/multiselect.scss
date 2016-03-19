@@ -7,8 +7,8 @@
 .btn-group-multiselect {
     $width: 250px;
 
-    &.state-multiple-selected { // &.state-selected-multiple {
-        .dropdown-toggle {
+    &.state-selected-multiple {
+        .btn-dropdown-toggle {
             .text {
                 width: $width - 60;
             }
