@@ -42,7 +42,7 @@ The interface for this directive is based off [`ngOptions`](https://docs.angular
 </amo-multiselect>
 ```
 
-where the value of `options` is of the following form: `[`_`select`_ **`as`**`]` _`label`_ **`for`** _`value`_ **`in`** _`array`_
+where the value of `options` is of the following form: `[`_`select`_ **`as`**`]` _`label`_ `[`**`group by`** _`group`_ `]` **`for`** _`value`_ **`in`** _`array`_
 
 ## Running Tests
 

@@ -4,7 +4,7 @@ module.exports = function(config) {
     frameworks: ['jasmine'],
     files: [
       'src/dist/js/vendor.min.js',
-      'src/scripts/angular/angular-mocks.js', // 'node_modules/angular-mocks/angular-mocks.js'
+      'node_modules/angular-mocks/angular-mocks.js',
       'src/dist/js/app.min.js',
       'tests/**/*.spec.js'
     ],

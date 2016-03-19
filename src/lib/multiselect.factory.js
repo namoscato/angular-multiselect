@@ -144,7 +144,7 @@
                 var expression = options.match(_optionsRegularExpression);
 
                 if (expression === null) {
-                    throw new Error('Expected "' + options + '" to be in form of "[_select_ as] [group by _groupByExpression_] _label_ for _value_ in _array_"');
+                    throw new Error('Expected "' + options + '" to be in form of "[_select_ as] _label_ [group by _groupByExpression_] for _value_ in _array_"');
                 }
 
                 _parse = {

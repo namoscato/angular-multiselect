@@ -34,11 +34,10 @@ var js = {
             'src/lib/**/*.js'
         ],
         libs: [
-            'src/scripts/jquery/jquery.js',
-            'src/scripts/angular/angular.js',
+            'node_modules/jquery/dist/jquery.js',
+            'node_modules/angular/angular.js',
+            'node_modules/bootstrap/dist/js/bootstrap.js',
             'src/scripts/**/*.js'
-            // 'node_modules/angular/angular.js',
-            // 'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js'
         ],
         templates: 'src/lib/**/*.html'
     }
