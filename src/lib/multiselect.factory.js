@@ -21,9 +21,9 @@
          *
          * 1. value expression (selectFunction)
          * 2. label expression (labelFunction)
-         * 3. group by expression (groupByExpression)
+         * 3. group by expression (groupFunction)
          * 4. array item variable name (value)
-         * 5. array expression (optionsExpression)
+         * 5. options array expression (optionsExpression)
          */
         var _optionsRegularExpression = /^\s*(?:(\S+)\s+as\s+)?(\S+)(?:\s+group\s+by\s+(\S+?))?\s+for\s+(\S+)\s+in\s+(\S+)\s*$/;
                                        //0000000111110000000000222220000000000000000000333333000000000004444400000000555550000
@@ -57,12 +57,16 @@
             /**
              * @ngdoc method
              * @name AmoMultiselectFactory#getGroup
-             * @description Returns the group by expression
+             * @description Returns the group for the specified option
              * @param {Object} option
-             * @returns {*}
+             * @returns {String|Null}
              */
             function getGroup(option) {
-                return option[_parse.groupByExpression];
+                if (!isGrouped()) {
+                    return null;
+                }
+
+                return _parse.groupFunction(scope, getLocals(option));
             }
 
             /**
@@ -140,11 +144,11 @@
                 var expression = options.match(_optionsRegularExpression);
 
                 if (expression === null) {
-                    throw new Error('Expected "' + options + '" to be in form of "[_select_ as] _label_ [group by _groupByExpression_] for _value_ in _array_"');
+                    throw new Error('Expected "' + options + '" to be in form of "[_select_ as] _label_ [group by _group_] for _value_ in _array_"');
                 }
 
                 _parse = {
-                    groupByExpression: expression[3], // TODO this should be a parse function
+                    groupFunction: angular.isDefined(expression[3]) ? $parse(expression[3]) : null,
                     labelFunction: $parse(expression[2]),
                     optionsExpression: expression[5],
                     selectFunction: $parse(angular.isDefined(expression[1]) ? expression[1] : expression[4]),
@@ -159,7 +163,7 @@
              * @returns {Boolean}
              */
             function isGrouped() {
-                return angular.isDefined(_parse.groupByExpression);
+                return _parse.groupFunction !== null;
             }
 
             /**

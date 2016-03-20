@@ -21,8 +21,8 @@
         return {
             link: link,
             replace: true,
-            restrict: 'E',
-            require: 'ngModel'
+            require: 'ngModel',
+            restrict: 'E'
         };
 
         /**
@@ -93,6 +93,7 @@
                 _labels.length = 0;
                 self.groups.length = 0;
                 self.groupOptions = {};
+                self.optionsFiltered = {};
 
                 // Iterate through original options and create exposed model
                 multiselect.getOptions().forEach(function(option, index) {
@@ -150,7 +151,6 @@
                         _selectedOptions.push(multiselect.getValue(option));
                     });
                 });
-
 
                 _isInternalChange = true; // Prevent unnecessary $watch logic
 
