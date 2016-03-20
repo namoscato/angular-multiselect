@@ -32,13 +32,13 @@ where the value of `options` is of the following form:
 
 `[`_`select`_ **`as`**`]` _`label`_ `[`**`group by`** _`group`_`]` **`for`** _`value`_ **`in`** _`array`_
 
-where:
-
-* `array`: An expression which evaluates to an array.
-* `value`: Local variable which will refer to each item in the `array` during iteration.
-* `label`: The result of this expression will be the label for `<option>` element.
-* `select`: The result of this expression will be bound to the model of the parent `<select>` element. If not specified, `select` expression will default to `value`.
-* `group`: The result of this expression will be used to group options.
+| Keyword  | Description |
+| -------- | ----------- |
+| `array`  | An expression which evaluates to an array. |
+| `value`  | Local variable which will refer to each item in the `array` during iteration. |
+| `label`  | The result of this expression will be the label for each option. |
+| `select` | The result of this expression will be bound to the model of the parent `<amo-multiselect>` element. If not specified, `select` expression will default to `value`. |
+| `group`  | The result of this expression will be used to group options. |
 
 ## Development
 
