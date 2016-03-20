@@ -27,12 +27,19 @@
                 </a>
             </li>
             <li class="divider"></li>
-            <li ng-repeat="option in multiselectDropdown.optionsFiltered = (multiselectDropdown.options | filter : multiselectDropdown.search)">
+            <li
+                class="dropdown-header"
+                ng-bind="group"
+                ng-if="multiselectDropdown.isGrouped && !multiselectDropdown.isGroupEmpty(group)"
+                ng-repeat-start="group in multiselectDropdown.groups">
+            </li>
+            <li ng-repeat="option in multiselectDropdown.optionsFiltered = (multiselectDropdown.options | amoMultiselectGroup : group | filter : multiselectDropdown.search)">
                 <a ng-click="multiselectDropdown.toggleSelectedState(option)">
                     <input type="checkbox" ng-model="option.selected">
                     <span ng-bind="option.label"></span>
                 </a>
             </li>
+            <li ng-repeat-end></li>
         </ul>
     </div>
 </div>

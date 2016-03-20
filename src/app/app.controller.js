@@ -2,12 +2,12 @@
     'use strict';
 
     angular
-        .module('multiselectDemo.core')
+        .module('multiselectDemo')
         .controller('AppController', AppController);
 
     /**
      * @ngdoc controller
-     * @module multiselectDemo.core
+     * @module multiselectDemo
      * @name AppController
      * @requires $timeout
      */
@@ -16,6 +16,13 @@
 
         self.modelObject = [
             {
+                id: 2,
+                label: 'Two'
+            }
+        ];
+        self.modelObjectGrouped = [
+            {
+                category: 'Pizza',
                 id: 2,
                 label: 'Two'
             }
@@ -45,6 +52,23 @@
             },
             {
                 id: 3
+            }
+        ];
+        self.optionsObjectGrouped = [
+            {
+                category: 'Pizza',
+                id: 1,
+                label: 'One'
+            },
+            {
+                category: 'Pizza',
+                id: 2,
+                label: 'Two'
+            },
+            {
+                category: 'Hamburger',
+                id: 3,
+                label: 'Three'
             }
         ];
         self.optionsString = [

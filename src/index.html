@@ -60,6 +60,22 @@
                 </div>
             </div>
             <div class="panel panel-default">
+                <div class="panel-heading">Array of Objects, Grouped</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <amo-multiselect
+                                ng-model="app.modelObjectGrouped"
+                                options="option.label group by category for option in app.optionsObjectGrouped">
+                            </amo-multiselect>
+                        </div>
+                        <div class="col-md-6">
+                            <pre>{{ app.modelObjectGrouped }}</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
                 <div class="panel-heading">Select Property from Array of Objects</div>
                 <div class="panel-body">
                     <div class="row">
