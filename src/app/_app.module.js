@@ -7,7 +7,7 @@
      * @name multiselectDemo
      */
     angular.module('multiselectDemo', [
-        'multiselectDemo.core'
+        'amo.multiselect'
     ]);
 
 })();

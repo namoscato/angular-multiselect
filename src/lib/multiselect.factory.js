@@ -13,8 +13,21 @@
      */
     function MultiselectFactory($parse) {
 
-        var _optionsRegularExpression = /^\s*(?:(\S+)\s+as\s+)?(\S+)\s+for\s+(\S+)\s+in\s+(\S+)\s*$/;
-        
+        /**
+         * @name AmoMultiselectFactory#_optionsRegularExpression
+         * 
+         * @description
+         * Options attribute value regular expression
+         *
+         * 1. value expression (selectFunction)
+         * 2. label expression (labelFunction)
+         * 3. group by expression (groupFunction)
+         * 4. array item variable name (value)
+         * 5. options array expression (optionsExpression)
+         */
+        var _optionsRegularExpression = /^\s*(?:(\S+)\s+as\s+)?(\S+)(?:\s+group\s+by\s+(\S+?))?\s+for\s+(\S+)\s+in\s+(\S+)\s*$/;
+                                       //0000000111110000000000222220000000000000000000333333000000000004444400000000555550000
+
         /**
          * @ngdoc method
          * @name AmoMultiselectFactory#MultiselectFactoryConstructor
@@ -29,15 +42,32 @@
             var _parse;
 
             // Methods
+            self.getGroup = getGroup;
             self.getLabel = getLabel;
             self.getOption = getOption;
             self.getOptionsExpression = getOptionsExpression;
             self.getOptions = getOptions;
             self.getValue = getValue;
+            self.isGrouped = isGrouped;
             self.setOptions = setOptions;
 
             // Initialization
             initialize();
+
+            /**
+             * @ngdoc method
+             * @name AmoMultiselectFactory#getGroup
+             * @description Returns the group for the specified option
+             * @param {Object} option
+             * @returns {String|Null}
+             */
+            function getGroup(option) {
+                if (!isGrouped()) {
+                    return null;
+                }
+
+                return _parse.groupFunction(scope, getLocals(option));
+            }
 
             /**
              * @ngdoc method
@@ -114,15 +144,26 @@
                 var expression = options.match(_optionsRegularExpression);
 
                 if (expression === null) {
-                    throw new Error('Expected "' + options + '" to be in form of "[_select_ as] _label_ for _value_ in _array_"');
+                    throw new Error('Expected "' + options + '" to be in form of "[_select_ as] _label_ [group by _group_] for _value_ in _array_"');
                 }
 
                 _parse = {
+                    groupFunction: angular.isDefined(expression[3]) ? $parse(expression[3]) : null,
                     labelFunction: $parse(expression[2]),
-                    optionsExpression: expression[4],
-                    selectFunction: $parse(angular.isDefined(expression[1]) ? expression[1] : expression[3]),
-                    value: expression[3]
+                    optionsExpression: expression[5],
+                    selectFunction: $parse(angular.isDefined(expression[1]) ? expression[1] : expression[4]),
+                    value: expression[4]
                 };
+            }
+
+            /**
+             * @ngdoc method
+             * @name AmoMultiselectFactory#isGrouped
+             * @description Determines whether or not the multiselect is grouped
+             * @returns {Boolean}
+             */
+            function isGrouped() {
+                return _parse.groupFunction !== null;
             }
 
             /**
