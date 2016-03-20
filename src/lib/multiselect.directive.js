@@ -14,14 +14,15 @@
      * @requires $timeout
      * @requires AmoMultiselectFactory
      * @requires amoMultiselectFormatService
+     * @requires filterFilter
      */
-    function MultiselectDirective($compile, $parse, $timeout, AmoMultiselectFactory, amoMultiselectFormatService) {
+    function MultiselectDirective($compile, $parse, $timeout, AmoMultiselectFactory, amoMultiselectFormatService, filterFilter) {
 
         return {
             link: link,
             replace: true,
-            restrict: 'E',
-            require: 'ngModel'
+            require: 'ngModel',
+            restrict: 'E'
         };
 
         /**
@@ -48,7 +49,9 @@
             scope.multiselectDropdown = self;
 
             // Variables
-            self.options = [];
+            self.groups = [];
+            self.groupOptions = {};
+            self.optionsFiltered = {};
             self.search = {};
             self.text = {
                 deselectAll: attrs.deselectAllText || 'Deselect All',
@@ -57,9 +60,10 @@
             };
 
             // Methods
-            self.getSelectedCount = getSelectedCount;
             self.exposeSelectedOptions = exposeSelectedOptions;
+            self.getSelectedCount = getSelectedCount;
             self.hasSelectedMultipleItems = hasSelectedMultipleItems;
+            self.isGroupVisible = isGroupVisible;
             self.onToggleDropdown = onToggleDropdown;
 
             // Initialization
@@ -80,12 +84,15 @@
              * @description Exposes the multiselect options
              */
             function exposeOptions() {
-                var i,
+                var group,
+                    i,
                     selected,
                     value;
 
                 _labels.length = 0;
-                self.options.length = 0;
+                self.groups.length = 0;
+                self.groupOptions = {};
+                self.optionsFiltered = {};
 
                 // Iterate through original options and create exposed model
                 multiselect.getOptions().forEach(function(option, index) {
@@ -100,7 +107,14 @@
                         }
                     }
 
-                    self.options.push({
+                    group = multiselect.getGroup(option);
+
+                    if (angular.isUndefined(self.groupOptions[group])) {
+                        self.groups.push(group);
+                        self.groupOptions[group] = [];
+                    }
+
+                    self.groupOptions[group].push({
                         id: index,
                         label: multiselect.getLabel(option),
                         value: value,
@@ -122,14 +136,18 @@
                 _labels.length = 0;
                 _selectedOptions.length = 0;
 
-                self.options.forEach(function(optionModel, index) {
-                    if (!optionModel.selected) { return; }
+                angular.forEach(self.groupOptions, function(options) {
+                    angular.forEach(options, function(optionModel, index) {
+                        if (!optionModel.selected) {
+                            return;
+                        }
 
-                    option = multiselect.getOption(index);
+                        option = multiselect.getOption(index);
 
-                    addLabel(option);
+                        addLabel(option);
 
-                    _selectedOptions.push(multiselect.getValue(option));
+                        _selectedOptions.push(multiselect.getValue(option));
+                    });
                 });
 
                 _isInternalChange = true; // Prevent unnecessary $watch logic
@@ -194,6 +212,21 @@
 
                     exposeOptions();
                 }, true);
+            }
+
+            /**
+             * @ngdoc method
+             * @name amoMultiselect#isGroupVisible
+             * @description Determines whether or not the group is visible
+             * @param {String} group
+             * @returns {Boolean}
+             */
+            function isGroupVisible(group) {
+                if (!multiselect.isGrouped()) {
+                    return false;
+                }
+
+                return filterFilter(self.groupOptions[group], self.search).length > 0;
             }
 
             /**

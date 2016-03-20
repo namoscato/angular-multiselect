@@ -51,8 +51,10 @@
             function toggleAllSelectedState() {
                 self.isAllSelected = !self.isAllSelected;
 
-                self.optionsFiltered.forEach(function(option) {
-                    option.selected = self.isAllSelected;
+                angular.forEach(self.optionsFiltered, function(optionsFiltered) {
+                    angular.forEach(optionsFiltered, function(option) {
+                        option.selected = self.isAllSelected;
+                    });
                 });
 
                 self.exposeSelectedOptions();
