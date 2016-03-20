@@ -128,7 +128,7 @@ gulp.task('serve', 'Run a local webserver', function() {
         }));
 });
 
-gulp.task('watch', 'Watch for changes and recompile', function() {
+gulp.task('watch', 'Watch for changes and recompile', ['all'], function() {
     gulp.watch(
         js.src.app,
         [
@@ -138,12 +138,12 @@ gulp.task('watch', 'Watch for changes and recompile', function() {
     );
 
     gulp.watch(
-        [js.src.templates],
+        js.src.templates,
         ['js:app']
     );
 
     gulp.watch(
-        ['src/content/styles/**/*.scss'],
+        'src/content/styles/**/*.scss',
         ['css:app']
     );
 });

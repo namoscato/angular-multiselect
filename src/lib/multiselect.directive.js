@@ -36,7 +36,6 @@
         function link(parentScope, element, attrs, ngModelController) {
 
             var _exposeLabel = attrs.label ? $parse(attrs.label) : angular.noop,
-                _isGrouped,
                 _isInternalChange,
                 _labels = [],
                 _onChange = attrs.onChange ? $parse(attrs.onChange) : angular.noop,
@@ -108,7 +107,7 @@
                         }
                     }
 
-                    group = _isGrouped ? multiselect.getGroup(option) : 'ungrouped';
+                    group = multiselect.getGroup(option);
 
                     if (angular.isUndefined(self.groupOptions[group])) {
                         self.groups.push(group);
@@ -116,11 +115,10 @@
                     }
 
                     self.groupOptions[group].push({
-                        group: group,
                         id: index,
                         label: multiselect.getLabel(option),
-                        selected: selected,
-                        value: value
+                        value: value,
+                        selected: selected
                     });
                 });
 
@@ -186,8 +184,6 @@
              * @description Initializes the directive
              */
             function initialize() {
-                _isGrouped = multiselect.isGrouped();
-
                 element.append($compile('<amo-multiselect-dropdown></amo-multiselect-dropdown>')(scope));
 
                 parentScope.$on('$destroy', function() {
@@ -226,7 +222,7 @@
              * @returns {Boolean}
              */
             function isGroupVisible(group) {
-                if (!_isGrouped) {
+                if (!multiselect.isGrouped()) {
                     return false;
                 }
 

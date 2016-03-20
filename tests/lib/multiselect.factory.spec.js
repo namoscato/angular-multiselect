@@ -225,11 +225,6 @@ describe('AmoMultiselectFactory', function() {
                 formatLabel: formatLabelSpy,
                 formatValue: formatValueSpy
             });
-
-            target.setOptions([
-                'One',
-                'Two'
-            ]);
         });
 
         describe('and getting the label of an option', function() {
@@ -266,6 +261,65 @@ describe('AmoMultiselectFactory', function() {
             expect(function() {
                 new targetConstructor('option for option inoptions', {});
             }).toThrow(jasmine.any(Error));
+        });
+    });
+
+    describe('When parsing an expression', function() {
+        describe('without groups', function() {
+            beforeEach(function() {
+                target = new targetConstructor('option.label for option in ctrl.arrayOfObjects', {});
+            });
+
+            describe('and getting the group of the first option', function() {
+                beforeEach(function() {
+                    result = target.getGroup({
+                        label: 'One'
+                    });
+                });
+
+                it('should return "null"', function() {
+                    expect(result).toEqual(null);
+                });
+            });
+
+            describe('and getting the grouped status', function() {
+                beforeEach(function() {
+                    result = target.isGrouped();
+                });
+
+                it('should return false', function() {
+                    expect(result).toEqual(false);
+                });
+            });
+        });
+
+        describe('without groups', function() {
+            beforeEach(function() {
+                target = new targetConstructor('option.label group by option.group for option in ctrl.arrayOfObjects', {});
+            });
+
+            describe('and getting the group of the first option', function() {
+                beforeEach(function() {
+                    result = target.getGroup({
+                        label: 'One',
+                        group: 'A'
+                    });
+                });
+
+                it('should return group', function() {
+                    expect(result).toEqual('A');
+                });
+            });
+
+            describe('and getting the grouped status', function() {
+                beforeEach(function() {
+                    result = target.isGrouped();
+                });
+
+                it('should return true', function() {
+                    expect(result).toEqual(true);
+                });
+            });
         });
     });
 });

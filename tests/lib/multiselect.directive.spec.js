@@ -9,7 +9,8 @@ describe('amoMultiselect', function() {
     var timeout,
         amoMultiselectFactorySpy,
         amoMultiselectFactoryInstanceSpy,
-        amoMultiselectFormatServiceSpy;
+        amoMultiselectFormatServiceSpy,
+        filterFilterSpy;
 
     var optionsMock;
 
@@ -17,11 +18,13 @@ describe('amoMultiselect', function() {
 
     beforeEach(function() {
         amoMultiselectFactoryInstanceSpy = jasmine.createSpyObj('AmoMultiselectFactory()', [
+            'getGroup',
+            'getLabel',
             'getOption',
             'getOptions',
             'getOptionsExpression',
-            'getLabel',
             'getValue',
+            'isGrouped',
             'setOptions',
         ]);
 
@@ -29,6 +32,8 @@ describe('amoMultiselect', function() {
             'One',
             'Two'
         ];
+
+        amoMultiselectFactoryInstanceSpy.getGroup.and.returnValue(null);
 
         amoMultiselectFactoryInstanceSpy.getOption.and.callFake(function(index) {
             return optionsMock[index];
@@ -61,6 +66,30 @@ describe('amoMultiselect', function() {
             return amoMultiselectFormatServiceSpy;
         });
     }));
+
+    function compile(html, locals) {
+        amoMultiselectFactoryInstanceSpy.getOptions.and.returnValue(optionsMock);
+
+        amoMultiselectFactoryInstanceSpy.getOptionsExpression.and.returnValue('options');
+
+        inject(function($compile, $rootScope, $timeout, filterFilter) {
+            var element = angular.element(html);
+
+            timeout = $timeout;
+            filterFilterSpy = filterFilter;
+
+            parentScope = $rootScope.$new();
+
+            $compile(element)(angular.extend(parentScope, locals));
+
+            parentScope.$digest();
+
+            element = element.find('amo-multiselect-dropdown');
+
+            scope = element.scope();
+            target = scope.multiselectDropdown;
+        });
+    }
 
     describe('When compiling the directive with an array of strings', function() {
         beforeEach(function() {
@@ -102,22 +131,24 @@ describe('amoMultiselect', function() {
             });
 
             it('should expose options', function() {
-                expect(target.options).toEqual([
-                    {
-                        id: 0,
-                        label: 'LABEL One',
-                        value: 'VALUE One',
-                        selected: false,
-                        $$hashKey: jasmine.any(String)
-                    },
-                    {
-                        id: 1,
-                        label: 'LABEL Two',
-                        value: 'VALUE Two',
-                        selected: false,
-                        $$hashKey: jasmine.any(String)
-                    }
-                ]);
+                expect(target.optionsFiltered).toEqual({
+                    null: [
+                        {
+                            id: 0,
+                            label: 'LABEL One',
+                            value: 'VALUE One',
+                            selected: false,
+                            $$hashKey: jasmine.any(String)
+                        },
+                        {
+                            id: 1,
+                            label: 'LABEL Two',
+                            value: 'VALUE Two',
+                            selected: false,
+                            $$hashKey: jasmine.any(String)
+                        }
+                    ]
+                });
             });
 
             describe('and an option is added', function() {
@@ -140,29 +171,31 @@ describe('amoMultiselect', function() {
                 });
 
                 it('should add option', function() {
-                    expect(target.options).toEqual([
-                        {
-                            id: 0,
-                            label: 'LABEL One',
-                            value: 'VALUE One',
-                            selected: false,
-                            $$hashKey: jasmine.any(String)
-                        },
-                        {
-                            id: 1,
-                            label: 'LABEL Two',
-                            value: 'VALUE Two',
-                            selected: false,
-                            $$hashKey: jasmine.any(String)
-                        },
-                        {
-                            id: 2,
-                            label: 'LABEL Three',
-                            value: 'VALUE Three',
-                            selected: false,
-                            $$hashKey: jasmine.any(String)
-                        }
-                    ]);
+                    expect(target.groupOptions).toEqual({
+                        null: [
+                            {
+                                id: 0,
+                                label: 'LABEL One',
+                                value: 'VALUE One',
+                                selected: false,
+                                $$hashKey: jasmine.any(String)
+                            },
+                            {
+                                id: 1,
+                                label: 'LABEL Two',
+                                value: 'VALUE Two',
+                                selected: false,
+                                $$hashKey: jasmine.any(String)
+                            },
+                            {
+                                id: 2,
+                                label: 'LABEL Three',
+                                value: 'VALUE Three',
+                                selected: false,
+                                $$hashKey: jasmine.any(String)
+                            }
+                        ]
+                    });
                 });
             });
 
@@ -178,22 +211,24 @@ describe('amoMultiselect', function() {
                 });
 
                 it('should mark option as selected', function() {
-                    expect(target.options).toEqual([
-                        {
-                            id: 0,
-                            label: 'LABEL One',
-                            value: 'VALUE One',
-                            selected: true,
-                            $$hashKey: jasmine.any(String)
-                        },
-                        {
-                            id: 1,
-                            label: 'LABEL Two',
-                            value: 'VALUE Two',
-                            selected: false,
-                            $$hashKey: jasmine.any(String)
-                        }
-                    ]);
+                    expect(target.groupOptions).toEqual({
+                        null: [
+                            {
+                                id: 0,
+                                label: 'LABEL One',
+                                value: 'VALUE One',
+                                selected: true,
+                                $$hashKey: jasmine.any(String)
+                            },
+                            {
+                                id: 1,
+                                label: 'LABEL Two',
+                                value: 'VALUE Two',
+                                selected: false,
+                                $$hashKey: jasmine.any(String)
+                            }
+                        ]
+                    });
                 });
             });
         });
@@ -211,22 +246,24 @@ describe('amoMultiselect', function() {
             });
 
             it('should expose options', function() {
-                expect(target.options).toEqual([
-                    {
-                        id: 0,
-                        label: 'LABEL One',
-                        value: 'VALUE One',
-                        selected: false,
-                        $$hashKey: jasmine.any(String)
-                    },
-                    {
-                        id: 1,
-                        label: 'LABEL Two',
-                        value: 'VALUE Two',
-                        selected: true,
-                        $$hashKey: jasmine.any(String)
-                    }
-                ]);
+                expect(target.groupOptions).toEqual({
+                    null: [
+                        {
+                            id: 0,
+                            label: 'LABEL One',
+                            value: 'VALUE One',
+                            selected: false,
+                            $$hashKey: jasmine.any(String)
+                        },
+                        {
+                            id: 1,
+                            label: 'LABEL Two',
+                            value: 'VALUE Two',
+                            selected: true,
+                            $$hashKey: jasmine.any(String)
+                        }
+                    ]
+                });
             });
         });
     });
@@ -236,11 +273,11 @@ describe('amoMultiselect', function() {
 
         beforeEach(function() {
             amoMultiselectFactoryInstanceSpy.getLabel.and.callFake(function(option) {
-                return 'LABEL ' + option.id
+                return 'LABEL ' + option.id;
             });
 
             amoMultiselectFactoryInstanceSpy.getValue.and.callFake(function(option) {
-                return 'VALUE ' + option.id
+                return 'VALUE ' + option.id;
             });
 
             optionsMock = [
@@ -269,29 +306,157 @@ describe('amoMultiselect', function() {
         });
         
         it('should expose options', function() {
-            expect(target.options).toEqual([
-                {
-                    id: 0,
-                    label: 'LABEL 1',
-                    value: 'VALUE 1',
-                    selected: false,
-                    $$hashKey: jasmine.any(String)
-                },
+            expect(target.groupOptions).toEqual({
+                null: [
+                    {
+                        id: 0,
+                        label: 'LABEL 1',
+                        value: 'VALUE 1',
+                        selected: false,
+                        $$hashKey: jasmine.any(String)
+                    },
+                    {
+                        id: 1,
+                        label: 'LABEL 2',
+                        value: 'VALUE 2',
+                        selected: true,
+                        $$hashKey: jasmine.any(String)
+                    },
+                    {
+                        id: 2,
+                        label: 'LABEL 3',
+                        value: 'VALUE 3',
+                        selected: true,
+                        $$hashKey: jasmine.any(String)
+                    }
+                ]
+            });
+        });
+    });
+
+    describe('When compiling the directive with groups and two items selected', function() {
+        var html;
+
+        beforeEach(function() {
+            amoMultiselectFactoryInstanceSpy.getGroup.and.callFake(function(option) {
+                return option.color;
+            });
+
+            amoMultiselectFactoryInstanceSpy.getLabel.and.callFake(function(option) {
+                return 'LABEL ' + option.id;
+            });
+
+            amoMultiselectFactoryInstanceSpy.getValue.and.callFake(function(option) {
+                return 'VALUE ' + option.id;
+            });
+
+            amoMultiselectFactoryInstanceSpy.isGrouped.and.returnValue(true);
+
+            optionsMock = [
                 {
                     id: 1,
-                    label: 'LABEL 2',
-                    value: 'VALUE 2',
-                    selected: true,
-                    $$hashKey: jasmine.any(String)
+                    color: 'Red',
+                    label: 'Maroon'
                 },
                 {
                     id: 2,
-                    label: 'LABEL 3',
-                    value: 'VALUE 3',
-                    selected: true,
-                    $$hashKey: jasmine.any(String)
+                    color: 'Green',
+                    label: 'Lime'
+                },
+                {
+                    id: 3,
+                    color: 'Red',
+                    label: 'Ruby'
+                },
+                {
+                    id: 4,
+                    color: 'Blue',
+                    label: 'Azure'
+                },
+                {
+                    id: 5,
+                    color: 'Red',
+                    label: 'Crimson'
+                },
+                {
+                    id: 6,
+                    color: 'Blue',
+                    label: 'Sapphire'
                 }
+            ];
+
+            compile('<amo-multiselect ng-model="model" options="option.id as option.label for option in options"></amo-multiselect>', {
+                model: [
+                    'VALUE 4',
+                    'VALUE 5'
+                ],
+                options: optionsMock
+            });
+        });
+
+        it('should set selected count to 2', function() {
+            expect(target.getSelectedCount()).toEqual(2);
+        });
+
+        it('should set the groups in the proper order', function() {
+            expect(target.groups).toEqual([
+                'Red',
+                'Green',
+                'Blue'
             ]);
+        });
+        
+        it('should expose options', function() {
+            expect(target.groupOptions).toEqual({
+                'Red': [
+                    {
+                        id: 0,
+                        label: 'LABEL 1',
+                        value: 'VALUE 1',
+                        selected: false,
+                        $$hashKey: jasmine.any(String)
+                    },
+                    {
+                        id: 2,
+                        label: 'LABEL 3',
+                        value: 'VALUE 3',
+                        selected: false,
+                        $$hashKey: jasmine.any(String)
+                    },
+                    {
+                        id: 4,
+                        label: 'LABEL 5',
+                        value: 'VALUE 5',
+                        selected: true,
+                        $$hashKey: jasmine.any(String)
+                    }
+                ],
+                'Green': [
+                    {
+                        id: 1,
+                        label: 'LABEL 2',
+                        value: 'VALUE 2',
+                        selected: false,
+                        $$hashKey: jasmine.any(String)
+                    }
+                ],
+                'Blue': [
+                    {
+                        id: 3,
+                        label: 'LABEL 4',
+                        value: 'VALUE 4',
+                        selected: true,
+                        $$hashKey: jasmine.any(String)
+                    },
+                    {
+                        id: 5,
+                        label: 'LABEL 6',
+                        value: 'VALUE 6',
+                        selected: false,
+                        $$hashKey: jasmine.any(String)
+                    }
+                ]
+            });
         });
     });
 
@@ -387,26 +552,28 @@ describe('amoMultiselect', function() {
                     options: optionsMock
                 });
 
-                expect(target.toggleSelectedState(target.options[1]));
+                target.toggleSelectedState(target.groupOptions[null][1]);
             });
 
             it('should check selected option', function() {
-                expect(target.options).toEqual([
-                    {
-                        id: 0,
-                        label: 'LABEL One',
-                        value: 'VALUE One',
-                        selected: false,
-                        $$hashKey: jasmine.any(String)
-                    },
-                    {
-                        id: 1,
-                        label: 'LABEL Two',
-                        value: 'VALUE Two',
-                        selected: true,
-                        $$hashKey: jasmine.any(String)
-                    }
-                ]);
+                expect(target.groupOptions).toEqual({
+                    null: [
+                        {
+                            id: 0,
+                            label: 'LABEL One',
+                            value: 'VALUE One',
+                            selected: false,
+                            $$hashKey: jasmine.any(String)
+                        },
+                        {
+                            id: 1,
+                            label: 'LABEL Two',
+                            value: 'VALUE Two',
+                            selected: true,
+                            $$hashKey: jasmine.any(String)
+                        }
+                    ]
+                });
             });
         });
 
@@ -421,26 +588,28 @@ describe('amoMultiselect', function() {
                     options: optionsMock
                 });
 
-                expect(target.toggleSelectedState(target.options[1]));
+                target.toggleSelectedState(target.groupOptions[null][1]);
             });
 
             it('should check selected option', function() {
-                expect(target.options).toEqual([
-                    {
-                        id: 0,
-                        label: 'LABEL One',
-                        value: 'VALUE One',
-                        selected: false,
-                        $$hashKey: jasmine.any(String)
-                    },
-                    {
-                        id: 1,
-                        label: 'LABEL Two',
-                        value: 'VALUE Two',
-                        selected: true,
-                        $$hashKey: jasmine.any(String)
-                    }
-                ]);
+                expect(target.groupOptions).toEqual({
+                    null: [
+                        {
+                            id: 0,
+                            label: 'LABEL One',
+                            value: 'VALUE One',
+                            selected: false,
+                            $$hashKey: jasmine.any(String)
+                        },
+                        {
+                            id: 1,
+                            label: 'LABEL Two',
+                            value: 'VALUE Two',
+                            selected: true,
+                            $$hashKey: jasmine.any(String)
+                        }
+                    ]
+                });
             });
 
             it('should get option', function() {
@@ -533,22 +702,24 @@ describe('amoMultiselect', function() {
         });
 
         it('should check all options', function() {
-            expect(target.options).toEqual([
-                {
-                    id: 0,
-                    label: 'LABEL One',
-                    value: 'VALUE One',
-                    selected: true,
-                    $$hashKey: jasmine.any(String)
-                },
-                {
-                    id: 1,
-                    label: 'LABEL Two',
-                    value: 'VALUE Two',
-                    selected: true,
-                    $$hashKey: jasmine.any(String)
-                }
-            ]);
+            expect(target.groupOptions).toEqual({
+                null: [
+                    {
+                        id: 0,
+                        label: 'LABEL One',
+                        value: 'VALUE One',
+                        selected: true,
+                        $$hashKey: jasmine.any(String)
+                    },
+                    {
+                        id: 1,
+                        label: 'LABEL Two',
+                        value: 'VALUE Two',
+                        selected: true,
+                        $$hashKey: jasmine.any(String)
+                    }
+                ]
+            });
         });
 
         it('should get option', function() {
@@ -567,12 +738,45 @@ describe('amoMultiselect', function() {
         });
     });
 
-    describe('When deselecting all items', function() {
+    describe('When deselecting all items (with groups)', function() {
         beforeEach(function() {
+            amoMultiselectFactoryInstanceSpy.getGroup.and.callFake(function(option) {
+                return option.group;
+            });
+
+            amoMultiselectFactoryInstanceSpy.getLabel.and.callFake(function(option) {
+                return 'LABEL ' + option.id;
+            });
+
+            amoMultiselectFactoryInstanceSpy.getValue.and.callFake(function(option) {
+                return 'VALUE ' + option.id;
+            });
+
+            amoMultiselectFactoryInstanceSpy.isGrouped.and.returnValue(true);
+
+            optionsMock = [
+                {
+                    id: 1,
+                    group: 'A',
+                    value: 'One'
+                },
+                {
+                    id: 2,
+                    group: 'B',
+                    value: 'Two'
+                },
+                {
+                    id: 3,
+                    group: 'A',
+                    value: 'Two'
+                }
+            ];
+
             compile('<amo-multiselect ng-model="model" options="option for option in options"></amo-multiselect>', {
                 model: [
-                    'One',
-                    'Two'
+                    'VALUE 1',
+                    'VALUE 2',
+                    'VALUE 3',
                 ],
                 options: optionsMock
             });
@@ -587,22 +791,33 @@ describe('amoMultiselect', function() {
         });
 
         it('should check all options', function() {
-            expect(target.options).toEqual([
-                {
-                    id: 0,
-                    label: 'LABEL One',
-                    value: 'VALUE One',
-                    selected: false,
-                    $$hashKey: jasmine.any(String)
-                },
-                {
-                    id: 1,
-                    label: 'LABEL Two',
-                    value: 'VALUE Two',
-                    selected: false,
-                    $$hashKey: jasmine.any(String)
-                }
-            ]);
+            expect(target.groupOptions).toEqual({
+                A: [
+                    {
+                        id: 0,
+                        label: 'LABEL 1',
+                        value: 'VALUE 1',
+                        selected: false,
+                        $$hashKey: jasmine.any(String)
+                    },
+                    {
+                        id: 2,
+                        label: 'LABEL 3',
+                        value: 'VALUE 3',
+                        selected: false,
+                        $$hashKey: jasmine.any(String)
+                    }
+                ],
+                B: [
+                    {
+                        id: 1,
+                        label: 'LABEL 2',
+                        value: 'VALUE 2',
+                        selected: false,
+                        $$hashKey: jasmine.any(String)
+                    }
+                ]
+            });
         });
 
         it('should set model', function() {
@@ -624,22 +839,24 @@ describe('amoMultiselect', function() {
         });
 
         it('should check all filtered options', function() {
-            expect(target.options).toEqual([
-                {
-                    id: 0,
-                    label: 'LABEL One',
-                    value: 'VALUE One',
-                    selected: true,
-                    $$hashKey: jasmine.any(String)
-                },
-                {
-                    id: 1,
-                    label: 'LABEL Two',
-                    value: 'VALUE Two',
-                    selected: false,
-                    $$hashKey: jasmine.any(String)
-                }
-            ]);
+            expect(target.groupOptions).toEqual({
+                null: [
+                    {
+                        id: 0,
+                        label: 'LABEL One',
+                        value: 'VALUE One',
+                        selected: true,
+                        $$hashKey: jasmine.any(String)
+                    },
+                    {
+                        id: 1,
+                        label: 'LABEL Two',
+                        value: 'VALUE Two',
+                        selected: false,
+                        $$hashKey: jasmine.any(String)
+                    }
+                ]
+            });
         });
 
         it('should set model', function() {
@@ -702,27 +919,4 @@ describe('amoMultiselect', function() {
             expect(scope.label).toEqual('SELECT');
         });
     });
-    
-    function compile(html, locals) {
-        amoMultiselectFactoryInstanceSpy.getOptions.and.returnValue(optionsMock);
-
-        amoMultiselectFactoryInstanceSpy.getOptionsExpression.and.returnValue('options');
-
-        inject(function($compile, $rootScope, $timeout) {
-            var element = angular.element(html);
-
-            timeout = $timeout;
-
-            parentScope = $rootScope.$new();
-
-            $compile(element)(angular.extend(parentScope, locals));
-
-            parentScope.$digest();
-
-            element = element.find('amo-multiselect-dropdown');
-
-            scope = element.scope();
-            target = scope.multiselectDropdown;
-        });
-    }
 });

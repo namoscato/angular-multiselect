@@ -4,25 +4,9 @@ AngularJS multiselect component based off [`ngOptions`](https://docs.angularjs.o
 
 ## Dependencies
 
-* [AngularJS](https://angularjs.org/) v1.5.0
-* [Bootstrap](http://getbootstrap.com/) v3.3.6 for dropdown styles
-* [UI Bootstrap](http://angular-ui.github.io/bootstrap/) v1.1.2 for dropdown functionality
-
-_Note that [`backport`](https://github.com/namoscato/angular-multiselect/tree/backport) supports older versions of these dependencies._
-
-## Development
-
-1. Install dependencies
-
-        npm install
-
-2. Compile JavaScript & CSS
-
-        gulp all
-
-3. Run local webserver
-
-        gulp serve
+* [AngularJS](https://angularjs.org/) v1.5.x
+* [Bootstrap](http://getbootstrap.com/) v3.3.x for dropdown styles
+* [UI Bootstrap](http://angular-ui.github.io/bootstrap/) v1.2.x for dropdown functionality
 
 ## Usage
 
@@ -44,10 +28,34 @@ The interface for this directive is based off [`ngOptions`](https://docs.angular
 </amo-multiselect>
 ```
 
-where the value of `options` is of the following form: [_select_ **as**] _label_ [**group by** _group_] **for** _value_ **in** _array_
+where the value of `options` is of the following form:
+
+`[`_`select`_ **`as`**`]` _`label`_ `[`**`group by`** _`group`_`]` **`for`** _`value`_ **`in`** _`array`_
+
+where:
+
+* `array`: An expression which evaluates to an array.
+* `value`: Local variable which will refer to each item in the `array` during iteration.
+* `label`: The result of this expression will be the label for `<option>` element.
+* `select`: The result of this expression will be bound to the model of the parent `<select>` element. If not specified, `select` expression will default to `value`.
+* `group`: The result of this expression will be used to group options.
+
+## Development
+
+1. Install dependencies
+
+        npm install
+
+2. Compile JavaScript & CSS
+
+        gulp all
+
+3. Run local webserver
+
+        gulp serve
 
 ## Running Tests
 
-Install the [Karma](http://karma-runner.github.io/) commandline interface (`karma-cli`) globally and run:
+Install the [Karma](http://karma-runner.github.io/) commandline interface globally and run:
 
     karma start
