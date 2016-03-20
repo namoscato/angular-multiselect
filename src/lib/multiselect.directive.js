@@ -10,13 +10,13 @@
      * @module amo.multiselect
      * @name amoMultiselect
      * @requires $compile
-     * @requires $filter
      * @requires $parse
      * @requires $timeout
      * @requires AmoMultiselectFactory
      * @requires amoMultiselectFormatService
+     * @requires filterFilter
      */
-    function MultiselectDirective($compile, $filter, $parse, $timeout, AmoMultiselectFactory, amoMultiselectFormatService) {
+    function MultiselectDirective($compile, $parse, $timeout, AmoMultiselectFactory, amoMultiselectFormatService, filterFilter) {
 
         return {
             link: link,
@@ -36,7 +36,7 @@
         function link(parentScope, element, attrs, ngModelController) {
 
             var _exposeLabel = attrs.label ? $parse(attrs.label) : angular.noop,
-                _groupsHash = {},
+                _isGrouped,
                 _isInternalChange,
                 _labels = [],
                 _onChange = attrs.onChange ? $parse(attrs.onChange) : angular.noop,
@@ -51,8 +51,8 @@
 
             // Variables
             self.groups = [];
-            self.isGrouped = multiselect.isGrouped();
-            self.options = [];
+            self.groupOptions = {};
+            self.optionsFiltered = {};
             self.search = {};
             self.text = {
                 deselectAll: attrs.deselectAllText || 'Deselect All',
@@ -64,7 +64,7 @@
             self.exposeSelectedOptions = exposeSelectedOptions;
             self.getSelectedCount = getSelectedCount;
             self.hasSelectedMultipleItems = hasSelectedMultipleItems;
-            self.isGroupEmpty = isGroupEmpty;
+            self.isGroupVisible = isGroupVisible;
             self.onToggleDropdown = onToggleDropdown;
 
             // Initialization
@@ -90,10 +90,9 @@
                     selected,
                     value;
 
-                _groupsHash = {};
-                self.groups.length = 0;
                 _labels.length = 0;
-                self.options.length = 0;
+                self.groups.length = 0;
+                self.groupOptions = {};
 
                 // Iterate through original options and create exposed model
                 multiselect.getOptions().forEach(function(option, index) {
@@ -108,20 +107,20 @@
                         }
                     }
 
-                    group = self.isGrouped ? multiselect.getGroup(option) : 'ungrouped';
+                    group = _isGrouped ? multiselect.getGroup(option) : 'ungrouped';
 
-                    self.options.push({
+                    if (angular.isUndefined(self.groupOptions[group])) {
+                        self.groups.push(group);
+                        self.groupOptions[group] = [];
+                    }
+
+                    self.groupOptions[group].push({
                         group: group,
                         id: index,
                         label: multiselect.getLabel(option),
                         selected: selected,
                         value: value
                     });
-
-                    if (angular.isUndefined(_groupsHash[group])) {
-                        self.groups.push(group);
-                        _groupsHash[group] = true;
-                    }
                 });
 
                 setSelectedLabel();
@@ -138,15 +137,20 @@
                 _labels.length = 0;
                 _selectedOptions.length = 0;
 
-                self.options.forEach(function(optionModel, index) {
-                    if (!optionModel.selected) { return; }
+                angular.forEach(self.groupOptions, function(options) {
+                    angular.forEach(options, function(optionModel, index) {
+                        if (!optionModel.selected) {
+                            return;
+                        }
 
-                    option = multiselect.getOption(index);
+                        option = multiselect.getOption(index);
 
-                    addLabel(option);
+                        addLabel(option);
 
-                    _selectedOptions.push(multiselect.getValue(option));
+                        _selectedOptions.push(multiselect.getValue(option));
+                    });
                 });
+
 
                 _isInternalChange = true; // Prevent unnecessary $watch logic
 
@@ -182,6 +186,8 @@
              * @description Initializes the directive
              */
             function initialize() {
+                _isGrouped = multiselect.isGrouped();
+
                 element.append($compile('<amo-multiselect-dropdown></amo-multiselect-dropdown>')(scope));
 
                 parentScope.$on('$destroy', function() {
@@ -214,13 +220,17 @@
 
             /**
              * @ngdoc method
-             * @name amoMultiselect#isGroupEmpty
-             * @description Determines whether or not items are selected
+             * @name amoMultiselect#isGroupVisible
+             * @description Determines whether or not the group is visible
              * @param {String} group
              * @returns {Boolean}
              */
-            function isGroupEmpty(group) {
-                return $filter('amoMultiselectGroup')($filter('filter')(self.options, self.search), group).length === 0;
+            function isGroupVisible(group) {
+                if (!_isGrouped) {
+                    return false;
+                }
+
+                return filterFilter(self.groupOptions[group], self.search).length > 0;
             }
 
             /**
