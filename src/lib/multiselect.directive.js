@@ -13,10 +13,11 @@
      * @requires $parse
      * @requires $timeout
      * @requires AmoMultiselectFactory
+     * @requires amoMultiselectConfig
      * @requires amoMultiselectFormatService
      * @requires filterFilter
      */
-    function MultiselectDirective($compile, $parse, $timeout, AmoMultiselectFactory, amoMultiselectFormatService, filterFilter) {
+    function MultiselectDirective($compile, $parse, $timeout, AmoMultiselectFactory, amoMultiselectConfig, amoMultiselectFormatService, filterFilter) {
 
         return {
             link: link,
@@ -54,9 +55,9 @@
             self.optionsFiltered = {};
             self.search = {};
             self.text = {
-                deselectAll: attrs.deselectAllText || 'Deselect All',
-                search: attrs.searchText || 'Search...',
-                selectAll: attrs.selectAllText || 'Select All',
+                deselectAll: attrs.deselectAllText || amoMultiselectConfig.deselectAllText,
+                search: attrs.searchText || amoMultiselectConfig.searchText,
+                selectAll: attrs.selectAllText || amoMultiselectConfig.selectAllText
             };
 
             // Methods
@@ -252,7 +253,7 @@
              * @returns {String} New label
              */
             function setSelectedLabel() {
-                var label = attrs.selectText || 'Select...';
+                var label = attrs.selectText || amoMultiselectConfig.selectText;
 
                 if (_labels.length > 0) {
                     if (angular.isDefined(_labels[0])) { // Support undefined labels

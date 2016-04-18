@@ -25,8 +25,8 @@
          * 4. array item variable name (value)
          * 5. options array expression (optionsExpression)
          */
-        var _optionsRegularExpression = /^\s*(?:(\S+)\s+as\s+)?(\S+)(?:\s+group\s+by\s+(\S+?))?\s+for\s+(\S+)\s+in\s+(\S+)\s*$/;
-                                       //0000000111110000000000222220000000000000000000333333000000000004444400000000555550000
+        var _optionsRegularExpression = /^\s*(?:([\s\S]+?)\s+as\s+)?([\s\S]+?)(?:\s+group\s+by\s+([\s\S]+?))?\s+for\s+([\$\w][\$\w]*)\s+in\s+([\s\S]+?)\s*$/;
+                                       //000000011111111110000000000222222222200000000000000000003333333333300000000004444444444444440000000055555555550000
 
         /**
          * @ngdoc method
