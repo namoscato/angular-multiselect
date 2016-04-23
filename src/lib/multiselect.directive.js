@@ -13,10 +13,11 @@
      * @requires $parse
      * @requires $timeout
      * @requires AmoMultiselectFactory
+     * @requires amoMultiselectConfig
      * @requires amoMultiselectFormatService
      * @requires filterFilter
      */
-    function MultiselectDirective($compile, $parse, $timeout, AmoMultiselectFactory, amoMultiselectFormatService, filterFilter) {
+    function MultiselectDirective($compile, $parse, $timeout, AmoMultiselectFactory, amoMultiselectConfig, amoMultiselectFormatService, filterFilter) {
 
         return {
             link: link,
@@ -54,9 +55,9 @@
             self.optionsFiltered = {};
             self.search = {};
             self.text = {
-                deselectAll: attrs.deselectAllText || 'Deselect All',
-                search: attrs.searchText || 'Search...',
-                selectAll: attrs.selectAllText || 'Select All',
+                deselectAll: attrs.deselectAllText || amoMultiselectConfig.deselectAllText,
+                search: attrs.searchText || amoMultiselectConfig.searchText,
+                selectAll: attrs.selectAllText || amoMultiselectConfig.selectAllText
             };
 
             // Methods
@@ -84,41 +85,40 @@
              * @description Exposes the multiselect options
              */
             function exposeOptions() {
-                var group,
-                    i,
+                var i,
                     selected,
                     value;
 
                 _labels.length = 0;
-                self.groups.length = 0;
                 self.groupOptions = {};
                 self.optionsFiltered = {};
 
+                self.groups = multiselect.getGroups();
+
                 // Iterate through original options and create exposed model
-                multiselect.getOptions().forEach(function(option, index) {
-                    selected = false;
-                    value = multiselect.getValue(option);
+                angular.forEach(multiselect.getOptions(), function(options, group) {
+                    angular.forEach(options, function(option, index) {
+                        selected = false;
+                        value = multiselect.getValue(option);
 
-                    for (i = 0; i < _selectedOptions.length; i++) {
-                        if (angular.equals(_selectedOptions[i], value)) {
-                            selected = true;
-                            addLabel(option);
-                            break;
+                        for (i = 0; i < _selectedOptions.length; i++) {
+                            if (angular.equals(_selectedOptions[i], value)) {
+                                selected = true;
+                                addLabel(option);
+                                break;
+                            }
                         }
-                    }
 
-                    group = multiselect.getGroup(option);
+                        if (angular.isUndefined(self.groupOptions[group])) {
+                            self.groupOptions[group] = [];
+                        }
 
-                    if (angular.isUndefined(self.groupOptions[group])) {
-                        self.groups.push(group);
-                        self.groupOptions[group] = [];
-                    }
-
-                    self.groupOptions[group].push({
-                        id: index,
-                        label: multiselect.getLabel(option),
-                        value: value,
-                        selected: selected
+                        self.groupOptions[group].push({
+                            id: index,
+                            label: multiselect.getLabel(option),
+                            value: value,
+                            selected: selected
+                        });
                     });
                 });
 
@@ -136,13 +136,13 @@
                 _labels.length = 0;
                 _selectedOptions.length = 0;
 
-                angular.forEach(self.groupOptions, function(options) {
+                angular.forEach(self.groupOptions, function(options, group) {
                     angular.forEach(options, function(optionModel, index) {
                         if (!optionModel.selected) {
                             return;
                         }
 
-                        option = multiselect.getOption(index);
+                        option = multiselect.getOption(index, group);
 
                         addLabel(option);
 
@@ -252,7 +252,7 @@
              * @returns {String} New label
              */
             function setSelectedLabel() {
-                var label = attrs.selectText || 'Select...';
+                var label = attrs.selectText || amoMultiselectConfig.selectText;
 
                 if (_labels.length > 0) {
                     if (angular.isDefined(_labels[0])) { // Support undefined labels

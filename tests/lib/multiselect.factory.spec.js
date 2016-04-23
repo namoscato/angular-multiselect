@@ -29,9 +29,19 @@ describe('AmoMultiselectFactory', function() {
             });
         });
 
+        describe('and getting the first option', function() {
+            beforeEach(function() {
+                result = target.getOption(0);
+            });
+
+            it('should return "One"', function() {
+                expect(result).toEqual('One');
+            });
+        });
+
         describe('and getting the second option', function() {
             beforeEach(function() {
-                result = target.getOption(1);
+                result = target.getOption(1, null);
             });
 
             it('should return "Two"', function() {
@@ -49,16 +59,30 @@ describe('AmoMultiselectFactory', function() {
             });
         });
 
+        describe('and getting the groups', function() {
+            beforeEach(function() {
+                result = target.getGroups();
+            });
+
+            it('should return array of groups', function() {
+                expect(result).toEqual([
+                    null
+                ]);
+            });
+        });
+
         describe('and getting the options', function() {
             beforeEach(function() {
                 result = target.getOptions();
             });
 
             it('should return array of options', function() {
-                expect(result).toEqual([
-                    'One',
-                    'Two'
-                ]);
+                expect(result).toEqual({
+                    null: [
+                        'One',
+                        'Two'
+                    ]
+                });
             });
         });
 
@@ -74,7 +98,7 @@ describe('AmoMultiselectFactory', function() {
     });
 
     describe('When parsing an array of objects', function() {
-        describe('with a specified select property', function() {
+        describe('without a specified select property', function() {
             beforeEach(function() {
                 target = new targetConstructor('option.prop for option in ctrl.arrayOfObjects', {});
 
@@ -128,14 +152,16 @@ describe('AmoMultiselectFactory', function() {
                 });
 
                 it('should return array of options', function() {
-                    expect(result).toEqual([
-                        {
-                            prop: 'One'
-                        },
-                        {
-                            prop: 'Two'
-                        }
-                    ]);
+                    expect(result).toEqual({
+                        null: [
+                            {
+                                prop: 'One'
+                            },
+                            {
+                                prop: 'Two'
+                            }
+                        ]
+                    });
                 });
             });
 
@@ -208,63 +234,155 @@ describe('AmoMultiselectFactory', function() {
                 });
             });
         });
-    });
 
-    describe('When parsing an expression with format methods', function() {
-        var formatLabelSpy,
-            formatValueSpy;
-
-        beforeEach(function() {
-            formatLabelSpy = jasmine.createSpy('formatLabel');
-            formatLabelSpy.and.returnValue('LABEL');
-
-            formatValueSpy = jasmine.createSpy('formatValue');
-            formatValueSpy.and.returnValue('VALUE');
-
-            target = new targetConstructor('formatValue(option) as formatLabel(option) for option in options', {
-                formatLabel: formatLabelSpy,
-                formatValue: formatValueSpy
-            });
-        });
-
-        describe('and getting the label of an option', function() {
+        describe('with groups', function() {
             beforeEach(function() {
-                result = target.getLabel('Two');
+                target = new targetConstructor('option group by option.group for option in ctrl.arrayOfObjects', {});
+
+                target.setOptions([
+                    {
+                        key: 1,
+                        group: 'B'
+                    },
+                    {
+                        key: 2,
+                        group: 'A'
+                    },
+                    {
+                        key: 3,
+                        group: 'B'
+                    }
+                ]);
             });
 
-            it('should format label', function() {
-                expect(formatLabelSpy).toHaveBeenCalledWith('Two');
+            describe('and getting the groups', function() {
+                beforeEach(function() {
+                    result = target.getGroups();
+                });
+
+                it('should return array of groups', function() {
+                    expect(result).toEqual([
+                        'B',
+                        'A'
+                    ]);
+                });
             });
 
-            it('should return formatted label', function() {
-                expect(result).toEqual('LABEL');
-            });
-        });
+            describe('and getting the options', function() {
+                beforeEach(function() {
+                    result = target.getOptions();
+                });
 
-        describe('and getting the value of an option', function() {
-            beforeEach(function() {
-                result = target.getValue('One');
+                it('should return array of options', function() {
+                    expect(result).toEqual({
+                        A: [
+                            {
+                                key: 2,
+                                group: 'A'
+                            }
+                        ],
+                        B: [
+                            {
+                                key: 1,
+                                group: 'B'
+                            },
+                            {
+                                key: 3,
+                                group: 'B'
+                            }
+                        ]
+                    });
+                });
             });
 
-            it('should format value', function() {
-                expect(formatValueSpy).toHaveBeenCalledWith('One');
+            describe('and getting the first option of the first group', function() {
+                beforeEach(function() {
+                    result = target.getOption(0, 'A');
+                });
+
+                it('should return option', function() {
+                    expect(result).toEqual({
+                        key: 2,
+                        group: 'A'
+                    })
+                });
             });
 
-            it('should return formatted value', function() {
-                expect(result).toEqual('VALUE');
-            });
-        });
-    });
+            describe('and getting the first option of the second group', function() {
+                beforeEach(function() {
+                    result = target.getOption(0, 'B');
+                });
 
-    describe('When parsing an invalid options expression', function() {
-        it('should throw error', function() {
-            expect(function() {
-                new targetConstructor('option for option inoptions', {});
-            }).toThrow(jasmine.any(Error));
+                it('should return option', function() {
+                    expect(result).toEqual({
+                        key: 1,
+                        group: 'B'
+                    })
+                });
+            });
+
+            describe('and getting the second option of the second group', function() {
+                beforeEach(function() {
+                    result = target.getOption(1, 'B');
+                });
+
+                it('should return option', function() {
+                    expect(result).toEqual({
+                        key: 3,
+                        group: 'B'
+                    })
+                });
+            });
         });
     });
 
     describe('When parsing an expression', function() {
+        var formatLabelSpy,
+            formatValueSpy;
+
+        describe('with format methods', function() {
+            beforeEach(function() {
+                formatLabelSpy = jasmine.createSpy('formatLabel');
+                formatLabelSpy.and.returnValue('LABEL');
+
+                formatValueSpy = jasmine.createSpy('formatValue');
+                formatValueSpy.and.returnValue('VALUE');
+
+                target = new targetConstructor('formatValue( option ) as formatLabel(option) for option in options', {
+                    formatLabel: formatLabelSpy,
+                    formatValue: formatValueSpy
+                });
+            });
+
+            describe('and getting the label of an option', function() {
+                beforeEach(function() {
+                    result = target.getLabel('Two');
+                });
+
+                it('should format label', function() {
+                    expect(formatLabelSpy).toHaveBeenCalledWith('Two');
+                });
+
+                it('should return formatted label', function() {
+                    expect(result).toEqual('LABEL');
+                });
+            });
+
+            describe('and getting the value of an option', function() {
+                beforeEach(function() {
+                    result = target.getValue('One');
+                });
+
+                it('should format value', function() {
+                    expect(formatValueSpy).toHaveBeenCalledWith('One');
+                });
+
+                it('should return formatted value', function() {
+                    expect(result).toEqual('VALUE');
+                });
+            });
+        });
+
         describe('without groups', function() {
             beforeEach(function() {
                 target = new targetConstructor('option.label for option in ctrl.arrayOfObjects', {});
@@ -320,6 +438,14 @@ describe('AmoMultiselectFactory', function() {
                     expect(result).toEqual(true);
                 });
             });
+        });
+    });
+
+    describe('When parsing an invalid options expression', function() {
+        it('should throw error', function() {
+            expect(function() {
+                new targetConstructor('option for option inoptions', {});
+            }).toThrow(jasmine.any(Error));
         });
     });
 });

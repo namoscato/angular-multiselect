@@ -10,7 +10,13 @@ AngularJS multiselect component based off [`ngOptions`](https://docs.angularjs.o
 
 ## Usage
 
-The interface for this directive is based off [`ngOptions`](https://docs.angularjs.org/api/ng/directive/ngOptions):
+Declare a dependency on the `amo.multiselect` module:
+
+```js
+angular.module('myModule', ['amo.multiselect']);
+```
+
+and add the `amoMultiselect` directive to your template:
 
 ```html
 <amo-multiselect
@@ -39,6 +45,24 @@ where the value of `options` is of the following form:
 | `label`  | The result of this expression will be the label for each option. |
 | `select` | The result of this expression will be bound to the model of the parent `<amo-multiselect>` element. If not specified, `select` expression will default to `value`. |
 | `group`  | The result of this expression will be used to group options. |
+
+## Settings
+
+The following settings can be set on a per-instance basis via dasherized `<amo-multiselect>` attributes.
+
+Some settings can be set globally via camel cased `amoMultiselectConfig` [constant](https://docs.angularjs.org/api/auto/service/$provide#constant) properties.
+
+| Name | Type | Global | Default | Description |
+| ---- | ---- |:------:| ------- | ----------- |
+| `deselectAllText` | `@string` | Yes | Deselect&nbsp;All | Deselect all option label text |
+| `label` | `&string` | No | — | Expression bound to the current button label text |
+| `onChange` | `&function(label)` | No | — | Expression called with `label` string when model changes |
+| `onToggleDropdown` | `&function(isOpen)` | No | — | Expression called with `isOpen` boolean when dropdown opens or closes |
+| `searchText` | `@string` | Yes | Search... | Search input placeholder text |
+| `selectAllText` | `@string` | Yes | Select&nbsp;All | Select all option label text |
+| `selectedSuffixSingularText` | `@string` | Yes | item | Singular suffix appended to button label text when option label properties are undefined |
+| `selectedSuffixText` | `@string` | Yes | items | Suffix appended to button label text when option label properties are undefined |
+| `selectText` | `@string` | Yes | Select... | Default button label text when no options are selected |
 
 ## Development
 

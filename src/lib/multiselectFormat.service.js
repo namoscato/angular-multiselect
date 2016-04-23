@@ -9,8 +9,9 @@
      * @ngdoc factory
      * @module amo.multiselect
      * @name amoMultiselectFormatService
+     * @requires amoMultiselectConfig
      */
-    function MultiselectFormatService() {
+    function MultiselectFormatService(amoMultiselectConfig) {
         var self = this;
 
         self.joinLabels = joinLabels;
@@ -55,9 +56,9 @@
             var label = labels.length + ' ';
 
             if (labels.length === 1) {
-                label += singularSuffix || 'item';
+                label += singularSuffix || amoMultiselectConfig.selectedSuffixSingularText;
             } else {
-                label += suffix || 'items';
+                label += suffix || amoMultiselectConfig.selectedSuffixText;
             }
 
             return label;

@@ -38,8 +38,14 @@ var js = {
             'node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js'
         ],
         templates: 'src/lib/**/*.html'
-    }
+    },
+    dest: 'src/dist/js'
 };
+
+var distDest = {
+    css: 'dist/css',
+    js: 'dist/js'
+}
 
 gulp.task('all', 'Build application', [
     'css:app',
@@ -70,7 +76,7 @@ gulp.task('css:app', 'Compile application SASS', function() {
 gulp.task('css:dist', 'Compile multiselect SASS', function() {
     gulp.src(css.src.dist)
         .pipe(gulpSass().on('error', gulpSass.logError))
-        .pipe(gulp.dest(css.dest));
+        .pipe(gulp.dest(distDest.css));
 });
 
 gulp.task('js:app', 'Compile application JavaScript', function() {
@@ -82,7 +88,7 @@ gulp.task('js:app', 'Compile application JavaScript', function() {
             })
         )));
 
-    return compileJavaScript(stream, 'app');
+    return compileJavaScript(stream, 'app', js.dest);
 });
 
 gulp.task('js:dist', 'Build directive JavaScript and template', [
@@ -90,9 +96,9 @@ gulp.task('js:dist', 'Build directive JavaScript and template', [
 ]);
 
 gulp.task('js:dist:compressed', false, ['js:dist:uncompressed'], function() {
-    var stream = gulp.src('src/dist/js/multiselect.js');
+    var stream = gulp.src(distDest.js + '/multiselect.js');
 
-    return compileJavaScript(stream, 'multiselect');
+    return compileJavaScript(stream, 'multiselect', distDest.js);
 });
 
 gulp.task('js:dist:uncompressed', false, function() {
@@ -104,13 +110,13 @@ gulp.task('js:dist:uncompressed', false, function() {
             })
         )));
 
-    return compileJavaScript(stream, 'multiselect', false);
+    return compileJavaScript(stream, 'multiselect', distDest.js, false);
 });
 
 gulp.task('js:libs', 'Compile third party JavaScript', function() {
     var stream = gulp.src(js.src.libs);
 
-    return compileJavaScript(stream, 'vendor');
+    return compileJavaScript(stream, 'vendor', js.dest);
 });
 
 gulp.task('js:lint', 'Run JSHint to check for JavaScript code quality', function() {
@@ -153,11 +159,10 @@ gulp.task('watch', 'Watch for changes and recompile', ['all'], function() {
  * @name compileJavaScript
  * @param {Object} stream Stream object
  * @param {String} name Name of output file
+ * @param {String} dest Destination path
  * @param {Boolean} [uglify=true]
  */
-function compileJavaScript(stream, name, uglify) {
-    var outputPath = 'src/dist/js';
-
+function compileJavaScript(stream, name, dest, uglify) {
     if (typeof uglify === 'undefined') {
         uglify = true;
     }
@@ -173,5 +178,5 @@ function compileJavaScript(stream, name, uglify) {
             .pipe(gulpRename(name + '.min.js'));
     }
 
-    return stream.pipe(gulp.dest(outputPath));
+    return stream.pipe(gulp.dest(dest));
 }
