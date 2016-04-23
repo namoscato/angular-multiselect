@@ -19,6 +19,7 @@ describe('amoMultiselect', function() {
     beforeEach(function() {
         amoMultiselectFactoryInstanceSpy = jasmine.createSpyObj('AmoMultiselectFactory()', [
             'getGroup',
+            'getGroups',
             'getLabel',
             'getOption',
             'getOptions',
@@ -35,9 +36,19 @@ describe('amoMultiselect', function() {
 
         amoMultiselectFactoryInstanceSpy.getGroup.and.returnValue(null);
 
+        amoMultiselectFactoryInstanceSpy.getGroups.and.returnValue([
+            null
+        ]);
+
         amoMultiselectFactoryInstanceSpy.getOption.and.callFake(function(index) {
             return optionsMock[index];
         });
+
+        amoMultiselectFactoryInstanceSpy.getOptions.and.returnValue({
+            null: optionsMock
+        });
+
+        amoMultiselectFactoryInstanceSpy.getOptionsExpression.and.returnValue('options');
 
         amoMultiselectFactoryInstanceSpy.getLabel.and.callFake(function(option) {
             return 'LABEL ' + option
@@ -68,10 +79,6 @@ describe('amoMultiselect', function() {
     }));
 
     function compile(html, locals) {
-        amoMultiselectFactoryInstanceSpy.getOptions.and.returnValue(optionsMock);
-
-        amoMultiselectFactoryInstanceSpy.getOptionsExpression.and.returnValue('options');
-
         inject(function($compile, $rootScope, $timeout, filterFilter) {
             var element = angular.element(html);
 
@@ -127,6 +134,12 @@ describe('amoMultiselect', function() {
                 expect(amoMultiselectFactoryInstanceSpy.setOptions).toHaveBeenCalledWith([
                     'One',
                     'Two'
+                ]);
+            });
+
+            it('should expose groups', function() {
+                expect(target.groups).toEqual([
+                    null
                 ]);
             });
 
@@ -295,6 +308,10 @@ describe('amoMultiselect', function() {
                 }
             ];
 
+            amoMultiselectFactoryInstanceSpy.getOptions.and.returnValue({
+                null: optionsMock
+            });
+
             compile('<amo-multiselect ng-model="model" options="option.id as option.label for option in options"></amo-multiselect>', {
                 model: ['VALUE 2', 'VALUE 3'],
                 options: optionsMock
@@ -342,8 +359,53 @@ describe('amoMultiselect', function() {
                 return option.color;
             });
 
+            amoMultiselectFactoryInstanceSpy.getGroups.and.returnValue([
+                'Red',
+                'Green',
+                'Blue'
+            ]);
+
             amoMultiselectFactoryInstanceSpy.getLabel.and.callFake(function(option) {
                 return 'LABEL ' + option.id;
+            });
+
+            amoMultiselectFactoryInstanceSpy.getOptions.and.returnValue({
+                'Red': [
+                    {
+                        id: 1,
+                        color: 'Red',
+                        label: 'Maroon'
+                    },
+                    {
+                        id: 3,
+                        color: 'Red',
+                        label: 'Ruby'
+                    },
+                    {
+                        id: 5,
+                        color: 'Red',
+                        label: 'Crimson'
+                    }
+                ],
+                'Green': [
+                    {
+                        id: 2,
+                        color: 'Green',
+                        label: 'Lime'
+                    }
+                ],
+                'Blue': [
+                    {
+                        id: 4,
+                        color: 'Blue',
+                        label: 'Azure'
+                    },
+                    {
+                        id: 6,
+                        color: 'Blue',
+                        label: 'Sapphire'
+                    }
+                ]
             });
 
             amoMultiselectFactoryInstanceSpy.getValue.and.callFake(function(option) {
@@ -417,14 +479,14 @@ describe('amoMultiselect', function() {
                         $$hashKey: jasmine.any(String)
                     },
                     {
-                        id: 2,
+                        id: 1,
                         label: 'LABEL 3',
                         value: 'VALUE 3',
                         selected: false,
                         $$hashKey: jasmine.any(String)
                     },
                     {
-                        id: 4,
+                        id: 2,
                         label: 'LABEL 5',
                         value: 'VALUE 5',
                         selected: true,
@@ -433,7 +495,7 @@ describe('amoMultiselect', function() {
                 ],
                 'Green': [
                     {
-                        id: 1,
+                        id: 0,
                         label: 'LABEL 2',
                         value: 'VALUE 2',
                         selected: false,
@@ -442,14 +504,14 @@ describe('amoMultiselect', function() {
                 ],
                 'Blue': [
                     {
-                        id: 3,
+                        id: 0,
                         label: 'LABEL 4',
                         value: 'VALUE 4',
                         selected: true,
                         $$hashKey: jasmine.any(String)
                     },
                     {
-                        id: 5,
+                        id: 1,
                         label: 'LABEL 6',
                         value: 'VALUE 6',
                         selected: false,
@@ -613,7 +675,10 @@ describe('amoMultiselect', function() {
             });
 
             it('should get option', function() {
-                expect(amoMultiselectFactoryInstanceSpy.getOption).toHaveBeenCalledWith(1);
+                expect(amoMultiselectFactoryInstanceSpy.getOption).toHaveBeenCalledWith(
+                    1,
+                    'null'
+                );
             });
 
             it('should set model', function() {
@@ -744,6 +809,11 @@ describe('amoMultiselect', function() {
                 return option.group;
             });
 
+            amoMultiselectFactoryInstanceSpy.getGroups.and.returnValue([
+                'A',
+                'B'
+            ]);
+
             amoMultiselectFactoryInstanceSpy.getLabel.and.callFake(function(option) {
                 return 'LABEL ' + option.id;
             });
@@ -772,6 +842,28 @@ describe('amoMultiselect', function() {
                 }
             ];
 
+            amoMultiselectFactoryInstanceSpy.getOptions.and.returnValue({
+                'A': [
+                    {
+                        id: 1,
+                        group: 'A',
+                        value: 'One'
+                    },
+                    {
+                        id: 3,
+                        group: 'A',
+                        value: 'Two'
+                    }
+                ],
+                'B': [
+                    {
+                        id: 2,
+                        group: 'B',
+                        value: 'Two'
+                    }
+                ]
+            });
+
             compile('<amo-multiselect ng-model="model" options="option for option in options"></amo-multiselect>', {
                 model: [
                     'VALUE 1',
@@ -790,7 +882,7 @@ describe('amoMultiselect', function() {
             expect(target.isAllSelected).toEqual(false);
         });
 
-        it('should check all options', function() {
+        it('should uncheck all options', function() {
             expect(target.groupOptions).toEqual({
                 A: [
                     {
@@ -801,7 +893,7 @@ describe('amoMultiselect', function() {
                         $$hashKey: jasmine.any(String)
                     },
                     {
-                        id: 2,
+                        id: 1,
                         label: 'LABEL 3',
                         value: 'VALUE 3',
                         selected: false,
@@ -810,7 +902,7 @@ describe('amoMultiselect', function() {
                 ],
                 B: [
                     {
-                        id: 1,
+                        id: 0,
                         label: 'LABEL 2',
                         value: 'VALUE 2',
                         selected: false,

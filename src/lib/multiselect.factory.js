@@ -43,6 +43,7 @@
 
             // Methods
             self.getGroup = getGroup;
+            self.getGroups = getGroups;
             self.getLabel = getLabel;
             self.getOption = getOption;
             self.getOptionsExpression = getOptionsExpression;
@@ -67,6 +68,16 @@
                 }
 
                 return _parse.groupFunction(scope, getLocals(option));
+            }
+
+            /**
+             * @ngdoc method
+             * @name AmoMultiselectFactory#getGroups
+             * @description Returns the array of groups
+             * @returns {Array}
+             */
+            function getGroups(option) {
+                return _parse.groups;
             }
 
             /**
@@ -99,10 +110,15 @@
              * @name AmoMultiselectFactory#getOption
              * @description Returns the option with the specified index
              * @param {Number} index Index of option
+             * @param {String} [group=null] Optional group key
              * @returns {*}
              */
-            function getOption(index) {
-                return _parse.options[index];
+            function getOption(index, group) {
+                if (angular.isUndefined(group)) {
+                    group = null;
+                }
+
+                return _parse.groupOptions[group][index];
             }
 
             /**
@@ -118,11 +134,11 @@
             /**
              * @ngdoc method
              * @name AmoMultiselectFactory#getOptions
-             * @description Returns the array of options
-             * @returns {*}
+             * @description Returns the set of options, hashed by group
+             * @returns {Object}
              */
             function getOptions() {
-                return _parse.options;
+                return _parse.groupOptions;
             }
 
             /**
@@ -171,16 +187,30 @@
              * @name AmoMultiselectFactory#setOptions
              * @description Sets the options array
              * @param {Array} options
-             * @returns {Array} Reference to `options`
+             * @returns {Object} Set of options, hashed by group
              */
             function setOptions(options) {
+                var group;
+
                 if (!angular.isArray(options)) {
                     throw new Error('Expected "' + _parse.optionsExpression + '" to be Array');
                 }
 
-                _parse.options = options;
+                _parse.groups = [];
+                _parse.groupOptions = {};
 
-                return _parse.options;
+                options.forEach(function(option) {
+                    group = getGroup(option);
+
+                    if (angular.isUndefined(_parse.groupOptions[group])) {
+                        _parse.groups.push(group);
+                        _parse.groupOptions[group] = [];
+                    }
+
+                    _parse.groupOptions[group].push(option);
+                });
+
+                return _parse.groupOptions;
             }
 
             return self;
