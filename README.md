@@ -5,8 +5,8 @@ AngularJS multiselect component based off [`ngOptions`](https://docs.angularjs.o
 ## Dependencies
 
 * [AngularJS](https://angularjs.org/) v1.5.x
-* [Bootstrap](http://getbootstrap.com/) v3.3.x for dropdown styles
-* [UI Bootstrap](http://angular-ui.github.io/bootstrap/) v1.2.x for dropdown functionality
+* [Bootstrap CSS](http://getbootstrap.com/) v3.3.x for dropdown styles
+* [UI Bootstrap](http://angular-ui.github.io/bootstrap/) v1.3.x for dropdown functionality
 
 ## Usage
 
@@ -21,16 +21,7 @@ and add the `amoMultiselect` directive to your template:
 ```html
 <amo-multiselect
     ng-model="app.model"
-    options="option.id as option.label for option in app.options"
-    on-change="app.onChange(label)"
-    on-toggle-dropdown="app.onToggleDropdown(isOpen)"
-    label="app.label"
-    search-text="Search..."
-    select-text="Select..."
-    select-all-text="Select All"
-    deselect-all-text="Deselect All"
-    selected-suffix-singular-text="thing"
-    selected-suffix-text="things">
+    options="option.id as option.label for option in app.options">
 </amo-multiselect>
 ```
 

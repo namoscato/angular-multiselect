@@ -84,7 +84,7 @@ gulp.task('js:app', 'Compile application JavaScript', function() {
         .pipe(addStream.obj(gulp.src(js.src.templates)
             .pipe(gulpAngularTemplateCache('templates.js', {
                 module: 'amo.multiselect',
-                root: 'multiselect'
+                root: 'amo/multiselect'
             })
         )));
 

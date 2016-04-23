@@ -15,7 +15,7 @@
         return {
             link: link,
             restrict: 'E',
-            templateUrl: 'multiselect/multiselect-dropdown.html'
+            templateUrl: 'amo/multiselect/multiselect-dropdown.html'
         };
 
         /**
