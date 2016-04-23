@@ -8,6 +8,7 @@ var addStream = require('add-stream'),
     gulpCssnano = require('gulp-cssnano'),
     gulpHelp = require('gulp-help')(gulp),
     gulpJshint = require('gulp-jshint'),
+    gulpNgAnnotate = require('gulp-ng-annotate'),
     gulpRename = require('gulp-rename'),
     gulpSass = require('gulp-sass'),
     gulpUglify = require('gulp-uglify'),
@@ -167,13 +168,15 @@ function compileJavaScript(stream, name, dest, uglify) {
         uglify = true;
     }
 
-    stream = stream.pipe(gulpConcat(name + '.js'));
+    stream = stream
+        .pipe(gulpConcat(name + '.js'))
+        .pipe(gulpNgAnnotate());
 
     if (uglify) {
         stream = stream
             .pipe(gulpUglify({
                 compress: false,
-                mangle: false
+                preserveComments: 'license'
             }))
             .pipe(gulpRename(name + '.min.js'));
     }

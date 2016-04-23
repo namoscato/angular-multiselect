@@ -1,3 +1,9 @@
+// AngularJS Multiselect
+// https://github.com/namoscato/angular-multiselect
+// 
+// Version: 1.1.4
+// License: MIT
+
 (function() {
     'use strict';
 
@@ -115,6 +121,7 @@
 (function() {
     'use strict';
 
+    MultiselectDirective.$inject = ["$compile", "$parse", "$timeout", "AmoMultiselectFactory", "amoMultiselectConfig", "amoMultiselectFormatService", "filterFilter"];
     angular
         .module('amo.multiselect')
         .directive('amoMultiselect', MultiselectDirective);
@@ -392,6 +399,7 @@
 (function() {
     'use strict';
 
+    MultiselectFactory.$inject = ["$parse"];
     angular
         .module('amo.multiselect')
         .factory('AmoMultiselectFactory', MultiselectFactory);
@@ -613,6 +621,7 @@
 (function() {
     'use strict';
 
+    MultiselectFormatService.$inject = ["amoMultiselectConfig"];
     angular
         .module('amo.multiselect')
         .service('amoMultiselectFormatService', MultiselectFormatService);
