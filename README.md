@@ -8,6 +8,18 @@ AngularJS multiselect component based off [`ngOptions`](https://docs.angularjs.o
 * [Bootstrap CSS](http://getbootstrap.com/) v3.3.x for dropdown styles
 * [UI Bootstrap](http://angular-ui.github.io/bootstrap/) v1.3.x for dropdown functionality
 
+## Installation
+
+A distribution package is maintained in a [separate repository](https://github.com/namoscato/angular-multiselect-package).
+
+### npm
+
+    npm install amo-angular-multiselect
+
+### Bower
+
+    bower install amo-angular-multiselect
+
 ## Usage
 
 Declare a dependency on the `amo.multiselect` module:
