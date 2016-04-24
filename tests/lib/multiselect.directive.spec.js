@@ -1,4 +1,4 @@
-describe('amoMultiselect', function() {
+fdescribe('amoMultiselect', function() {
     var result,
         parentScope,
         scope,
