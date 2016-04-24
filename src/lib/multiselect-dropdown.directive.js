@@ -55,16 +55,16 @@
              * @description Toggles the selected state for all options
              */
             function toggleAllSelectedState() {
-                var state = !self.isAllSelected;
+                var state;
 
-                if (self.state.isSelectAllCheckboxVisible) {
-                    self.isAllSelected = state;
-                }
+                self.isAllSelected = !self.isAllSelected;
 
                 if (!self.state.isSelectAllEnabled) {
                     state = false;
                 } else if (!self.state.isDeselectAllEnabled) {
                     state = true;
+                } else {
+                    state = self.isAllSelected;
                 }
 
                 angular.forEach(self.optionsFiltered, function(optionsFiltered) {
