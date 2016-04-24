@@ -21,7 +21,6 @@
 
         return {
             link: link,
-            replace: true,
             require: 'ngModel',
             restrict: 'E'
         };
@@ -37,7 +36,9 @@
         function link(parentScope, element, attrs, ngModelController) {
 
             var _exposeLabel = attrs.label ? $parse(attrs.label) : angular.noop,
+                _isDeselectAllEnabled = getSettingValue('isDeselectAllEnabled', true),
                 _isInternalChange,
+                _isSelectAllEnabled = getSettingValue('isSelectAllEnabled', true),
                 _labels = [],
                 _onChange = attrs.onChange ? $parse(attrs.onChange) : angular.noop,
                 _onToggleDropdown = attrs.onToggleDropdown ? $parse(attrs.onToggleDropdown) : angular.noop,
@@ -53,11 +54,18 @@
             self.groups = [];
             self.groupOptions = {};
             self.optionsFiltered = {};
-            self.search = {};
+            self.filter = {};
+            self.state = {
+                isDeselectAllEnabled: _isDeselectAllEnabled,
+                isFilterEnabled: getSettingValue('isFilterEnabled', true),
+                isSelectAllEnabled: _isSelectAllEnabled,
+                isSelectAllVisible: _isSelectAllEnabled || _isDeselectAllEnabled,
+                isSelectAllCheckboxVisible: _isSelectAllEnabled && _isDeselectAllEnabled
+            };
             self.text = {
-                deselectAll: attrs.deselectAllText || amoMultiselectConfig.deselectAllText,
-                search: attrs.searchText || amoMultiselectConfig.searchText,
-                selectAll: attrs.selectAllText || amoMultiselectConfig.selectAllText
+                deselectAll: getSettingValue('deselectAllText'),
+                filter: getSettingValue('filterText'),
+                selectAll: getSettingValue('selectAllText')
             };
 
             // Methods
@@ -65,6 +73,7 @@
             self.getSelectedCount = getSelectedCount;
             self.hasSelectedMultipleItems = hasSelectedMultipleItems;
             self.isGroupVisible = isGroupVisible;
+            self.isSelectAllToggleDisabled = isSelectAllToggleDisabled;
             self.onToggleDropdown = onToggleDropdown;
 
             // Initialization
@@ -161,12 +170,27 @@
 
             /**
              * @ngdoc method
-             * @name amoMultiselect#initialize
+             * @name amoMultiselect#getSelectedCount
              * @description Returns the count of selected options
              * @returns {Number}
              */
             function getSelectedCount() {
                 return _selectedOptions.length;
+            }
+
+            /**
+             * @name amoMultiselect#getSettingValue
+             * @description Returns the value of the specified setting
+             * @param {String} setting
+             * @param {Boolean} [isExpression=false]
+             * @returns {*}
+             */
+            function getSettingValue(setting, isExpression) {
+                if (angular.isDefined(attrs[setting])) {
+                    return isExpression ? $parse(attrs[setting])(parentScope) : attrs[setting];
+                }
+
+                return amoMultiselectConfig[setting];
             }
 
             /**
@@ -226,18 +250,35 @@
                     return false;
                 }
 
-                return filterFilter(self.groupOptions[group], self.search).length > 0;
+                return filterFilter(self.groupOptions[group], self.filter).length > 0;
+            }
+
+            /**
+             * @ngdoc method
+             * @name amoMultiselect#isSelectAllToggleDisabled
+             * @description Determines whether or not the select/deselect toggle is disabled
+             * @returns {Boolean}
+             */
+            function isSelectAllToggleDisabled() {
+                if (!_isSelectAllEnabled) { // Deselect All
+                    return _selectedOptions.length === 0;
+                } else if (!_isDeselectAllEnabled) { // Select All
+                    return _selectedOptions.length === multiselect.getOptionsCount();
+                }
+                
+                return false;
             }
 
             /**
              * @ngdoc method
              * @name amoMultiselect#onToggleDropdown
              * @description Handler executed when dropdown opens or closes
+             * @param {Boolean} isOpen
              */
             function onToggleDropdown(isOpen) {
                 if (!isOpen) {
                     $timeout(function() {
-                        self.search = {};
+                        self.filter = {};
                     });
                 }
 

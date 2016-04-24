@@ -46,8 +46,9 @@
             self.getGroups = getGroups;
             self.getLabel = getLabel;
             self.getOption = getOption;
-            self.getOptionsExpression = getOptionsExpression;
             self.getOptions = getOptions;
+            self.getOptionsCount = getOptionsCount;
+            self.getOptionsExpression = getOptionsExpression;
             self.getValue = getValue;
             self.isGrouped = isGrouped;
             self.setOptions = setOptions;
@@ -123,22 +124,32 @@
 
             /**
              * @ngdoc method
-             * @name AmoMultiselectFactory#getOptionsExpression
-             * @description Returns the options expression
-             * @returns {String}
-             */
-            function getOptionsExpression() {
-                return _parse.optionsExpression;
-            }
-
-            /**
-             * @ngdoc method
              * @name AmoMultiselectFactory#getOptions
              * @description Returns the set of options, hashed by group
              * @returns {Object}
              */
             function getOptions() {
                 return _parse.groupOptions;
+            }
+
+            /**
+             * @ngdoc method
+             * @name AmoMultiselectFactory#getOptionsCount
+             * @description Returns the number of options
+             * @returns {Number}
+             */
+            function getOptionsCount() {
+                return _parse.optionsCount;
+            }
+
+            /**
+             * @ngdoc method
+             * @name AmoMultiselectFactory#getOptionsExpression
+             * @description Returns the options expression
+             * @returns {String}
+             */
+            function getOptionsExpression() {
+                return _parse.optionsExpression;
             }
 
             /**
@@ -198,6 +209,7 @@
 
                 _parse.groups = [];
                 _parse.groupOptions = {};
+                _parse.optionsCount = options.length;
 
                 options.forEach(function(option) {
                     group = getGroup(option);

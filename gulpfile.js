@@ -7,7 +7,9 @@ var addStream = require('add-stream'),
     gulpConcat = require('gulp-concat'),
     gulpCssnano = require('gulp-cssnano'),
     gulpHelp = require('gulp-help')(gulp),
+    gulpHtmlmin = require('gulp-htmlmin'),
     gulpJshint = require('gulp-jshint'),
+    gulpNgAnnotate = require('gulp-ng-annotate'),
     gulpRename = require('gulp-rename'),
     gulpSass = require('gulp-sass'),
     gulpUglify = require('gulp-uglify'),
@@ -80,13 +82,7 @@ gulp.task('css:dist', 'Compile multiselect SASS', function() {
 });
 
 gulp.task('js:app', 'Compile application JavaScript', function() {
-    var stream = gulp.src(js.src.app)
-        .pipe(addStream.obj(gulp.src(js.src.templates)
-            .pipe(gulpAngularTemplateCache('templates.js', {
-                module: 'amo.multiselect',
-                root: 'multiselect'
-            })
-        )));
+    var stream = gulp.src(js.src.app).pipe(addTemplateStream());
 
     return compileJavaScript(stream, 'app', js.dest);
 });
@@ -102,13 +98,7 @@ gulp.task('js:dist:compressed', false, ['js:dist:uncompressed'], function() {
 });
 
 gulp.task('js:dist:uncompressed', false, function() {
-    var stream = gulp.src(js.src.dist)
-        .pipe(addStream.obj(gulp.src(js.src.templates)
-            .pipe(gulpAngularTemplateCache('templates.js', {
-                module: 'amo.multiselect',
-                root: 'multiselect'
-            })
-        )));
+    var stream = gulp.src(js.src.dist).pipe(addTemplateStream());
 
     return compileJavaScript(stream, 'multiselect', distDest.js, false);
 });
@@ -155,28 +145,48 @@ gulp.task('watch', 'Watch for changes and recompile', ['all'], function() {
 });
 
 /**
- * @ngdoc method
  * @name compileJavaScript
  * @param {Object} stream Stream object
  * @param {String} name Name of output file
  * @param {String} dest Destination path
  * @param {Boolean} [uglify=true]
+ * @returns {Stream}
  */
 function compileJavaScript(stream, name, dest, uglify) {
     if (typeof uglify === 'undefined') {
         uglify = true;
     }
 
-    stream = stream.pipe(gulpConcat(name + '.js'));
+    stream = stream
+        .pipe(gulpConcat(name + '.js'))
+        .pipe(gulpNgAnnotate());
 
     if (uglify) {
         stream = stream
             .pipe(gulpUglify({
                 compress: false,
-                mangle: false
+                preserveComments: 'license'
             }))
             .pipe(gulpRename(name + '.min.js'));
     }
 
     return stream.pipe(gulp.dest(dest));
+}
+
+/**
+ * @name getTemplateStream
+ * @returns {Stream}
+ */
+function addTemplateStream() {
+    return addStream.obj(
+        gulp.src(js.src.templates)
+            .pipe(gulpHtmlmin({
+                collapseWhitespace: true,
+                conservativeCollapse: true
+            }))
+            .pipe(gulpAngularTemplateCache('templates.js', {
+                module: 'amo.multiselect',
+                root: 'amo/multiselect'
+            }))
+    );
 }

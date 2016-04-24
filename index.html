@@ -50,7 +50,8 @@
                         <div class="col-md-6">
                             <amo-multiselect
                                 ng-model="app.modelObject"
-                                options="option.label for option in app.optionsObject">
+                                options="option.label for option in app.optionsObject"
+                                is-filter-enabled="false">
                             </amo-multiselect>
                         </div>
                         <div class="col-md-6">
@@ -66,7 +67,8 @@
                         <div class="col-md-6">
                             <amo-multiselect
                                 ng-model="app.modelObjectGrouped"
-                                options="option.label group by option.category for option in app.optionsObjectGrouped">
+                                options="option.label group by option.category for option in app.optionsObjectGrouped"
+                                is-deselect-all-enabled="false">
                             </amo-multiselect>
                         </div>
                         <div class="col-md-6">
@@ -82,7 +84,8 @@
                         <div class="col-md-6">
                             <amo-multiselect
                                 ng-model="app.modelObjectProperty"
-                                options="option.id as option.label for option in app.optionsObject">
+                                options="option.id as option.label for option in app.optionsObject"
+                                is-select-all-enabled="false">
                             </amo-multiselect>
                             <button class="btn btn-default" ng-click="app.addObject()" type="button">Add Item</button>
                         </div>

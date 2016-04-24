@@ -49,6 +49,16 @@ describe('AmoMultiselectFactory', function() {
             });
         });
 
+        describe('and getting the count of options', function() {
+            beforeEach(function() {
+                result = target.getOptionsCount();
+            });
+
+            it('should return count', function() {
+                expect(result).toEqual(2);
+            });
+        });
+
         describe('and getting the options expression', function() {
             beforeEach(function() {
                 result = target.getOptionsExpression();

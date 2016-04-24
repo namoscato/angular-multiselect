@@ -5,8 +5,8 @@ AngularJS multiselect component based off [`ngOptions`](https://docs.angularjs.o
 ## Dependencies
 
 * [AngularJS](https://angularjs.org/) v1.5.x
-* [Bootstrap](http://getbootstrap.com/) v3.3.x for dropdown styles
-* [UI Bootstrap](http://angular-ui.github.io/bootstrap/) v1.2.x for dropdown functionality
+* [Bootstrap CSS](http://getbootstrap.com/) v3.3.x for dropdown styles
+* [UI Bootstrap](http://angular-ui.github.io/bootstrap/) v1.3.x for dropdown functionality
 
 ## Usage
 
@@ -21,16 +21,7 @@ and add the `amoMultiselect` directive to your template:
 ```html
 <amo-multiselect
     ng-model="app.model"
-    options="option.id as option.label for option in app.options"
-    on-change="app.onChange(label)"
-    on-toggle-dropdown="app.onToggleDropdown(isOpen)"
-    label="app.label"
-    search-text="Search..."
-    select-text="Select..."
-    select-all-text="Select All"
-    deselect-all-text="Deselect All"
-    selected-suffix-singular-text="thing"
-    selected-suffix-text="things">
+    options="option.id as option.label for option in app.options">
 </amo-multiselect>
 ```
 
@@ -48,17 +39,18 @@ where the value of `options` is of the following form:
 
 ## Settings
 
-The following settings can be set on a per-instance basis via dasherized `<amo-multiselect>` attributes.
-
-Some settings can be set globally via camel cased `amoMultiselectConfig` [constant](https://docs.angularjs.org/api/auto/service/$provide#constant) properties.
+The following settings can be set on a per-instance basis via _dasherized_ `<amo-multiselect>` attributes. Some settings can be set globally via _camel cased_ `amoMultiselectConfig` [constant](https://docs.angularjs.org/api/auto/service/$provide#constant) properties.
 
 | Name | Type | Global | Default | Description |
 | ---- | ---- |:------:| ------- | ----------- |
 | `deselectAllText` | `@string` | Yes | Deselect&nbsp;All | Deselect all option label text |
+| `filterText` | `@string` | Yes | Search... | Search filter input placeholder text |
+| `isDeselectAllEnabled` | `<boolean` | Yes | `true` | State of deselect all functionality |
+| `isFilterEnabled` | `<boolean` | Yes | `true` | State of search filter input visibility |
+| `isSelectAllEnabled` | `<boolean` | Yes | `true` | State of select all functionality |
 | `label` | `&string` | No | — | Expression bound to the current button label text |
 | `onChange` | `&function(label)` | No | — | Expression called with `label` string when model changes |
 | `onToggleDropdown` | `&function(isOpen)` | No | — | Expression called with `isOpen` boolean when dropdown opens or closes |
-| `searchText` | `@string` | Yes | Search... | Search input placeholder text |
 | `selectAllText` | `@string` | Yes | Select&nbsp;All | Select all option label text |
 | `selectedSuffixSingularText` | `@string` | Yes | item | Singular suffix appended to button label text when option label properties are undefined |
 | `selectedSuffixText` | `@string` | Yes | items | Suffix appended to button label text when option label properties are undefined |
