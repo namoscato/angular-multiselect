@@ -31,7 +31,10 @@
         .module('amo.multiselect')
         .constant('amoMultiselectConfig', {
             deselectAllText: 'Deselect All',
-            searchText: 'Search...',
+            filterText: 'Search...',
+            isDeselectAllEnabled: true,
+            isFilterEnabled: true,
+            isSelectAllEnabled: true,
             selectAllText: 'Select All',
             selectedSuffixSingularText: 'item',
             selectedSuffixText: 'items',
@@ -82,7 +85,13 @@
              * @returns {String}
              */
             function getSelectAllLabel() {
-                return self.isAllSelected ? self.text.deselectAll : self.text.selectAll;
+                if (self.state.isSelectAllCheckboxVisible) {
+                    return self.isAllSelected ? self.text.deselectAll : self.text.selectAll;
+                } else if (self.state.isSelectAllEnabled) {
+                    return self.text.selectAll;
+                }
+
+                return self.text.deselectAll;
             }
 
             /**
@@ -91,11 +100,21 @@
              * @description Toggles the selected state for all options
              */
             function toggleAllSelectedState() {
+                var state;
+
                 self.isAllSelected = !self.isAllSelected;
+
+                if (!self.state.isSelectAllEnabled) {
+                    state = false;
+                } else if (!self.state.isDeselectAllEnabled) {
+                    state = true;
+                } else {
+                    state = self.isAllSelected;
+                }
 
                 angular.forEach(self.optionsFiltered, function(optionsFiltered) {
                     angular.forEach(optionsFiltered, function(option) {
-                        option.selected = self.isAllSelected;
+                        option.selected = state;
                     });
                 });
 
@@ -142,7 +161,6 @@
 
         return {
             link: link,
-            replace: true,
             require: 'ngModel',
             restrict: 'E'
         };
@@ -158,7 +176,9 @@
         function link(parentScope, element, attrs, ngModelController) {
 
             var _exposeLabel = attrs.label ? $parse(attrs.label) : angular.noop,
+                _isDeselectAllEnabled = getSettingValue('isDeselectAllEnabled', true),
                 _isInternalChange,
+                _isSelectAllEnabled = getSettingValue('isSelectAllEnabled', true),
                 _labels = [],
                 _onChange = attrs.onChange ? $parse(attrs.onChange) : angular.noop,
                 _onToggleDropdown = attrs.onToggleDropdown ? $parse(attrs.onToggleDropdown) : angular.noop,
@@ -174,11 +194,18 @@
             self.groups = [];
             self.groupOptions = {};
             self.optionsFiltered = {};
-            self.search = {};
+            self.filter = {};
+            self.state = {
+                isDeselectAllEnabled: _isDeselectAllEnabled,
+                isFilterEnabled: getSettingValue('isFilterEnabled', true),
+                isSelectAllEnabled: _isSelectAllEnabled,
+                isSelectAllVisible: _isSelectAllEnabled || _isDeselectAllEnabled,
+                isSelectAllCheckboxVisible: _isSelectAllEnabled && _isDeselectAllEnabled
+            };
             self.text = {
-                deselectAll: attrs.deselectAllText || amoMultiselectConfig.deselectAllText,
-                search: attrs.searchText || amoMultiselectConfig.searchText,
-                selectAll: attrs.selectAllText || amoMultiselectConfig.selectAllText
+                deselectAll: getSettingValue('deselectAllText'),
+                filter: getSettingValue('filterText'),
+                selectAll: getSettingValue('selectAllText')
             };
 
             // Methods
@@ -186,6 +213,7 @@
             self.getSelectedCount = getSelectedCount;
             self.hasSelectedMultipleItems = hasSelectedMultipleItems;
             self.isGroupVisible = isGroupVisible;
+            self.isSelectAllToggleDisabled = isSelectAllToggleDisabled;
             self.onToggleDropdown = onToggleDropdown;
 
             // Initialization
@@ -282,12 +310,27 @@
 
             /**
              * @ngdoc method
-             * @name amoMultiselect#initialize
+             * @name amoMultiselect#getSelectedCount
              * @description Returns the count of selected options
              * @returns {Number}
              */
             function getSelectedCount() {
                 return _selectedOptions.length;
+            }
+
+            /**
+             * @name amoMultiselect#getSettingValue
+             * @description Returns the value of the specified setting
+             * @param {String} setting
+             * @param {Boolean} [isExpression=false]
+             * @returns {*}
+             */
+            function getSettingValue(setting, isExpression) {
+                if (angular.isDefined(attrs[setting])) {
+                    return isExpression ? $parse(attrs[setting])(parentScope) : attrs[setting];
+                }
+
+                return amoMultiselectConfig[setting];
             }
 
             /**
@@ -347,18 +390,35 @@
                     return false;
                 }
 
-                return filterFilter(self.groupOptions[group], self.search).length > 0;
+                return filterFilter(self.groupOptions[group], self.filter).length > 0;
+            }
+
+            /**
+             * @ngdoc method
+             * @name amoMultiselect#isSelectAllToggleDisabled
+             * @description Determines whether or not the select/deselect toggle is disabled
+             * @returns {Boolean}
+             */
+            function isSelectAllToggleDisabled() {
+                if (!_isSelectAllEnabled) { // Deselect All
+                    return _selectedOptions.length === 0;
+                } else if (!_isDeselectAllEnabled) { // Select All
+                    return _selectedOptions.length === multiselect.getOptionsCount();
+                }
+                
+                return false;
             }
 
             /**
              * @ngdoc method
              * @name amoMultiselect#onToggleDropdown
              * @description Handler executed when dropdown opens or closes
+             * @param {Boolean} isOpen
              */
             function onToggleDropdown(isOpen) {
                 if (!isOpen) {
                     $timeout(function() {
-                        self.search = {};
+                        self.filter = {};
                     });
                 }
 
@@ -445,8 +505,9 @@
             self.getGroups = getGroups;
             self.getLabel = getLabel;
             self.getOption = getOption;
-            self.getOptionsExpression = getOptionsExpression;
             self.getOptions = getOptions;
+            self.getOptionsCount = getOptionsCount;
+            self.getOptionsExpression = getOptionsExpression;
             self.getValue = getValue;
             self.isGrouped = isGrouped;
             self.setOptions = setOptions;
@@ -522,22 +583,32 @@
 
             /**
              * @ngdoc method
-             * @name AmoMultiselectFactory#getOptionsExpression
-             * @description Returns the options expression
-             * @returns {String}
-             */
-            function getOptionsExpression() {
-                return _parse.optionsExpression;
-            }
-
-            /**
-             * @ngdoc method
              * @name AmoMultiselectFactory#getOptions
              * @description Returns the set of options, hashed by group
              * @returns {Object}
              */
             function getOptions() {
                 return _parse.groupOptions;
+            }
+
+            /**
+             * @ngdoc method
+             * @name AmoMultiselectFactory#getOptionsCount
+             * @description Returns the number of options
+             * @returns {Number}
+             */
+            function getOptionsCount() {
+                return _parse.optionsCount;
+            }
+
+            /**
+             * @ngdoc method
+             * @name AmoMultiselectFactory#getOptionsExpression
+             * @description Returns the options expression
+             * @returns {String}
+             */
+            function getOptionsExpression() {
+                return _parse.optionsExpression;
             }
 
             /**
@@ -597,6 +668,7 @@
 
                 _parse.groups = [];
                 _parse.groupOptions = {};
+                _parse.optionsCount = options.length;
 
                 options.forEach(function(option) {
                     group = getGroup(option);
@@ -688,4 +760,4 @@
 
 })();
 
-angular.module("amo.multiselect").run(["$templateCache", function($templateCache) {$templateCache.put("amo/multiselect/multiselect-dropdown.html","<div class=\"btn-group btn-group-multiselect\" auto-close=\"outsideClick\" ng-attr-title=\"{{ multiselectDropdown.selectedLabel }}\" ng-class=\"{ \'state-selected-multiple\': multiselectDropdown.hasSelectedMultipleItems() }\" on-toggle=\"multiselectDropdown.onToggleDropdown(open)\" uib-dropdown> <button type=\"button\" class=\"btn btn-default\" uib-dropdown-toggle> <span class=\"text\" ng-bind=\"multiselectDropdown.selectedLabel\"></span> <span class=\"badge\" ng-bind=\"multiselectDropdown.getSelectedCount()\"></span> <span class=\"caret\"></span> </button> <div uib-dropdown-menu> <input type=\"text\" class=\"form-control\" ng-model=\"multiselectDropdown.search.label\" placeholder=\"{{ multiselectDropdown.text.search }}\"> <ul class=\"dropdown-menu-list list-unstyled\"> <li> <a ng-click=\"multiselectDropdown.toggleAllSelectedState()\"> <input type=\"checkbox\" ng-model=\"multiselectDropdown.isAllSelected\"> <span ng-bind=\"multiselectDropdown.getSelectAllLabel()\"></span> </a> </li> <li class=\"divider\"></li> <li class=\"dropdown-header\" ng-bind=\"group\" ng-if=\"multiselectDropdown.isGroupVisible(group)\" ng-repeat-start=\"group in multiselectDropdown.groups\"> </li> <li ng-repeat=\"option in multiselectDropdown.optionsFiltered[group] = (multiselectDropdown.groupOptions[group] | filter : multiselectDropdown.search)\"> <a ng-attr-title=\"{{ option.label }}\" ng-click=\"multiselectDropdown.toggleSelectedState(option)\"> <input type=\"checkbox\" ng-model=\"option.selected\"> <span ng-bind=\"option.label\"></span> </a> </li> <li ng-repeat-end></li> </ul> </div> </div>");}]);
+angular.module("amo.multiselect").run(["$templateCache", function($templateCache) {$templateCache.put("amo/multiselect/multiselect-dropdown.html","<div class=\"btn-group btn-group-multiselect\" auto-close=\"outsideClick\" ng-attr-title=\"{{ multiselectDropdown.selectedLabel }}\" ng-class=\"{ \'state-selected-multiple\': multiselectDropdown.hasSelectedMultipleItems() }\" on-toggle=\"multiselectDropdown.onToggleDropdown(open)\" uib-dropdown> <button type=\"button\" class=\"btn btn-default\" uib-dropdown-toggle> <span class=\"text\" ng-bind=\"multiselectDropdown.selectedLabel\"></span> <span class=\"badge\" ng-bind=\"multiselectDropdown.getSelectedCount()\"></span> <span class=\"caret\"></span> </button> <div uib-dropdown-menu> <input type=\"text\" class=\"form-control\" ng-if=\"::multiselectDropdown.state.isFilterEnabled\" ng-model=\"multiselectDropdown.filter.label\" placeholder=\"{{ ::multiselectDropdown.text.filter }}\"> <ul class=\"dropdown-menu-list list-unstyled\"> <li ng-if=\"::multiselectDropdown.state.isSelectAllVisible\"> <a ng-class=\"{ \'text-muted\': multiselectDropdown.isSelectAllToggleDisabled() }\" ng-click=\"multiselectDropdown.toggleAllSelectedState()\"> <input type=\"checkbox\" ng-if=\"::multiselectDropdown.state.isSelectAllCheckboxVisible\" ng-model=\"multiselectDropdown.isAllSelected\"> <span ng-bind=\"multiselectDropdown.getSelectAllLabel()\"></span> </a> </li> <li class=\"divider\" ng-if=\"::multiselectDropdown.state.isSelectAllVisible\"></li> <li class=\"dropdown-header\" ng-bind=\"group\" ng-if=\"multiselectDropdown.isGroupVisible(group)\" ng-repeat-start=\"group in multiselectDropdown.groups\"> </li> <li ng-repeat=\"option in multiselectDropdown.optionsFiltered[group] = (multiselectDropdown.groupOptions[group] | filter : multiselectDropdown.filter)\"> <a ng-attr-title=\"{{ option.label }}\" ng-click=\"multiselectDropdown.toggleSelectedState(option)\"> <input type=\"checkbox\" ng-model=\"option.selected\"> <span ng-bind=\"option.label\"></span> </a> </li> <li ng-repeat-end></li> </ul> </div> </div>");}]);

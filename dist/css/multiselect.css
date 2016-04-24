@@ -56,6 +56,10 @@
     line-height: 1.42857;
     padding: 5px 12px;
     white-space: nowrap; }
+    .btn-group-multiselect .dropdown-menu-list > li > a.text-muted, .btn-group-multiselect .dropdown-menu-list > li > a.text-muted:hover, .btn-group-multiselect .dropdown-menu-list > li > a.text-muted:focus {
+      background-color: transparent;
+      color: #777777;
+      cursor: not-allowed; }
     .btn-group-multiselect .dropdown-menu-list > li > a:hover, .btn-group-multiselect .dropdown-menu-list > li > a:focus {
       background-color: #f5f5f5;
       color: #262626;
