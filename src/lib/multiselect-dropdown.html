@@ -17,23 +17,29 @@
         <input
             type="text"
             class="form-control"
-            ng-model="multiselectDropdown.search.label"
-            placeholder="{{ multiselectDropdown.text.search }}">
+            ng-if="::multiselectDropdown.state.isFilterEnabled"
+            ng-model="multiselectDropdown.filter.label"
+            placeholder="{{ ::multiselectDropdown.text.filter }}">
         <ul class="dropdown-menu-list list-unstyled">
-            <li>
-                <a ng-click="multiselectDropdown.toggleAllSelectedState()">
-                    <input type="checkbox" ng-model="multiselectDropdown.isAllSelected">
+            <li ng-if="::multiselectDropdown.state.isSelectAllVisible">
+                <a
+                    ng-class="{ 'text-muted': multiselectDropdown.isSelectAllToggleDisabled() }"
+                    ng-click="multiselectDropdown.toggleAllSelectedState()">
+                    <input
+                        type="checkbox"
+                        ng-if="::multiselectDropdown.state.isSelectAllCheckboxVisible"
+                        ng-model="multiselectDropdown.isAllSelected">
                     <span ng-bind="multiselectDropdown.getSelectAllLabel()"></span>
                 </a>
             </li>
-            <li class="divider"></li>
+            <li class="divider" ng-if="::multiselectDropdown.state.isSelectAllVisible"></li>
             <li
                 class="dropdown-header"
                 ng-bind="group"
                 ng-if="multiselectDropdown.isGroupVisible(group)"
                 ng-repeat-start="group in multiselectDropdown.groups">
             </li>
-            <li ng-repeat="option in multiselectDropdown.optionsFiltered[group] = (multiselectDropdown.groupOptions[group] | filter : multiselectDropdown.search)">
+            <li ng-repeat="option in multiselectDropdown.optionsFiltered[group] = (multiselectDropdown.groupOptions[group] | filter : multiselectDropdown.filter)">
                 <a
                     ng-attr-title="{{ option.label }}"
                     ng-click="multiselectDropdown.toggleSelectedState(option)">

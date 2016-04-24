@@ -7,6 +7,7 @@ describe('amoMultiselect', function() {
     var html;
 
     var timeout,
+        amoMultiselectConfigSpy,
         amoMultiselectFactorySpy,
         amoMultiselectFactoryInstanceSpy,
         amoMultiselectFormatServiceSpy,
@@ -17,12 +18,25 @@ describe('amoMultiselect', function() {
     beforeEach(module('amo.multiselect'));
 
     beforeEach(function() {
+        amoMultiselectConfigSpy = {
+            deselectAllText: 'Deselect All',
+            filterText: 'Search...',
+            isDeselectAllEnabled: true,
+            isFilterEnabled: true,
+            isSelectAllEnabled: true,
+            selectAllText: 'Select All',
+            selectedSuffixSingularText: 'item',
+            selectedSuffixText: 'items',
+            selectText: 'Select...'
+        };
+
         amoMultiselectFactoryInstanceSpy = jasmine.createSpyObj('AmoMultiselectFactory()', [
             'getGroup',
             'getGroups',
             'getLabel',
             'getOption',
             'getOptions',
+            'getOptionsCount',
             'getOptionsExpression',
             'getValue',
             'isGrouped',
@@ -60,6 +74,8 @@ describe('amoMultiselect', function() {
     });
 
     beforeEach(module(function($provide) {
+        $provide.constant('amoMultiselectConfig', amoMultiselectConfigSpy);
+
         $provide.factory('AmoMultiselectFactory', function() {
             amoMultiselectFactorySpy = jasmine.createSpy('AmoMultiselectFactory');
             amoMultiselectFactorySpy.and.returnValue(amoMultiselectFactoryInstanceSpy);
@@ -114,14 +130,24 @@ describe('amoMultiselect', function() {
                 expect(amoMultiselectFactorySpy).toHaveBeenCalledWith('option for option in options', jasmine.any(Object));
             });
 
-            it('should initialize search model', function() {
-                expect(target.search).toEqual({});
+            it('should initialize filter model', function() {
+                expect(target.filter).toEqual({});
+            });
+
+            it('should expose state', function() {
+                expect(target.state).toEqual({
+                    isDeselectAllEnabled: true,
+                    isFilterEnabled: true,
+                    isSelectAllEnabled: true,
+                    isSelectAllVisible: true,
+                    isSelectAllCheckboxVisible: true
+                });
             });
 
             it('should expose text', function() {
                 expect(target.text).toEqual({
                     deselectAll: 'Deselect All',
-                    search: 'Search...',
+                    filter: 'Search...',
                     selectAll: 'Select All',
                 });
             });
@@ -162,6 +188,10 @@ describe('amoMultiselect', function() {
                         }
                     ]
                 });
+            });
+
+            it('should enable select all toggle', function() {
+                expect(target.isSelectAllToggleDisabled()).toEqual(false);
             });
 
             describe('and an option is added', function() {
@@ -277,6 +307,123 @@ describe('amoMultiselect', function() {
                         }
                     ]
                 });
+            });
+        });
+    });
+
+    describe('When compiling the directive', function() {
+        describe('with the "isDeselectAllEnabled" disabled', function() {
+            describe('and something is selected', function() {
+                beforeEach(function() {
+                    compile('<amo-multiselect is-deselect-all-enabled="false" ng-model="model" options="option for option in options"></amo-multiselect>', {
+                        model: ['One'],
+                        options: optionsMock
+                    });
+
+                    result = target.isSelectAllToggleDisabled();
+                });
+
+                it('should expose state', function() {
+                    expect(target.state).toEqual(jasmine.objectContaining({
+                        isDeselectAllEnabled: false,
+                        isSelectAllEnabled: true,
+                        isSelectAllVisible: true,
+                        isSelectAllCheckboxVisible: false
+                    }));
+                });
+
+                it('should disable enable select all functionality', function() {
+                    expect(result).toEqual(false);
+                });
+            });
+
+            describe('and everything is selected', function() {
+                beforeEach(function() {
+                    compile('<amo-multiselect is-deselect-all-enabled="false" ng-model="model" options="option for option in options"></amo-multiselect>', {
+                        model: [
+                            'One',
+                            'Two'
+                        ],
+                        options: optionsMock
+                    });
+
+                    amoMultiselectFactoryInstanceSpy.getOptionsCount.and.returnValue(2);
+
+                    result = target.isSelectAllToggleDisabled();
+                });
+
+                it('should enable select all functionality', function() {
+                    expect(result).toEqual(true);
+                });
+            });
+        });
+
+        describe('with the "isSelectAllEnabled" disabled', function() {
+            describe('and nothing is selected', function() {
+                beforeEach(function() {
+                    compile('<amo-multiselect is-select-all-enabled="false" ng-model="model" options="option for option in options"></amo-multiselect>', {
+                        options: optionsMock
+                    });
+
+                    result = target.isSelectAllToggleDisabled();
+                });
+
+                it('should expose state', function() {
+                    expect(target.state).toEqual(jasmine.objectContaining({
+                        isDeselectAllEnabled: true,
+                        isSelectAllEnabled: false,
+                        isSelectAllVisible: true,
+                        isSelectAllCheckboxVisible: false
+                    }));
+                });
+
+                it('should disable deselect all functionality', function() {
+                    expect(result).toEqual(true);
+                });
+            });
+
+            describe('and something is selected', function() {
+                beforeEach(function() {
+                    compile('<amo-multiselect is-select-all-enabled="false" ng-model="model" options="option for option in options"></amo-multiselect>', {
+                        model: ['One'],
+                        options: optionsMock
+                    });
+
+                    result = target.isSelectAllToggleDisabled();
+                });
+
+                it('should enable deselect all functionality', function() {
+                    expect(result).toEqual(false);
+                });
+            });
+        });
+
+        describe('with the "isSelectAllEnabled" and "isDeselectAllEnabled" disabled', function() {
+            beforeEach(function() {
+                compile('<amo-multiselect is-select-all-enabled="false" is-deselect-all-enabled="false" ng-model="model" options="option for option in options"></amo-multiselect>', {
+                    options: optionsMock
+                });
+            });
+
+            it('should expose state', function() {
+                expect(target.state).toEqual(jasmine.objectContaining({
+                    isDeselectAllEnabled: false,
+                    isSelectAllEnabled: false,
+                    isSelectAllVisible: false,
+                    isSelectAllCheckboxVisible: false
+                }));
+            });
+        });
+
+        describe('with the "isFilterEnabled" disabled', function() {
+            beforeEach(function() {
+                compile('<amo-multiselect is-filter-enabled="false" ng-model="model" options="option for option in options"></amo-multiselect>', {
+                    options: optionsMock
+                });
+            });
+
+            it('should expose state', function() {
+                expect(target.state.isFilterEnabled).toEqual(false);
             });
         });
     });
@@ -698,15 +845,15 @@ describe('amoMultiselect', function() {
                     options: optionsMock
                 });
 
-                target.search = 'SEARCH';
+                target.filter = 'SEARCH';
 
                 target.onToggleDropdown(true);
 
                 timeout.flush();
             });
 
-            it('should not clear search', function() {
-                expect(target.search).toEqual('SEARCH');
+            it('should not clear filter', function() {
+                expect(target.filter).toEqual('SEARCH');
             });
         });
 
@@ -716,15 +863,15 @@ describe('amoMultiselect', function() {
                     options: optionsMock
                 });
 
-                target.search = 'SEARCH';
+                target.filter = 'SEARCH';
 
                 target.onToggleDropdown(false);
 
                 timeout.flush();
             });
 
-            it('should clear search', function() {
-                expect(target.search).toEqual({});
+            it('should clear filter', function() {
+                expect(target.filter).toEqual({});
             });
         });
 
@@ -748,6 +895,80 @@ describe('amoMultiselect', function() {
         });
     });
 
+    /**
+     * getSelectAllLabel
+     */
+    
+    describe('When getting the select/deselect all toggle text', function() {
+        describe('and both options are enabled', function() {
+            describe('and the "deselectAllText" attribute is set', function() {
+                beforeEach(function() {
+                    compile('<amo-multiselect deselect-all-text="DESELECT" ng-model="model" options="option for option in options"></amo-multiselect>', {
+                        options: optionsMock
+                    });
+
+                    target.isAllSelected = true;
+
+                    result = target.getSelectAllLabel();
+                });
+
+                it('should return custom text', function() {
+                    expect(result).toEqual('DESELECT');
+                });
+            });
+
+            describe('and the "selectAllText" attribute is set', function() {
+                beforeEach(function() {
+                    compile('<amo-multiselect select-all-text="SELECT" ng-model="model" options="option for option in options"></amo-multiselect>', {
+                        options: optionsMock
+                    });
+
+                    target.isAllSelected = false;
+
+                    result = target.getSelectAllLabel();
+                });
+
+                it('should return custom text', function() {
+                    expect(result).toEqual('SELECT');
+                });
+            });
+        });
+
+        describe('and only select all is enabled', function() {
+            beforeEach(function() {
+                compile('<amo-multiselect is-deselect-all-enabled="false" ng-model="model" options="option for option in options"></amo-multiselect>', {
+                    options: optionsMock
+                });
+
+                result = target.getSelectAllLabel();
+            });
+
+            it('should return select all text', function() {
+                expect(result).toEqual('Select All');
+            });
+        });
+
+        describe('and only deselect all is enabled', function() {
+            beforeEach(function() {
+                amoMultiselectConfigSpy.isSelectAllEnabled = false;
+
+                compile('<amo-multiselect ng-model="model" options="option for option in options"></amo-multiselect>', {
+                    options: optionsMock
+                });
+
+                result = target.getSelectAllLabel();
+            });
+
+            it('should return select all text', function() {
+                expect(result).toEqual('Deselect All');
+            });
+        });
+    });
+
+    /**
+     * toggleAllSelectedState
+     */
+
     describe('When selecting all items', function() {
         var onChangeSpy;
 
@@ -759,7 +980,7 @@ describe('amoMultiselect', function() {
                 options: optionsMock
             });
 
-            expect(target.toggleAllSelectedState());
+            target.toggleAllSelectedState();
         });
 
         it('should check select all checkbox', function() {
@@ -875,7 +1096,7 @@ describe('amoMultiselect', function() {
 
             target.isAllSelected = true;
 
-            expect(target.toggleAllSelectedState());
+            target.toggleAllSelectedState();
         });
 
         it('should uncheck select all checkbox', function() {
@@ -923,11 +1144,11 @@ describe('amoMultiselect', function() {
                 options: optionsMock
             });
 
-            target.search.label = 'One';
+            target.filter.label = 'One';
 
             scope.$digest();
 
-            expect(target.toggleAllSelectedState());
+            target.toggleAllSelectedState();
         });
 
         it('should check all filtered options', function() {
@@ -956,47 +1177,127 @@ describe('amoMultiselect', function() {
         });
     });
 
-    describe('When the "deselectAllText" attribute is set', function() {
-        beforeEach(function() {
-            compile('<amo-multiselect deselect-all-text="DESELECT" ng-model="model" options="option for option in options"></amo-multiselect>', {
-                options: optionsMock
+    describe('When toggling the selected state', function() {
+        describe('and "isSelectAllEnabled" is disabled', function() {
+            beforeEach(function() {
+                compile('<amo-multiselect ng-model="model" options="option for option in options"></amo-multiselect>', {
+                    model: ['One'],
+                    options: optionsMock
+                });
+
+                target.isAllSelected = false;
+                target.state.isSelectAllEnabled = false;
+
+                target.toggleAllSelectedState();
             });
 
-            target.isAllSelected = true;
-
-            result = target.getSelectAllLabel();
+            it('should uncheck all options', function() {
+                expect(target.groupOptions).toEqual({
+                    null: [
+                        jasmine.objectContaining({
+                            selected: false
+                        }),
+                        jasmine.objectContaining({
+                            selected: false
+                        })
+                    ]
+                });
+            });
         });
 
-        it('should return custom text', function() {
-            expect(result).toEqual('DESELECT');
+        describe('and "isDeselectAllEnabled" is disabled', function() {
+            beforeEach(function() {
+                compile('<amo-multiselect ng-model="model" options="option for option in options"></amo-multiselect>', {
+                    model: ['One'],
+                    options: optionsMock
+                });
+
+                target.isAllSelected = true;
+                target.state.isSelectAllEnabled = true;
+                target.state.isDeselectAllEnabled = false;
+
+                target.toggleAllSelectedState();
+            });
+
+            it('should check all options', function() {
+                expect(target.groupOptions).toEqual({
+                    null: [
+                        jasmine.objectContaining({
+                            selected: true
+                        }),
+                        jasmine.objectContaining({
+                            selected: true
+                        })
+                    ]
+                });
+            });
         });
     });
 
-    describe('When the "deselectAllText" attribute is set', function() {
+    describe('When selecting all items', function() {
+        var onChangeSpy;
+
         beforeEach(function() {
-            compile('<amo-multiselect select-all-text="SELECT" ng-model="model" options="option for option in options"></amo-multiselect>', {
+            onChangeSpy = jasmine.createSpy('onChange');
+
+            compile('<amo-multiselect on-change="onChange(label)" ng-model="model" options="option for option in options"></amo-multiselect>', {
+                onChange: onChangeSpy,
                 options: optionsMock
             });
 
-            target.isAllSelected = false;
-
-            result = target.getSelectAllLabel();
+            target.toggleAllSelectedState();
         });
 
-        it('should return custom text', function() {
-            expect(result).toEqual('SELECT');
+        it('should check select all checkbox', function() {
+            expect(target.isAllSelected).toEqual(true);
+        });
+
+        it('should check all options', function() {
+            expect(target.groupOptions).toEqual({
+                null: [
+                    {
+                        id: 0,
+                        label: 'LABEL One',
+                        value: 'VALUE One',
+                        selected: true,
+                        $$hashKey: jasmine.any(String)
+                    },
+                    {
+                        id: 1,
+                        label: 'LABEL Two',
+                        value: 'VALUE Two',
+                        selected: true,
+                        $$hashKey: jasmine.any(String)
+                    }
+                ]
+            });
+        });
+
+        it('should get option', function() {
+            expect(amoMultiselectFactoryInstanceSpy.getOption.calls.count()).toEqual(2);
+        });
+
+        it('should set model', function() {
+            expect(scope.model).toEqual([
+                'VALUE One',
+                'VALUE Two'
+            ]);
+        });
+
+        it('should call onChange handler', function() {
+            expect(onChangeSpy).toHaveBeenCalledWith('JOIN');
         });
     });
 
-    describe('When the "searchText" attribute is set', function() {
+    describe('When the "filterText" attribute is set', function() {
         beforeEach(function() {
-            compile('<amo-multiselect search-text="SEARCH" ng-model="model" options="option for option in options"></amo-multiselect>', {
+            compile('<amo-multiselect filter-text="SEARCH" ng-model="model" options="option for option in options"></amo-multiselect>', {
                 options: optionsMock
             });
         });
 
         it('should return custom text', function() {
-            expect(target.text.search).toEqual('SEARCH');
+            expect(target.text.filter).toEqual('SEARCH');
         });
     });
 

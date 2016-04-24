@@ -11,7 +11,10 @@
         .module('amo.multiselect')
         .constant('amoMultiselectConfig', {
             deselectAllText: 'Deselect All',
-            searchText: 'Search...',
+            filterText: 'Search...',
+            isDeselectAllEnabled: true,
+            isFilterEnabled: true,
+            isSelectAllEnabled: true,
             selectAllText: 'Select All',
             selectedSuffixSingularText: 'item',
             selectedSuffixText: 'items',

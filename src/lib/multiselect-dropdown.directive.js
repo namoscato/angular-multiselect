@@ -40,7 +40,13 @@
              * @returns {String}
              */
             function getSelectAllLabel() {
-                return self.isAllSelected ? self.text.deselectAll : self.text.selectAll;
+                if (self.state.isSelectAllCheckboxVisible) {
+                    return self.isAllSelected ? self.text.deselectAll : self.text.selectAll;
+                } else if (self.state.isSelectAllEnabled) {
+                    return self.text.selectAll;
+                }
+
+                return self.text.deselectAll;
             }
 
             /**
@@ -49,11 +55,21 @@
              * @description Toggles the selected state for all options
              */
             function toggleAllSelectedState() {
+                var state;
+
                 self.isAllSelected = !self.isAllSelected;
+
+                if (!self.state.isSelectAllEnabled) {
+                    state = false;
+                } else if (!self.state.isDeselectAllEnabled) {
+                    state = true;
+                } else {
+                    state = self.isAllSelected;
+                }
 
                 angular.forEach(self.optionsFiltered, function(optionsFiltered) {
                     angular.forEach(optionsFiltered, function(option) {
-                        option.selected = self.isAllSelected;
+                        option.selected = state;
                     });
                 });
 
