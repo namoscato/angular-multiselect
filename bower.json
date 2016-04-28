@@ -1,0 +1,24 @@
+{
+  "name": "amo-angular-multiselect",
+  "description": "AngularJS multiselect component based off ngOptions",
+  "license": "MIT",
+  "authors": [
+    "Nick Amoscato <nick@amoscato.com>"
+  ],
+  "keywords": [
+    "angular",
+    "angularjs",
+    "multiselect",
+    "angular-multiselect",
+    "angularjs-multiselect"
+  ],
+  "ignore": [
+    ".sass-cache",
+    ".travis.yml",
+    "gulpfile.js",
+    "karma.conf.js",
+    "node_modules",
+    "src",
+    "tests"
+  ]
+}
