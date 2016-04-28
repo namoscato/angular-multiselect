@@ -44,10 +44,7 @@ var js = {
     dest: 'src/dist/js'
 };
 
-var dist = {
-    src: 'README.md',
-    dest: '../angular-multiselect-package'
-};
+var distDest = 'dist';
 
 gulp.task('all', 'Build application', [
     'css:app',
@@ -56,10 +53,10 @@ gulp.task('all', 'Build application', [
     'js:lint'
 ]);
 
-gulp.task('dist', 'Build multiselect', ['css:dist', 'js:dist'], function() {
-    gulp.src(dist.src)
-        .pipe(gulp.dest(dist.dest));
-});
+gulp.task('dist', 'Build multiselect', [
+    'css:dist',
+    'js:dist'
+]);
 
 gulp.task('clean', 'Clean build directory', function() {
     return del([
@@ -78,7 +75,7 @@ gulp.task('css:app', 'Compile application SASS', function() {
 gulp.task('css:dist', 'Compile multiselect SASS', function() {
     gulp.src(css.src.dist)
         .pipe(gulpSass().on('error', gulpSass.logError))
-        .pipe(gulp.dest(dist.dest));
+        .pipe(gulp.dest(distDest));
 });
 
 gulp.task('js:app', 'Compile application JavaScript', function() {
@@ -92,15 +89,15 @@ gulp.task('js:dist', 'Build directive JavaScript and template', [
 ]);
 
 gulp.task('js:dist:compressed', false, ['js:dist:uncompressed'], function() {
-    var stream = gulp.src(dist.dest + '/multiselect.js');
+    var stream = gulp.src(distDest + '/multiselect.js');
 
-    return compileJavaScript(stream, 'multiselect', dist.dest);
+    return compileJavaScript(stream, 'multiselect', distDest);
 });
 
 gulp.task('js:dist:uncompressed', false, function() {
     var stream = gulp.src(js.src.dist).pipe(addTemplateStream());
 
-    return compileJavaScript(stream, 'multiselect', dist.dest, false);
+    return compileJavaScript(stream, 'multiselect', distDest, false);
 });
 
 gulp.task('js:libs', 'Compile third party JavaScript', function() {

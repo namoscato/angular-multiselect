@@ -10,8 +10,6 @@ AngularJS multiselect component based off [`ngOptions`](https://docs.angularjs.o
 
 ## Installation
 
-A distribution package is maintained in a [separate repository](https://github.com/namoscato/angular-multiselect-package).
-
 ### npm
 
     npm install amo-angular-multiselect

@@ -1,0 +1,66 @@
+.btn-group-multiselect.state-selected-multiple .dropdown-toggle .text {
+  width: 190px; }
+
+.btn-group-multiselect.state-selected-multiple .dropdown-toggle .badge {
+  display: inline-block; }
+
+.btn-group-multiselect .dropdown-toggle {
+  text-align: left;
+  width: 250px; }
+  .btn-group-multiselect .dropdown-toggle .text {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    width: 97%; }
+  .btn-group-multiselect .dropdown-toggle .badge,
+  .btn-group-multiselect .dropdown-toggle .caret {
+    position: absolute; }
+  .btn-group-multiselect .dropdown-toggle .badge {
+    background-color: #777777;
+    border-radius: 3px;
+    display: none;
+    padding: 4px 5px;
+    right: 22px;
+    top: 5px; }
+  .btn-group-multiselect .dropdown-toggle .caret {
+    right: 8px;
+    top: 13px; }
+
+.btn-group-multiselect .dropdown-menu {
+  padding: 0;
+  width: 250px; }
+  .btn-group-multiselect .dropdown-menu input[type="checkbox"] {
+    pointer-events: none;
+    margin: 0 4px 0 0; }
+  .btn-group-multiselect .dropdown-menu .form-control {
+    border-left: none;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: none;
+    border-top: none; }
+  .btn-group-multiselect .dropdown-menu .divider {
+    margin: 5px 0; }
+
+.btn-group-multiselect .dropdown-menu-list {
+  margin: 0;
+  max-height: 225px;
+  overflow: auto;
+  padding: 5px 0; }
+  .btn-group-multiselect .dropdown-menu-list > li > a {
+    clear: both;
+    color: #333333;
+    font-weight: normal;
+    cursor: pointer;
+    display: block;
+    line-height: 1.42857;
+    padding: 5px 12px;
+    white-space: nowrap; }
+    .btn-group-multiselect .dropdown-menu-list > li > a.text-muted, .btn-group-multiselect .dropdown-menu-list > li > a.text-muted:hover, .btn-group-multiselect .dropdown-menu-list > li > a.text-muted:focus {
+      background-color: transparent;
+      color: #777777;
+      cursor: not-allowed; }
+    .btn-group-multiselect .dropdown-menu-list > li > a:hover, .btn-group-multiselect .dropdown-menu-list > li > a:focus {
+      background-color: #f5f5f5;
+      color: #262626;
+      text-decoration: none; }
