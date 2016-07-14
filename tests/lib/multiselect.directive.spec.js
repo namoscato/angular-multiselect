@@ -22,6 +22,7 @@ describe('amoMultiselect', function() {
             deselectAllText: 'Deselect All',
             filterText: 'Search...',
             isDeselectAllEnabled: true,
+            isDisabled: false,
             isFilterEnabled: true,
             isSelectAllEnabled: true,
             selectAllText: 'Select All',
@@ -137,6 +138,7 @@ describe('amoMultiselect', function() {
             it('should expose state', function() {
                 expect(target.state).toEqual({
                     isDeselectAllEnabled: true,
+                    isDisabled: false,
                     isFilterEnabled: true,
                     isSelectAllEnabled: true,
                     isSelectAllVisible: true,
@@ -424,6 +426,18 @@ describe('amoMultiselect', function() {
 
             it('should expose state', function() {
                 expect(target.state.isFilterEnabled).toEqual(false);
+            });
+        });
+
+        describe('with the "isDisabled" enabled', function() {
+            beforeEach(function() {
+                compile('<amo-multiselect is-disabled="true" ng-model="model" options="option for option in options"></amo-multiselect>', {
+                    options: optionsMock
+                });
+            });
+
+            it('should expose state', function() {
+                expect(target.state.isDisabled).toEqual(true);
             });
         });
     });

@@ -57,6 +57,7 @@
             self.filter = {};
             self.state = {
                 isDeselectAllEnabled: _isDeselectAllEnabled,
+                isDisabled: getSettingValue('isDisabled', true),
                 isFilterEnabled: getSettingValue('isFilterEnabled', true),
                 isSelectAllEnabled: _isSelectAllEnabled,
                 isSelectAllVisible: _isSelectAllEnabled || _isDeselectAllEnabled,
