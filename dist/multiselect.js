@@ -1,7 +1,7 @@
 // AngularJS Multiselect
 // https://github.com/namoscato/angular-multiselect
 // 
-// Version: 1.2.2
+// Version: 1.2.3
 // License: MIT
 
 (function() {
@@ -285,7 +285,7 @@
                 var option;
 
                 _labels.length = 0;
-                _selectedOptions.length = 0;
+                _selectedOptions = [];
 
                 angular.forEach(self.groupOptions, function(options, group) {
                     angular.forEach(options, function(optionModel, index) {
@@ -378,6 +378,11 @@
 
                     exposeOptions();
                 }, true);
+
+                // Implement custom empty logic
+                ngModelController.$isEmpty = function(value) {
+                    return !angular.isArray(value) || value.length === 0;
+                };
             }
 
             /**
