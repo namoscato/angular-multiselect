@@ -1,7 +1,7 @@
 // AngularJS Multiselect
 // https://github.com/namoscato/angular-multiselect
 // 
-// Version: 1.1.4
+// Version: 1.2.3
 // License: MIT
 
 (function() {
@@ -33,6 +33,7 @@
             deselectAllText: 'Deselect All',
             filterText: 'Search...',
             isDeselectAllEnabled: true,
+            isDisabled: false,
             isFilterEnabled: true,
             isSelectAllEnabled: true,
             selectAllText: 'Select All',
@@ -197,6 +198,7 @@
             self.filter = {};
             self.state = {
                 isDeselectAllEnabled: _isDeselectAllEnabled,
+                isDisabled: getSettingValue('isDisabled', true),
                 isFilterEnabled: getSettingValue('isFilterEnabled', true),
                 isSelectAllEnabled: _isSelectAllEnabled,
                 isSelectAllVisible: _isSelectAllEnabled || _isDeselectAllEnabled,
@@ -283,7 +285,7 @@
                 var option;
 
                 _labels.length = 0;
-                _selectedOptions.length = 0;
+                _selectedOptions = [];
 
                 angular.forEach(self.groupOptions, function(options, group) {
                     angular.forEach(options, function(optionModel, index) {
@@ -376,6 +378,11 @@
 
                     exposeOptions();
                 }, true);
+
+                // Implement custom empty logic
+                ngModelController.$isEmpty = function(value) {
+                    return !angular.isArray(value) || value.length === 0;
+                };
             }
 
             /**
@@ -760,4 +767,4 @@
 
 })();
 
-angular.module("amo.multiselect").run(["$templateCache", function($templateCache) {$templateCache.put("amo/multiselect/multiselect-dropdown.html","<div class=\"btn-group btn-group-multiselect\" auto-close=\"outsideClick\" ng-attr-title=\"{{ multiselectDropdown.selectedLabel }}\" ng-class=\"{ \'state-selected-multiple\': multiselectDropdown.hasSelectedMultipleItems() }\" on-toggle=\"multiselectDropdown.onToggleDropdown(open)\" uib-dropdown> <button type=\"button\" class=\"btn btn-default\" uib-dropdown-toggle> <span class=\"text\" ng-bind=\"multiselectDropdown.selectedLabel\"></span> <span class=\"badge\" ng-bind=\"multiselectDropdown.getSelectedCount()\"></span> <span class=\"caret\"></span> </button> <div uib-dropdown-menu> <input type=\"text\" class=\"form-control\" ng-if=\"::multiselectDropdown.state.isFilterEnabled\" ng-model=\"multiselectDropdown.filter.label\" placeholder=\"{{ ::multiselectDropdown.text.filter }}\"> <ul class=\"dropdown-menu-list list-unstyled\"> <li ng-if=\"::multiselectDropdown.state.isSelectAllVisible\"> <a ng-class=\"{ \'text-muted\': multiselectDropdown.isSelectAllToggleDisabled() }\" ng-click=\"multiselectDropdown.toggleAllSelectedState()\"> <input type=\"checkbox\" ng-if=\"::multiselectDropdown.state.isSelectAllCheckboxVisible\" ng-model=\"multiselectDropdown.isAllSelected\"> <span ng-bind=\"multiselectDropdown.getSelectAllLabel()\"></span> </a> </li> <li class=\"divider\" ng-if=\"::multiselectDropdown.state.isSelectAllVisible\"></li> <li class=\"dropdown-header\" ng-bind=\"group\" ng-if=\"multiselectDropdown.isGroupVisible(group)\" ng-repeat-start=\"group in multiselectDropdown.groups\"> </li> <li ng-repeat=\"option in multiselectDropdown.optionsFiltered[group] = (multiselectDropdown.groupOptions[group] | filter : multiselectDropdown.filter)\"> <a ng-attr-title=\"{{ option.label }}\" ng-click=\"multiselectDropdown.toggleSelectedState(option)\"> <input type=\"checkbox\" ng-model=\"option.selected\"> <span ng-bind=\"option.label\"></span> </a> </li> <li ng-repeat-end></li> </ul> </div> </div>");}]);
+angular.module('amo.multiselect').run(['$templateCache', function($templateCache) {$templateCache.put('amo/multiselect/multiselect-dropdown.html','<div class="btn-group btn-group-multiselect" auto-close="outsideClick" ng-attr-title="{{ multiselectDropdown.selectedLabel }}" ng-class="{ \'state-selected-multiple\': multiselectDropdown.hasSelectedMultipleItems() }" on-toggle="multiselectDropdown.onToggleDropdown(open)" uib-dropdown> <button type="button" class="btn btn-default" ng-disabled="multiselectDropdown.state.isDisabled" uib-dropdown-toggle> <span class="text" ng-bind="multiselectDropdown.selectedLabel"></span> <span class="badge" ng-bind="multiselectDropdown.getSelectedCount()"></span> <span class="caret"></span> </button> <div uib-dropdown-menu> <input type="text" class="form-control" ng-if="::multiselectDropdown.state.isFilterEnabled" ng-model="multiselectDropdown.filter.label" placeholder="{{ ::multiselectDropdown.text.filter }}"> <ul class="dropdown-menu-list list-unstyled"> <li ng-if="::multiselectDropdown.state.isSelectAllVisible"> <a ng-class="{ \'text-muted\': multiselectDropdown.isSelectAllToggleDisabled() }" ng-click="multiselectDropdown.toggleAllSelectedState()"> <input type="checkbox" ng-if="::multiselectDropdown.state.isSelectAllCheckboxVisible" ng-model="multiselectDropdown.isAllSelected"> <span ng-bind="multiselectDropdown.getSelectAllLabel()"></span> </a> </li> <li class="divider" ng-if="::multiselectDropdown.state.isSelectAllVisible"></li> <li class="dropdown-header" ng-bind="group" ng-if="multiselectDropdown.isGroupVisible(group)" ng-repeat-start="group in multiselectDropdown.groups"> </li> <li ng-repeat="option in multiselectDropdown.optionsFiltered[group] = (multiselectDropdown.groupOptions[group] | filter : multiselectDropdown.filter)"> <a ng-attr-title="{{ option.label }}" ng-click="multiselectDropdown.toggleSelectedState(option)"> <input type="checkbox" ng-model="option.selected"> <span ng-bind="option.label"></span> </a> </li> <li ng-repeat-end></li> </ul> </div> </div> ');}]);

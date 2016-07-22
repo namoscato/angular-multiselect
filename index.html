@@ -97,7 +97,7 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">Deferred Load, Events & Custom Text</div>
-                <div class="panel-body">
+                <form class="panel-body" name="app.form">
                     <div class="row">
                         <div class="col-md-6">
                             <amo-multiselect
@@ -111,14 +111,21 @@
                                 select-text="Select Custom Items"
                                 select-all-text="Select Everything"
                                 selected-suffix-singular-text="thing"
-                                selected-suffix-text="things">
+                                selected-suffix-text="things"
+                                required>
                             </amo-multiselect>
                         </div>
                         <div class="col-md-6">
                             <pre>{{ app.label }}</pre>
+                            <button
+                                type="button"
+                                class="btn btn-default"
+                                ng-disabled="app.form.$invalid">
+                                Button
+                            </button>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
 

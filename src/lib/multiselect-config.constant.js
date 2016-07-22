@@ -13,6 +13,7 @@
             deselectAllText: 'Deselect All',
             filterText: 'Search...',
             isDeselectAllEnabled: true,
+            isDisabled: false,
             isFilterEnabled: true,
             isSelectAllEnabled: true,
             selectAllText: 'Select All',

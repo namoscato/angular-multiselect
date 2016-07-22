@@ -8,6 +8,7 @@
     <button
         type="button"
         class="btn btn-default"
+        ng-disabled="multiselectDropdown.state.isDisabled"
         uib-dropdown-toggle>
         <span class="text" ng-bind="multiselectDropdown.selectedLabel"></span>
         <span class="badge" ng-bind="multiselectDropdown.getSelectedCount()"></span>

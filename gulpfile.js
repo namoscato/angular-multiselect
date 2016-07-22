@@ -44,10 +44,7 @@ var js = {
     dest: 'src/dist/js'
 };
 
-var distDest = {
-    css: 'dist/css',
-    js: 'dist/js'
-}
+var distDest = 'dist';
 
 gulp.task('all', 'Build application', [
     'css:app',
@@ -78,7 +75,7 @@ gulp.task('css:app', 'Compile application SASS', function() {
 gulp.task('css:dist', 'Compile multiselect SASS', function() {
     gulp.src(css.src.dist)
         .pipe(gulpSass().on('error', gulpSass.logError))
-        .pipe(gulp.dest(distDest.css));
+        .pipe(gulp.dest(distDest));
 });
 
 gulp.task('js:app', 'Compile application JavaScript', function() {
@@ -92,15 +89,15 @@ gulp.task('js:dist', 'Build directive JavaScript and template', [
 ]);
 
 gulp.task('js:dist:compressed', false, ['js:dist:uncompressed'], function() {
-    var stream = gulp.src(distDest.js + '/multiselect.js');
+    var stream = gulp.src(distDest + '/multiselect.js');
 
-    return compileJavaScript(stream, 'multiselect', distDest.js);
+    return compileJavaScript(stream, 'multiselect', distDest);
 });
 
 gulp.task('js:dist:uncompressed', false, function() {
     var stream = gulp.src(js.src.dist).pipe(addTemplateStream());
 
-    return compileJavaScript(stream, 'multiselect', distDest.js, false);
+    return compileJavaScript(stream, 'multiselect', distDest, false);
 });
 
 gulp.task('js:libs', 'Compile third party JavaScript', function() {

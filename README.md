@@ -8,6 +8,16 @@ AngularJS multiselect component based off [`ngOptions`](https://docs.angularjs.o
 * [Bootstrap CSS](http://getbootstrap.com/) v3.3.x for dropdown styles
 * [UI Bootstrap](http://angular-ui.github.io/bootstrap/) v1.3.x for dropdown functionality
 
+## Installation
+
+### npm
+
+    npm install amo-angular-multiselect
+
+### Bower
+
+    bower install amo-angular-multiselect
+
 ## Usage
 
 Declare a dependency on the `amo.multiselect` module:
@@ -46,6 +56,7 @@ The following settings can be set on a per-instance basis via _dasherized_ `<amo
 | `deselectAllText` | `@string` | Yes | Deselect&nbsp;All | Deselect all option label text |
 | `filterText` | `@string` | Yes | Search... | Search filter input placeholder text |
 | `isDeselectAllEnabled` | `<boolean` | Yes | `true` | State of deselect all functionality |
+| `isDisabled` | `<boolean` | Yes | `false` | State of dropdown toggle functionality |
 | `isFilterEnabled` | `<boolean` | Yes | `true` | State of search filter input visibility |
 | `isSelectAllEnabled` | `<boolean` | Yes | `true` | State of select all functionality |
 | `label` | `&string` | No | — | Expression bound to the current button label text |

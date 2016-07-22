@@ -57,6 +57,7 @@
             self.filter = {};
             self.state = {
                 isDeselectAllEnabled: _isDeselectAllEnabled,
+                isDisabled: getSettingValue('isDisabled', true),
                 isFilterEnabled: getSettingValue('isFilterEnabled', true),
                 isSelectAllEnabled: _isSelectAllEnabled,
                 isSelectAllVisible: _isSelectAllEnabled || _isDeselectAllEnabled,
@@ -143,7 +144,7 @@
                 var option;
 
                 _labels.length = 0;
-                _selectedOptions.length = 0;
+                _selectedOptions = [];
 
                 angular.forEach(self.groupOptions, function(options, group) {
                     angular.forEach(options, function(optionModel, index) {
@@ -236,6 +237,11 @@
 
                     exposeOptions();
                 }, true);
+
+                // Implement custom empty logic
+                ngModelController.$isEmpty = function(value) {
+                    return !angular.isArray(value) || value.length === 0;
+                };
             }
 
             /**
