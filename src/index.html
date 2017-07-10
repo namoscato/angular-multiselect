@@ -83,9 +83,9 @@
                     <div class="row">
                         <div class="col-md-6">
                             <amo-multiselect
-                                    ng-model="app.modelObjectProperty"
-                                    options="option.id as option.label for option in app.optionsObject"
-                                    is-select-all-enabled="false">
+                                ng-model="app.modelObjectProperty"
+                                options="option.id as option.label for option in app.optionsObject"
+                                is-select-all-enabled="false">
                             </amo-multiselect>
                             <button class="btn btn-default" ng-click="app.addObject()" type="button">Add Item</button>
                         </div>
@@ -101,9 +101,9 @@
                     <div class="row">
                         <div class="col-md-6">
                             <amo-multiselect
-                                    limit-to="10"
-                                    ng-model="app.modelLongString"
-                                    options="option for option in app.optionsLongString">
+                                limit-to="10"
+                                ng-model="app.modelLongString"
+                                options="option for option in app.optionsLongString">
                             </amo-multiselect>
                         </div>
                         <div class="col-md-6">
