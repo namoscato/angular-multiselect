@@ -29,6 +29,7 @@
         ];
         self.modelObjectProperty = [2];
         self.modelStringTwo = ['One', 'Two'];
+        self.modelLongString = ['One', 'Two'];
         self.optionsObject = [
             {
                 id: 1,
@@ -75,6 +76,28 @@
             'One',
             'Two',
             'Three'
+        ];
+        self.optionsLongString = [
+            'One',
+            'Two',
+            'Three',
+            'Four',
+            'Five',
+            'Six',
+            'Seven',
+            'Eight',
+            'Nine',
+            'Ten',
+            'Eleven',
+            'Twelve',
+            'Thirteen',
+            'Fourteen',
+            'Fifteen',
+            'Sixteen',
+            'Seventeen',
+            'Eighteen',
+            'Nineteen',
+            'Twenty'
         ];
 
         self.addObject = addObject;
