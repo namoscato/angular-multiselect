@@ -55,6 +55,7 @@
             self.groupOptions = {};
             self.optionsFiltered = {};
             self.filter = {};
+            self.limit = getSettingValue('limitTo', true) || 500;
             self.state = {
                 isDeselectAllEnabled: _isDeselectAllEnabled,
                 isDisabled: getSettingValue('isDisabled', true),
@@ -70,6 +71,7 @@
             };
 
             // Methods
+            self.countOptionsAfterLimit = countOptionsAfterLimit;
             self.exposeSelectedOptions = exposeSelectedOptions;
             self.getSelectedCount = getSelectedCount;
             self.hasSelectedMultipleItems = hasSelectedMultipleItems;
@@ -88,6 +90,22 @@
              */
             function addLabel(option) {
                 _labels.push(multiselect.getLabel(option));
+            }
+
+            /**
+             * @ngdoc method
+             * @name amoMultiselect#countOptionsAfterLimit
+             * @description Determines whether or not there are options after the limit is imposed for the specified group
+             * @param {String} The group to count options for
+             * @returns {boolean}
+             */
+            function countOptionsAfterLimit(group) {
+                if (angular.isUndefined(group)) {
+                    group = null;
+                }
+
+                var diff = self.optionsFiltered[group].length - self.limit;
+                return (diff > 0) ? diff : 0;
             }
 
             /**
