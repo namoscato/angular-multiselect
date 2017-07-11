@@ -16,6 +16,7 @@
             isDisabled: false,
             isFilterEnabled: true,
             isSelectAllEnabled: true,
+            limitTo: 500,
             selectAllText: 'Select All',
             selectedSuffixSingularText: 'item',
             selectedSuffixText: 'items',

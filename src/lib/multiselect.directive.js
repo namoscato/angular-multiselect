@@ -55,7 +55,7 @@
             self.groupOptions = {};
             self.optionsFiltered = {};
             self.filter = {};
-            self.limit = getSettingValue('limitTo', true) || 500;
+            self.limit = getSettingValue('limitTo', true);
             self.state = {
                 isDeselectAllEnabled: _isDeselectAllEnabled,
                 isDisabled: getSettingValue('isDisabled', true),
