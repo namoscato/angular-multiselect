@@ -1,7 +1,7 @@
 // AngularJS Multiselect
 // https://github.com/namoscato/angular-multiselect
 // 
-// Version: 1.2.3
+// Version: 1.3.0
 // License: MIT
 
 (function() {
@@ -36,6 +36,7 @@
             isDisabled: false,
             isFilterEnabled: true,
             isSelectAllEnabled: true,
+            limitTo: 500,
             selectAllText: 'Select All',
             selectedSuffixSingularText: 'item',
             selectedSuffixText: 'items',
@@ -196,6 +197,7 @@
             self.groupOptions = {};
             self.optionsFiltered = {};
             self.filter = {};
+            self.limit = getSettingValue('limitTo', true);
             self.state = {
                 isDeselectAllEnabled: _isDeselectAllEnabled,
                 isDisabled: getSettingValue('isDisabled', true),
@@ -211,6 +213,7 @@
             };
 
             // Methods
+            self.countOptionsAfterLimit = countOptionsAfterLimit;
             self.exposeSelectedOptions = exposeSelectedOptions;
             self.getSelectedCount = getSelectedCount;
             self.hasSelectedMultipleItems = hasSelectedMultipleItems;
@@ -229,6 +232,29 @@
              */
             function addLabel(option) {
                 _labels.push(multiselect.getLabel(option));
+            }
+
+            /**
+             * @ngdoc method
+             * @name amoMultiselect#countOptionsAfterLimit
+             * @description Determines whether or not there are options after the limit is imposed for the specified group
+             * @param {String} The group to count options for
+             * @returns {boolean}
+             */
+            function countOptionsAfterLimit(group) {
+                // if the limit isn't set, then all items are returned
+                if (angular.isUndefined(self.limit)) {
+                    return 0;
+                }
+
+                // set the default group
+                if (angular.isUndefined(group)) {
+                    group = null;
+                }
+
+                // compute the difference
+                var diff = self.optionsFiltered[group].length - self.limit;
+                return (diff > 0) ? diff : 0;
             }
 
             /**
@@ -383,6 +409,11 @@
                 ngModelController.$isEmpty = function(value) {
                     return !angular.isArray(value) || value.length === 0;
                 };
+
+                // If the limit is defined but falsey (0, false, null) then disable the limit functionality
+                if (angular.isDefined(self.limit) && !Boolean(self.limit)) {
+                    self.limit = undefined;
+                }
             }
 
             /**
@@ -767,4 +798,4 @@
 
 })();
 
-angular.module('amo.multiselect').run(['$templateCache', function($templateCache) {$templateCache.put('amo/multiselect/multiselect-dropdown.html','<div class="btn-group btn-group-multiselect" auto-close="outsideClick" ng-attr-title="{{ multiselectDropdown.selectedLabel }}" ng-class="{ \'state-selected-multiple\': multiselectDropdown.hasSelectedMultipleItems() }" on-toggle="multiselectDropdown.onToggleDropdown(open)" uib-dropdown> <button type="button" class="btn btn-default" ng-disabled="multiselectDropdown.state.isDisabled" uib-dropdown-toggle> <span class="text" ng-bind="multiselectDropdown.selectedLabel"></span> <span class="badge" ng-bind="multiselectDropdown.getSelectedCount()"></span> <span class="caret"></span> </button> <div uib-dropdown-menu> <input type="text" class="form-control" ng-if="::multiselectDropdown.state.isFilterEnabled" ng-model="multiselectDropdown.filter.label" placeholder="{{ ::multiselectDropdown.text.filter }}"> <ul class="dropdown-menu-list list-unstyled"> <li ng-if="::multiselectDropdown.state.isSelectAllVisible"> <a ng-class="{ \'text-muted\': multiselectDropdown.isSelectAllToggleDisabled() }" ng-click="multiselectDropdown.toggleAllSelectedState()"> <input type="checkbox" ng-if="::multiselectDropdown.state.isSelectAllCheckboxVisible" ng-model="multiselectDropdown.isAllSelected"> <span ng-bind="multiselectDropdown.getSelectAllLabel()"></span> </a> </li> <li class="divider" ng-if="::multiselectDropdown.state.isSelectAllVisible"></li> <li class="dropdown-header" ng-bind="group" ng-if="multiselectDropdown.isGroupVisible(group)" ng-repeat-start="group in multiselectDropdown.groups"> </li> <li ng-repeat="option in multiselectDropdown.optionsFiltered[group] = (multiselectDropdown.groupOptions[group] | filter : multiselectDropdown.filter)"> <a ng-attr-title="{{ option.label }}" ng-click="multiselectDropdown.toggleSelectedState(option)"> <input type="checkbox" ng-model="option.selected"> <span ng-bind="option.label"></span> </a> </li> <li ng-repeat-end></li> </ul> </div> </div> ');}]);
+angular.module('amo.multiselect').run(['$templateCache', function($templateCache) {$templateCache.put('amo/multiselect/multiselect-dropdown.html','<div class="btn-group btn-group-multiselect" auto-close="outsideClick" ng-attr-title="{{ multiselectDropdown.selectedLabel }}" ng-class="{ \'state-selected-multiple\': multiselectDropdown.hasSelectedMultipleItems() }" on-toggle="multiselectDropdown.onToggleDropdown(open)" uib-dropdown> <button type="button" class="btn btn-default" ng-disabled="multiselectDropdown.state.isDisabled" uib-dropdown-toggle> <span class="text" ng-bind="multiselectDropdown.selectedLabel"></span> <span class="badge" ng-bind="multiselectDropdown.getSelectedCount()"></span> <span class="caret"></span> </button> <div uib-dropdown-menu> <input type="text" class="form-control" ng-if="::multiselectDropdown.state.isFilterEnabled" ng-model="multiselectDropdown.filter.label" placeholder="{{ ::multiselectDropdown.text.filter }}"> <ul class="dropdown-menu-list list-unstyled"> <li ng-if="::multiselectDropdown.state.isSelectAllVisible"> <a ng-class="{ \'text-muted\': multiselectDropdown.isSelectAllToggleDisabled() }" ng-click="multiselectDropdown.toggleAllSelectedState()"> <input type="checkbox" ng-if="::multiselectDropdown.state.isSelectAllCheckboxVisible" ng-model="multiselectDropdown.isAllSelected"> <span ng-bind="multiselectDropdown.getSelectAllLabel()"></span> </a> </li> <li class="divider" ng-if="::multiselectDropdown.state.isSelectAllVisible"></li> <li class="dropdown-header" ng-bind="group" ng-if="multiselectDropdown.isGroupVisible(group)" ng-repeat-start="group in multiselectDropdown.groups"> </li> <li ng-repeat="option in (multiselectDropdown.optionsFiltered[group] = (multiselectDropdown.groupOptions[group] | filter : multiselectDropdown.filter)) | limitTo: multiselectDropdown.limit"> <a ng-attr-title="{{ option.label }}" ng-click="multiselectDropdown.toggleSelectedState(option)"> <input type="checkbox" ng-model="option.selected"> <span ng-bind="option.label"></span> </a> </li> <li class="dropdown-is-over-limit" ng-class="{ \'dropdown-is-group-limit\': group !== null }" ng-show="multiselectDropdown.countOptionsAfterLimit(group)"> <span ng-bind="multiselectDropdown.countOptionsAfterLimit(group)"></span> more result(s).<span ng-if="::multiselectDropdown.state.isFilterEnabled"><br>Search to reveal more.</span> </li> <li ng-repeat-end></li> </ul> </div> </div> ');}]);
