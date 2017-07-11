@@ -25,6 +25,7 @@ describe('amoMultiselect', function() {
             isDisabled: false,
             isFilterEnabled: true,
             isSelectAllEnabled: true,
+            limitTo: 500,
             selectAllText: 'Select All',
             selectedSuffixSingularText: 'item',
             selectedSuffixText: 'items',
@@ -62,6 +63,8 @@ describe('amoMultiselect', function() {
         amoMultiselectFactoryInstanceSpy.getOptions.and.returnValue({
             null: optionsMock
         });
+
+        amoMultiselectFactoryInstanceSpy.getOptionsCount.and.returnValue(optionsMock.length);
 
         amoMultiselectFactoryInstanceSpy.getOptionsExpression.and.returnValue('options');
 
@@ -169,6 +172,10 @@ describe('amoMultiselect', function() {
                 expect(target.groups).toEqual([
                     null
                 ]);
+            });
+
+            it('should set the default limit', function() {
+                expect(target.limit).toEqual(500);
             });
 
             it('should expose options', function() {
@@ -438,6 +445,41 @@ describe('amoMultiselect', function() {
 
             it('should expose state', function() {
                 expect(target.state.isDisabled).toEqual(true);
+            });
+        });
+
+        describe('with the "limitTo" specified', function() {
+            beforeEach(function() {
+                compile('<amo-multiselect limit-to="1" ng-model="model" options="option for option in options"></amo-multiselect>', {
+                    options: optionsMock
+                });
+
+                target.optionsFiltered = {null: ['One', 'Two']};
+            });
+
+            it('should set the limit', function() {
+                expect(target.limit).toEqual(1);
+            });
+
+            it('should know that there are more options than the limit', function() {
+                expect(target.countOptionsAfterLimit()).toEqual(1);
+            });
+        });
+
+        describe('with the "limitTo" disabled', function() {
+            beforeEach(function() {
+                compile('<amo-multiselect limit-to="false" ng-model="model" options="option for option in options"></amo-multiselect>', {
+                    options: optionsMock
+                });
+                target.optionsFiltered = {null: ['One', 'Two']};
+            });
+
+            it('should set the limit', function() {
+                expect(target.limit).toEqual(undefined);
+            });
+
+            it('should know that there are more options than the limit', function() {
+                expect(target.countOptionsAfterLimit()).toEqual(0);
             });
         });
     });

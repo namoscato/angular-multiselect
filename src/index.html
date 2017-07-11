@@ -96,6 +96,23 @@
                 </div>
             </div>
             <div class="panel panel-default">
+                <div class="panel-heading">Limited Result Set</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <amo-multiselect
+                                limit-to="10"
+                                ng-model="app.modelLongString"
+                                options="option for option in app.optionsLongString">
+                            </amo-multiselect>
+                        </div>
+                        <div class="col-md-6">
+                            <pre>{{ app.modelLongString }}</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
                 <div class="panel-heading">Deferred Load, Events & Custom Text</div>
                 <form class="panel-body" name="app.form">
                     <div class="row">

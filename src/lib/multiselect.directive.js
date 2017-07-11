@@ -55,6 +55,7 @@
             self.groupOptions = {};
             self.optionsFiltered = {};
             self.filter = {};
+            self.limit = getSettingValue('limitTo', true);
             self.state = {
                 isDeselectAllEnabled: _isDeselectAllEnabled,
                 isDisabled: getSettingValue('isDisabled', true),
@@ -70,6 +71,7 @@
             };
 
             // Methods
+            self.countOptionsAfterLimit = countOptionsAfterLimit;
             self.exposeSelectedOptions = exposeSelectedOptions;
             self.getSelectedCount = getSelectedCount;
             self.hasSelectedMultipleItems = hasSelectedMultipleItems;
@@ -88,6 +90,29 @@
              */
             function addLabel(option) {
                 _labels.push(multiselect.getLabel(option));
+            }
+
+            /**
+             * @ngdoc method
+             * @name amoMultiselect#countOptionsAfterLimit
+             * @description Determines whether or not there are options after the limit is imposed for the specified group
+             * @param {String} The group to count options for
+             * @returns {boolean}
+             */
+            function countOptionsAfterLimit(group) {
+                // if the limit isn't set, then all items are returned
+                if (angular.isUndefined(self.limit)) {
+                    return 0;
+                }
+
+                // set the default group
+                if (angular.isUndefined(group)) {
+                    group = null;
+                }
+
+                // compute the difference
+                var diff = self.optionsFiltered[group].length - self.limit;
+                return (diff > 0) ? diff : 0;
             }
 
             /**
@@ -242,6 +267,11 @@
                 ngModelController.$isEmpty = function(value) {
                     return !angular.isArray(value) || value.length === 0;
                 };
+
+                // If the limit is defined but falsey (0, false, null) then disable the limit functionality
+                if (angular.isDefined(self.limit) && !Boolean(self.limit)) {
+                    self.limit = undefined;
+                }
             }
 
             /**

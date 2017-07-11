@@ -60,6 +60,7 @@ The following settings can be set on a per-instance basis via _dasherized_ `<amo
 | `isFilterEnabled` | `<boolean` | Yes | `true` | State of search filter input visibility |
 | `isSelectAllEnabled` | `<boolean` | Yes | `true` | State of select all functionality |
 | `label` | `&string` | No | — | Expression bound to the current button label text |
+| `limitTo` | `&number` | No | 500 | Number of options to show per group. This is a high-bound limit so that browser performance won't suffer with large data sets. Specify `0` or `false` to disable limiting. |
 | `onChange` | `&function(label)` | No | — | Expression called with `label` string when model changes |
 | `onToggleDropdown` | `&function(isOpen)` | No | — | Expression called with `isOpen` boolean when dropdown opens or closes |
 | `selectAllText` | `@string` | Yes | Select&nbsp;All | Select all option label text |
