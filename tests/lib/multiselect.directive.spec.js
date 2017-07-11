@@ -465,6 +465,23 @@ describe('amoMultiselect', function() {
                 expect(target.countOptionsAfterLimit()).toEqual(1);
             });
         });
+
+        describe('with the "limitTo" disabled', function() {
+            beforeEach(function() {
+                compile('<amo-multiselect limit-to="false" ng-model="model" options="option for option in options"></amo-multiselect>', {
+                    options: optionsMock
+                });
+                target.optionsFiltered = {null: ['One', 'Two']};
+            });
+
+            it('should set the limit', function() {
+                expect(target.limit).toEqual(undefined);
+            });
+
+            it('should know that there are more options than the limit', function() {
+                expect(target.countOptionsAfterLimit()).toEqual(0);
+            });
+        });
     });
 
     describe('When compiling the directive with an array of objects with two items selected', function() {

@@ -100,10 +100,17 @@
              * @returns {boolean}
              */
             function countOptionsAfterLimit(group) {
+                // if the limit isn't set, then all items are returned
+                if (angular.isUndefined(self.limit)) {
+                    return 0;
+                }
+
+                // set the default group
                 if (angular.isUndefined(group)) {
                     group = null;
                 }
 
+                // compute the difference
                 var diff = self.optionsFiltered[group].length - self.limit;
                 return (diff > 0) ? diff : 0;
             }
@@ -260,6 +267,11 @@
                 ngModelController.$isEmpty = function(value) {
                     return !angular.isArray(value) || value.length === 0;
                 };
+
+                // If the limit is set to 0, false, or null...set the value to undefined (this effectively disables the limitTo filter)
+                if (self.limit === 0 || self.limit === false || self.limit === null) {
+                    self.limit = undefined;
+                }
             }
 
             /**
