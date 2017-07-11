@@ -268,8 +268,8 @@
                     return !angular.isArray(value) || value.length === 0;
                 };
 
-                // If the limit is set to 0, false, or null...set the value to undefined (this effectively disables the limitTo filter)
-                if (self.limit === 0 || self.limit === false || self.limit === null) {
+                // If the limit is defined but falsey (0, false, null) then disable the limit functionality
+                if (angular.isDefined(self.limit) && !Boolean(self.limit)) {
                     self.limit = undefined;
                 }
             }
