@@ -454,7 +454,7 @@ describe('amoMultiselect', function() {
                     options: optionsMock
                 });
 
-                target.optionsFiltered = {null: ['One', 'Two']};
+                target.optionsFiltered = {undefined: ['One', 'Two']};
             });
 
             it('should set the limit', function() {
