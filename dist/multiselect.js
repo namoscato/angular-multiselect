@@ -1,7 +1,7 @@
 // AngularJS Multiselect
 // https://github.com/namoscato/angular-multiselect
 // 
-// Version: 1.3.0
+// Version: 1.3.1
 // License: MIT
 
 (function() {
@@ -238,18 +238,13 @@
              * @ngdoc method
              * @name amoMultiselect#countOptionsAfterLimit
              * @description Determines whether or not there are options after the limit is imposed for the specified group
-             * @param {String} The group to count options for
-             * @returns {boolean}
+             * @param {String} group The group to count options for
+             * @returns {Boolean}
              */
             function countOptionsAfterLimit(group) {
                 // if the limit isn't set, then all items are returned
                 if (angular.isUndefined(self.limit)) {
                     return 0;
-                }
-
-                // set the default group
-                if (angular.isUndefined(group)) {
-                    group = null;
                 }
 
                 // compute the difference
