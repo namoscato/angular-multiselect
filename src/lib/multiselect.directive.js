@@ -243,7 +243,7 @@
 
                 // Watch for is-disabled option changes
                 parentScope.$watch(attrs.isDisabled, function (isDisabled) {
-                    self.state.isDisabled = isDisabled;
+                    self.state.isDisabled = isDisabled ? isDisabled : false;
                 });
 
                 // Watch for (external) model changes
