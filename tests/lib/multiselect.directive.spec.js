@@ -22,7 +22,6 @@ describe('amoMultiselect', function() {
             deselectAllText: 'Deselect All',
             filterText: 'Search...',
             isDeselectAllEnabled: true,
-            isDisabled: false,
             isFilterEnabled: true,
             isSelectAllEnabled: true,
             limitTo: 500,
@@ -141,7 +140,6 @@ describe('amoMultiselect', function() {
             it('should expose state', function() {
                 expect(target.state).toEqual({
                     isDeselectAllEnabled: true,
-                    isDisabled: false,
                     isFilterEnabled: true,
                     isSelectAllEnabled: true,
                     isSelectAllVisible: true,

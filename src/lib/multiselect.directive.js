@@ -58,7 +58,6 @@
             self.limit = getSettingValue('limitTo', true);
             self.state = {
                 isDeselectAllEnabled: _isDeselectAllEnabled,
-                isDisabled: getSettingValue('isDisabled', true),
                 isFilterEnabled: getSettingValue('isFilterEnabled', true),
                 isSelectAllEnabled: _isSelectAllEnabled,
                 isSelectAllVisible: _isSelectAllEnabled || _isDeselectAllEnabled,
@@ -240,7 +239,13 @@
                     multiselect.setOptions(options);
                     exposeOptions();
                 }, true);
-                
+
+                if (attrs.isDisabled) { // Watch for is-disabled option changes
+                    parentScope.$watch(attrs.isDisabled, function (isDisabled) {
+                        self.state.isDisabled = Boolean(isDisabled);
+                    });
+                }
+
                 // Watch for (external) model changes
                 parentScope.$watch(function() {
                     return ngModelController.$modelValue;
