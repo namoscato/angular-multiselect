@@ -1,7 +1,7 @@
 // AngularJS Multiselect
 // https://github.com/namoscato/angular-multiselect
 // 
-// Version: 1.3.1
+// Version: 1.3.2
 // License: MIT
 
 (function() {

@@ -1,7 +1,7 @@
 // AngularJS Multiselect
 // https://github.com/namoscato/angular-multiselect
 // 
-// Version: 1.3.1
+// Version: 1.3.2
 // License: MIT
 
 (function() {
@@ -200,7 +200,6 @@
             self.limit = getSettingValue('limitTo', true);
             self.state = {
                 isDeselectAllEnabled: _isDeselectAllEnabled,
-                isDisabled: getSettingValue('isDisabled', true),
                 isFilterEnabled: getSettingValue('isFilterEnabled', true),
                 isSelectAllEnabled: _isSelectAllEnabled,
                 isSelectAllVisible: _isSelectAllEnabled || _isDeselectAllEnabled,
@@ -382,7 +381,13 @@
                     multiselect.setOptions(options);
                     exposeOptions();
                 }, true);
-                
+
+                if (attrs.isDisabled) { // Watch for is-disabled option changes
+                    parentScope.$watch(attrs.isDisabled, function (isDisabled) {
+                        self.state.isDisabled = Boolean(isDisabled);
+                    });
+                }
+
                 // Watch for (external) model changes
                 parentScope.$watch(function() {
                     return ngModelController.$modelValue;
