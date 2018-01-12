@@ -240,7 +240,12 @@
                     multiselect.setOptions(options);
                     exposeOptions();
                 }, true);
-                
+
+                // Watch for is-disabled option changes
+                parentScope.$watch(attrs.isDisabled, function (isDisabled) {
+                    self.state.isDisabled = isDisabled;
+                });
+
                 // Watch for (external) model changes
                 parentScope.$watch(function() {
                     return ngModelController.$modelValue;
