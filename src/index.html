@@ -119,6 +119,7 @@
                         <div class="col-md-6">
                             <amo-multiselect
                                 deselect-all-text="Deselect Everything"
+                                is-disabled="app.isDisabled"
                                 label="app.label"
                                 ng-model="app.modelObjectProperty"
                                 on-change="app.onChange(label)"
@@ -131,6 +132,11 @@
                                 selected-suffix-text="things"
                                 required>
                             </amo-multiselect>
+                            <div class="checkbox">
+                                <label>
+                                    <input ng-model="app.isDisabled" type="checkbox"> Disabled
+                                </label>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <pre>{{ app.label }}</pre>
