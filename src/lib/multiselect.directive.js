@@ -34,19 +34,20 @@
          * @param {Object} ngModelController
          */
         function link(parentScope, element, attrs, ngModelController) {
+            var _exposeLabel = attrs.label ? $parse(attrs.label) : angular.noop;
+            var _isDeselectAllEnabled = getSettingValue('isDeselectAllEnabled', true);
+            var _isInternalChange;
+            var _isSelectAllEnabled = getSettingValue('isSelectAllEnabled', true);
+            var _labels = [];
+            var _onChange = attrs.onChange ? $parse(attrs.onChange) : angular.noop;
+            var _onToggleDropdown = attrs.onToggleDropdown ? $parse(attrs.onToggleDropdown) : angular.noop;
+            var _selectedOptions = [];
 
-            var _exposeLabel = attrs.label ? $parse(attrs.label) : angular.noop,
-                _isDeselectAllEnabled = getSettingValue('isDeselectAllEnabled', true),
-                _isInternalChange,
-                _isSelectAllEnabled = getSettingValue('isSelectAllEnabled', true),
-                _labels = [],
-                _onChange = attrs.onChange ? $parse(attrs.onChange) : angular.noop,
-                _onToggleDropdown = attrs.onToggleDropdown ? $parse(attrs.onToggleDropdown) : angular.noop,
-                _selectedOptions = [];
-
-            var multiselect = new AmoMultiselectFactory(attrs.options, parentScope),
-                scope = parentScope.$new(),
-                self = {};
+            var multiselect = new AmoMultiselectFactory(attrs.options, parentScope);
+            var scope = parentScope.$new();
+            var self = {
+                name: attrs.name
+            };
 
             scope.multiselectDropdown = self;
 

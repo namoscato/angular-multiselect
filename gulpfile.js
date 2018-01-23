@@ -141,6 +141,8 @@ gulp.task('watch', 'Watch for changes and recompile', ['all'], function() {
     );
 });
 
+gulp.task('default', ['watch']);
+
 /**
  * @name compileJavaScript
  * @param {Object} stream Stream object

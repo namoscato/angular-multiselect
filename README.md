@@ -61,6 +61,7 @@ The following settings can be set on a per-instance basis via _dasherized_ `<amo
 | `isSelectAllEnabled` | `<boolean` | Yes | `true` | State of select all functionality |
 | `label` | `&string` | No | — | Expression bound to the current button label text |
 | `limitTo` | `<number` | Yes | 500 | Upper bound limit of options to show per group so that browser performance will not suffer with large data sets. Specify `0` or `false` to disable limiting. |
+| `name` | `@string` | No | — | Unique instance name used as the value of the button's `id` attribute |
 | `onChange` | `&function(label)` | No | — | Expression called with `label` string when model changes |
 | `onToggleDropdown` | `&function(isOpen)` | No | — | Expression called with `isOpen` boolean when dropdown opens or closes |
 | `selectAllText` | `@string` | Yes | Select&nbsp;All | Select all option label text |

@@ -8,6 +8,7 @@
     <button
         type="button"
         class="btn btn-default"
+        ng-attr-id="{{:: multiselectDropdown.name }}"
         ng-disabled="multiselectDropdown.state.isDisabled"
         uib-dropdown-toggle>
         <span class="text" ng-bind="multiselectDropdown.selectedLabel"></span>
