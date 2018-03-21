@@ -14,6 +14,7 @@ var gulpRename = require('gulp-rename');
 var gulpSass = require('gulp-sass');
 var gulpUglify = require('gulp-uglify');
 var gulpWebserver = require('gulp-webserver');
+var saveLicense = require('uglify-save-license');
 
 var css = {
     src: {
@@ -163,9 +164,11 @@ function compileJavaScript(stream, name, dest, uglify) {
     if (uglify) {
         stream = stream
             .pipe(gulpUglify({
-                compress: false,
-                preserveComments: 'license'
+                output: { comments: saveLicense }
             }))
+            .on('error', function (err) {
+                console.error('Error from uglify', err.toString());
+            })
             .pipe(gulpRename(name + '.min.js'));
     }
 
