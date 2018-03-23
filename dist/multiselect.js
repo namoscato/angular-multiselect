@@ -1,7 +1,7 @@
 // AngularJS Multiselect
 // https://github.com/namoscato/angular-multiselect
 // 
-// Version: 1.3.3
+// Version: 1.3.4
 // License: MIT
 
 (function() {
@@ -257,9 +257,9 @@
              * @description Exposes the multiselect options
              */
             function exposeOptions() {
-                var i,
-                    selected,
-                    value;
+                var i;
+                var selected;
+                var value;
 
                 _labels.length = 0;
                 self.groupOptions = {};
@@ -472,14 +472,18 @@
              * @returns {String} New label
              */
             function setSelectedLabel() {
-                var label = attrs.selectText || amoMultiselectConfig.selectText;
+                var label;
 
-                if (_labels.length > 0) {
-                    if (angular.isDefined(_labels[0])) { // Support undefined labels
-                        label = amoMultiselectFormatService.joinLabels(_labels);
-                    } else {
-                        label = amoMultiselectFormatService.pluralize(_labels, attrs.selectedSuffixText, attrs.selectedSuffixSingularText || attrs.selectedSuffixText);
-                    }
+                if (0 === _selectedOptions.length) {
+                    label = attrs.selectText || amoMultiselectConfig.selectText;
+                } else if (_labels.length > 0 && angular.isDefined(_labels[0])) { // Support undefined labels
+                    label = amoMultiselectFormatService.joinLabels(_labels);
+                } else {
+                    label = amoMultiselectFormatService.pluralize(
+                        _selectedOptions.length,
+                        attrs.selectedSuffixText,
+                        attrs.selectedSuffixSingularText || attrs.selectedSuffixText
+                    );
                 }
 
                 self.selectedLabel = label;
@@ -779,15 +783,15 @@
          * @ngdoc method
          * @name amoMultiselectFormatService#pluralize
          * @description Pluralizes the specified array of labels
-         * @param {Array} labels
+         * @param {Number} count
          * @param {String} [suffix='items'] Default phrase suffix
          * @param {String} [singularSuffix='item'] Singular suffix
          * @returns {String}
          */
-        function pluralize(labels, suffix, singularSuffix) {
-            var label = labels.length + ' ';
+        function pluralize(count, suffix, singularSuffix) {
+            var label = count + ' ';
 
-            if (labels.length === 1) {
+            if (count === 1) {
                 label += singularSuffix || amoMultiselectConfig.selectedSuffixSingularText;
             } else {
                 label += suffix || amoMultiselectConfig.selectedSuffixText;
