@@ -1,6 +1,6 @@
 describe('amoMultiselectFormatService', function() {
-    var result,
-        target;
+    var result;
+    var target;
 
     beforeEach(module('amo.multiselect'));
 
@@ -52,7 +52,7 @@ describe('amoMultiselectFormatService', function() {
         describe('a single item', function() {
             describe('without a text override', function() {
                 beforeEach(function() {
-                    result = target.pluralize(['ONE']);
+                    result = target.pluralize(1);
                 });
 
                 it('should return "1 item"', function() {
@@ -62,7 +62,7 @@ describe('amoMultiselectFormatService', function() {
 
             describe('with a text override', function() {
                 beforeEach(function() {
-                    result = target.pluralize(['ONE'], 'things', 'thing');
+                    result = target.pluralize(1, 'things', 'thing');
                 });
 
                 it('should return "1 item"', function() {
@@ -74,7 +74,7 @@ describe('amoMultiselectFormatService', function() {
         describe('multiple items', function() {
             describe('without a text override', function() {
                 beforeEach(function() {
-                    result = target.pluralize(['ONE', 'TWO']);
+                    result = target.pluralize(2);
                 });
 
                 it('should return "1 item"', function() {
@@ -84,7 +84,7 @@ describe('amoMultiselectFormatService', function() {
 
             describe('with a text override', function() {
                 beforeEach(function() {
-                    result = target.pluralize(['ONE', 'TWO'], 'things');
+                    result = target.pluralize(2, 'things');
                 });
 
                 it('should return "1 item"', function() {

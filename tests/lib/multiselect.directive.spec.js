@@ -1,17 +1,17 @@
 describe('amoMultiselect', function() {
-    var result,
-        parentScope,
-        scope,
-        target;
+    var result;
+    var parentScope;
+    var scope;
+    var target;
 
     var html;
 
-    var timeout,
-        amoMultiselectConfigSpy,
-        amoMultiselectFactorySpy,
-        amoMultiselectFactoryInstanceSpy,
-        amoMultiselectFormatServiceSpy,
-        filterFilterSpy;
+    var timeout;
+    var amoMultiselectConfigSpy;
+    var amoMultiselectFactorySpy;
+    var amoMultiselectFactoryInstanceSpy;
+    var amoMultiselectFormatServiceSpy;
+    var filterFilterSpy;
 
     var optionsMock;
 
@@ -792,7 +792,7 @@ describe('amoMultiselect', function() {
 
             it('should join labels', function() {
                 expect(amoMultiselectFormatServiceSpy.pluralize).toHaveBeenCalledWith(
-                    [undefined, undefined],
+                    2,
                     'items',
                     'item'
                 );

@@ -44,17 +44,8 @@
                 label: 'Three'
             }
         ];
-        self.optionsObjectDefer = [
-            {
-                id: 1
-            },
-            {
-                id: 2
-            },
-            {
-                id: 3
-            }
-        ];
+        self.optionsObjectDefer = [];
+        
         self.optionsObjectGrouped = [
             {
                 category: 'Pizza',

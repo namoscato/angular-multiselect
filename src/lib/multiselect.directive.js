@@ -115,9 +115,9 @@
              * @description Exposes the multiselect options
              */
             function exposeOptions() {
-                var i,
-                    selected,
-                    value;
+                var i;
+                var selected;
+                var value;
 
                 _labels.length = 0;
                 self.groupOptions = {};
@@ -330,14 +330,18 @@
              * @returns {String} New label
              */
             function setSelectedLabel() {
-                var label = attrs.selectText || amoMultiselectConfig.selectText;
+                var label;
 
-                if (_labels.length > 0) {
-                    if (angular.isDefined(_labels[0])) { // Support undefined labels
-                        label = amoMultiselectFormatService.joinLabels(_labels);
-                    } else {
-                        label = amoMultiselectFormatService.pluralize(_labels, attrs.selectedSuffixText, attrs.selectedSuffixSingularText || attrs.selectedSuffixText);
-                    }
+                if (0 === _selectedOptions.length) {
+                    label = attrs.selectText || amoMultiselectConfig.selectText;
+                } else if (_labels.length > 0 && angular.isDefined(_labels[0])) { // Support undefined labels
+                    label = amoMultiselectFormatService.joinLabels(_labels);
+                } else {
+                    label = amoMultiselectFormatService.pluralize(
+                        _selectedOptions.length,
+                        attrs.selectedSuffixText,
+                        attrs.selectedSuffixSingularText || attrs.selectedSuffixText
+                    );
                 }
 
                 self.selectedLabel = label;
