@@ -47,15 +47,15 @@
          * @ngdoc method
          * @name amoMultiselectFormatService#pluralize
          * @description Pluralizes the specified array of labels
-         * @param {Array} labels
+         * @param {Number} count
          * @param {String} [suffix='items'] Default phrase suffix
          * @param {String} [singularSuffix='item'] Singular suffix
          * @returns {String}
          */
-        function pluralize(labels, suffix, singularSuffix) {
-            var label = labels.length + ' ';
+        function pluralize(count, suffix, singularSuffix) {
+            var label = count + ' ';
 
-            if (labels.length === 1) {
+            if (count === 1) {
                 label += singularSuffix || amoMultiselectConfig.selectedSuffixSingularText;
             } else {
                 label += suffix || amoMultiselectConfig.selectedSuffixText;

@@ -1,19 +1,20 @@
 'use strict';
 
-var addStream = require('add-stream'),
-    del = require('del'),
-    gulp = require('gulp'),
-    gulpAngularTemplateCache = require('gulp-angular-templatecache'),
-    gulpConcat = require('gulp-concat'),
-    gulpCssnano = require('gulp-cssnano'),
-    gulpHelp = require('gulp-help')(gulp),
-    gulpHtmlmin = require('gulp-htmlmin'),
-    gulpJshint = require('gulp-jshint'),
-    gulpNgAnnotate = require('gulp-ng-annotate'),
-    gulpRename = require('gulp-rename'),
-    gulpSass = require('gulp-sass'),
-    gulpUglify = require('gulp-uglify'),
-    gulpWebserver = require('gulp-webserver');
+var addStream = require('add-stream');
+var del = require('del');
+var gulp = require('gulp');
+var gulpAngularTemplateCache = require('gulp-angular-templatecache');
+var gulpConcat = require('gulp-concat');
+var gulpCssnano = require('gulp-cssnano');
+var gulpHelp = require('gulp-help')(gulp);
+var gulpHtmlmin = require('gulp-htmlmin');
+var gulpJshint = require('gulp-jshint');
+var gulpNgAnnotate = require('gulp-ng-annotate');
+var gulpRename = require('gulp-rename');
+var gulpSass = require('gulp-sass');
+var gulpUglify = require('gulp-uglify');
+var gulpWebserver = require('gulp-webserver');
+var saveLicense = require('uglify-save-license');
 
 var css = {
     src: {
@@ -141,6 +142,8 @@ gulp.task('watch', 'Watch for changes and recompile', ['all'], function() {
     );
 });
 
+gulp.task('default', ['watch']);
+
 /**
  * @name compileJavaScript
  * @param {Object} stream Stream object
@@ -161,9 +164,11 @@ function compileJavaScript(stream, name, dest, uglify) {
     if (uglify) {
         stream = stream
             .pipe(gulpUglify({
-                compress: false,
-                preserveComments: 'license'
+                output: { comments: saveLicense }
             }))
+            .on('error', function (err) {
+                console.error('Error from uglify', err.toString());
+            })
             .pipe(gulpRename(name + '.min.js'));
     }
 

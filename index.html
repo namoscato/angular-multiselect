@@ -16,7 +16,9 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-md-6">
+                            <label for="multiselect-one">Label:</label>
                             <amo-multiselect
+                                name="multiselect-one"
                                 ng-model="app.modelStringOne"
                                 options="option for option in app.optionsString">
                             </amo-multiselect>
@@ -96,12 +98,30 @@
                 </div>
             </div>
             <div class="panel panel-default">
+                <div class="panel-heading">Limited Result Set</div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <amo-multiselect
+                                limit-to="10"
+                                ng-model="app.modelLongString"
+                                options="option for option in app.optionsLongString">
+                            </amo-multiselect>
+                        </div>
+                        <div class="col-md-6">
+                            <pre>{{ app.modelLongString }}</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
                 <div class="panel-heading">Deferred Load, Events & Custom Text</div>
                 <form class="panel-body" name="app.form">
                     <div class="row">
                         <div class="col-md-6">
                             <amo-multiselect
                                 deselect-all-text="Deselect Everything"
+                                is-disabled="app.isDisabled"
                                 label="app.label"
                                 ng-model="app.modelObjectProperty"
                                 on-change="app.onChange(label)"
@@ -114,6 +134,11 @@
                                 selected-suffix-text="things"
                                 required>
                             </amo-multiselect>
+                            <div class="checkbox">
+                                <label>
+                                    <input ng-model="app.isDisabled" type="checkbox"> Disabled
+                                </label>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <pre>{{ app.label }}</pre>

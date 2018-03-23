@@ -41,11 +41,11 @@ where the value of `options` is of the following form:
 
 | Keyword  | Description |
 | -------- | ----------- |
-| `array`  | An expression which evaluates to an array. |
-| `value`  | Local variable which will refer to each item in the `array` during iteration. |
-| `label`  | The result of this expression will be the label for each option. |
 | `select` | The result of this expression will be bound to the model of the parent `<amo-multiselect>` element. If not specified, `select` expression will default to `value`. |
+| `label`  | The result of this expression will be the label for each option. |
 | `group`  | The result of this expression will be used to group options. |
+| `value`  | Local variable which will refer to each item in the `array` during iteration. |
+| `array`  | An expression which evaluates to an array. |
 
 ## Settings
 
@@ -56,10 +56,12 @@ The following settings can be set on a per-instance basis via _dasherized_ `<amo
 | `deselectAllText` | `@string` | Yes | Deselect&nbsp;All | Deselect all option label text |
 | `filterText` | `@string` | Yes | Search... | Search filter input placeholder text |
 | `isDeselectAllEnabled` | `<boolean` | Yes | `true` | State of deselect all functionality |
-| `isDisabled` | `<boolean` | Yes | `false` | State of dropdown toggle functionality |
+| `isDisabled` | `<boolean` | No | `false` | State of dropdown toggle functionality |
 | `isFilterEnabled` | `<boolean` | Yes | `true` | State of search filter input visibility |
 | `isSelectAllEnabled` | `<boolean` | Yes | `true` | State of select all functionality |
 | `label` | `&string` | No | — | Expression bound to the current button label text |
+| `limitTo` | `<number` | Yes | 500 | Upper bound limit of options to show per group so that browser performance will not suffer with large data sets. Specify `0` or `false` to disable limiting. |
+| `name` | `@string` | No | — | Unique instance name used as the value of the button's `id` attribute |
 | `onChange` | `&function(label)` | No | — | Expression called with `label` string when model changes |
 | `onToggleDropdown` | `&function(isOpen)` | No | — | Expression called with `isOpen` boolean when dropdown opens or closes |
 | `selectAllText` | `@string` | Yes | Select&nbsp;All | Select all option label text |

@@ -29,6 +29,7 @@
         ];
         self.modelObjectProperty = [2];
         self.modelStringTwo = ['One', 'Two'];
+        self.modelLongString = ['One', 'Two'];
         self.optionsObject = [
             {
                 id: 1,
@@ -43,17 +44,8 @@
                 label: 'Three'
             }
         ];
-        self.optionsObjectDefer = [
-            {
-                id: 1
-            },
-            {
-                id: 2
-            },
-            {
-                id: 3
-            }
-        ];
+        self.optionsObjectDefer = [];
+        
         self.optionsObjectGrouped = [
             {
                 category: 'Pizza',
@@ -75,6 +67,28 @@
             'One',
             'Two',
             'Three'
+        ];
+        self.optionsLongString = [
+            'One',
+            'Two',
+            'Three',
+            'Four',
+            'Five',
+            'Six',
+            'Seven',
+            'Eight',
+            'Nine',
+            'Ten',
+            'Eleven',
+            'Twelve',
+            'Thirteen',
+            'Fourteen',
+            'Fifteen',
+            'Sixteen',
+            'Seventeen',
+            'Eighteen',
+            'Nineteen',
+            'Twenty'
         ];
 
         self.addObject = addObject;

@@ -34,19 +34,20 @@
          * @param {Object} ngModelController
          */
         function link(parentScope, element, attrs, ngModelController) {
+            var _exposeLabel = attrs.label ? $parse(attrs.label) : angular.noop;
+            var _isDeselectAllEnabled = getSettingValue('isDeselectAllEnabled', true);
+            var _isInternalChange;
+            var _isSelectAllEnabled = getSettingValue('isSelectAllEnabled', true);
+            var _labels = [];
+            var _onChange = attrs.onChange ? $parse(attrs.onChange) : angular.noop;
+            var _onToggleDropdown = attrs.onToggleDropdown ? $parse(attrs.onToggleDropdown) : angular.noop;
+            var _selectedOptions = [];
 
-            var _exposeLabel = attrs.label ? $parse(attrs.label) : angular.noop,
-                _isDeselectAllEnabled = getSettingValue('isDeselectAllEnabled', true),
-                _isInternalChange,
-                _isSelectAllEnabled = getSettingValue('isSelectAllEnabled', true),
-                _labels = [],
-                _onChange = attrs.onChange ? $parse(attrs.onChange) : angular.noop,
-                _onToggleDropdown = attrs.onToggleDropdown ? $parse(attrs.onToggleDropdown) : angular.noop,
-                _selectedOptions = [];
-
-            var multiselect = new AmoMultiselectFactory(attrs.options, parentScope),
-                scope = parentScope.$new(),
-                self = {};
+            var multiselect = new AmoMultiselectFactory(attrs.options, parentScope);
+            var scope = parentScope.$new();
+            var self = {
+                name: attrs.name
+            };
 
             scope.multiselectDropdown = self;
 
@@ -55,9 +56,9 @@
             self.groupOptions = {};
             self.optionsFiltered = {};
             self.filter = {};
+            self.limit = getSettingValue('limitTo', true);
             self.state = {
                 isDeselectAllEnabled: _isDeselectAllEnabled,
-                isDisabled: getSettingValue('isDisabled', true),
                 isFilterEnabled: getSettingValue('isFilterEnabled', true),
                 isSelectAllEnabled: _isSelectAllEnabled,
                 isSelectAllVisible: _isSelectAllEnabled || _isDeselectAllEnabled,
@@ -70,6 +71,7 @@
             };
 
             // Methods
+            self.countOptionsAfterLimit = countOptionsAfterLimit;
             self.exposeSelectedOptions = exposeSelectedOptions;
             self.getSelectedCount = getSelectedCount;
             self.hasSelectedMultipleItems = hasSelectedMultipleItems;
@@ -91,13 +93,31 @@
             }
 
             /**
+             * @ngdoc method
+             * @name amoMultiselect#countOptionsAfterLimit
+             * @description Determines whether or not there are options after the limit is imposed for the specified group
+             * @param {String} group The group to count options for
+             * @returns {Boolean}
+             */
+            function countOptionsAfterLimit(group) {
+                // if the limit isn't set, then all items are returned
+                if (angular.isUndefined(self.limit)) {
+                    return 0;
+                }
+
+                // compute the difference
+                var diff = self.optionsFiltered[group].length - self.limit;
+                return (diff > 0) ? diff : 0;
+            }
+
+            /**
              * @name amoMultiselect#exposeOptions
              * @description Exposes the multiselect options
              */
             function exposeOptions() {
-                var i,
-                    selected,
-                    value;
+                var i;
+                var selected;
+                var value;
 
                 _labels.length = 0;
                 self.groupOptions = {};
@@ -220,7 +240,13 @@
                     multiselect.setOptions(options);
                     exposeOptions();
                 }, true);
-                
+
+                if (attrs.isDisabled) { // Watch for is-disabled option changes
+                    parentScope.$watch(attrs.isDisabled, function (isDisabled) {
+                        self.state.isDisabled = Boolean(isDisabled);
+                    });
+                }
+
                 // Watch for (external) model changes
                 parentScope.$watch(function() {
                     return ngModelController.$modelValue;
@@ -242,6 +268,11 @@
                 ngModelController.$isEmpty = function(value) {
                     return !angular.isArray(value) || value.length === 0;
                 };
+
+                // If the limit is defined but falsey (0, false, null) then disable the limit functionality
+                if (angular.isDefined(self.limit) && !Boolean(self.limit)) {
+                    self.limit = undefined;
+                }
             }
 
             /**
@@ -299,14 +330,18 @@
              * @returns {String} New label
              */
             function setSelectedLabel() {
-                var label = attrs.selectText || amoMultiselectConfig.selectText;
+                var label;
 
-                if (_labels.length > 0) {
-                    if (angular.isDefined(_labels[0])) { // Support undefined labels
-                        label = amoMultiselectFormatService.joinLabels(_labels);
-                    } else {
-                        label = amoMultiselectFormatService.pluralize(_labels, attrs.selectedSuffixText, attrs.selectedSuffixSingularText || attrs.selectedSuffixText);
-                    }
+                if (0 === _selectedOptions.length) {
+                    label = attrs.selectText || amoMultiselectConfig.selectText;
+                } else if (_labels.length > 0 && angular.isDefined(_labels[0])) { // Support undefined labels
+                    label = amoMultiselectFormatService.joinLabels(_labels);
+                } else {
+                    label = amoMultiselectFormatService.pluralize(
+                        _selectedOptions.length,
+                        attrs.selectedSuffixText,
+                        attrs.selectedSuffixSingularText || attrs.selectedSuffixText
+                    );
                 }
 
                 self.selectedLabel = label;
