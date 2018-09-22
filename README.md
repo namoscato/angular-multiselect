@@ -4,7 +4,7 @@ AngularJS multiselect component based off [`ngOptions`](https://docs.angularjs.o
 
 ## Dependencies
 
-* [AngularJS](https://angularjs.org/) v1.5.x
+* [AngularJS](https://angularjs.org/) v1.x
 * [Bootstrap CSS](http://getbootstrap.com/) v3.3.x for dropdown styles
 * [UI Bootstrap](http://angular-ui.github.io/bootstrap/) v1.3.x for dropdown functionality
 
@@ -12,11 +12,15 @@ AngularJS multiselect component based off [`ngOptions`](https://docs.angularjs.o
 
 ### npm
 
-    npm install amo-angular-multiselect
+```
+npm i amo-angular-multiselect
+```
 
 ### Bower
 
-    bower install amo-angular-multiselect
+```
+bower install amo-angular-multiselect
+```
 
 ## Usage
 
@@ -71,20 +75,13 @@ The following settings can be set on a per-instance basis via _dasherized_ `<amo
 
 ## Development
 
-1. Install dependencies
-
-        npm install
-
-2. Compile JavaScript & CSS
-
-        gulp all
-
-3. Run local webserver
-
-        gulp serve
+```
+npm i
+npm start
+```
 
 ## Running Tests
 
-Install the [Karma](http://karma-runner.github.io/) commandline interface globally and run:
-
-    karma start
+```
+npm test
+```
