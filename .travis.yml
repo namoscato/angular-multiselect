@@ -1,8 +1,8 @@
 language: node_js
 node_js:
-- '5'
+- '6'
 before_install:
-- npm install -g gulp
+- npm i -g gulp-cli
 sudo: required
 addons:
   chrome: stable
