@@ -315,6 +315,27 @@ describe('amoMultiselect', function() {
                     ]
                 });
             });
+
+            describe('and the model is externally cleared', function() {
+                beforeEach(function() {
+                    parentScope.model = null;
+
+                    parentScope.$digest();
+                });
+
+                it('should set selected count to 0', function() {
+                    expect(target.getSelectedCount()).toEqual(0);
+                });
+
+                it('should clear selections', function() {
+                    expect(target.groupOptions).toEqual({
+                        null: [
+                            jasmine.objectContaining({ selected: false }),
+                            jasmine.objectContaining({ selected: false })
+                        ]
+                    });
+                });
+            });
         });
     });
 

@@ -257,9 +257,7 @@
                         return;
                     }
 
-                    if (angular.isArray(modelValue)) {
-                        _selectedOptions = modelValue;
-                    }
+                    _selectedOptions = angular.isArray(modelValue) ? modelValue : [];
 
                     exposeOptions();
                 }, true);

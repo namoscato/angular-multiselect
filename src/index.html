@@ -143,10 +143,11 @@
                         <div class="col-md-6">
                             <pre>{{ app.label }}</pre>
                             <button
-                                type="button"
                                 class="btn btn-default"
-                                ng-disabled="app.form.$invalid">
-                                Button
+                                ng-click="app.clear()"
+                                ng-disabled="app.form.$invalid"
+                                type="button">
+                                Clear
                             </button>
                         </div>
                     </div>
