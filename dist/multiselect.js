@@ -12,9 +12,7 @@
      * @module amo.multiselect
      * @name amo.multiselect
      */
-    angular.module('amo.multiselect', [
-        'ui.bootstrap.dropdown'
-    ]);
+    angular.module('amo.multiselect', ['ui.bootstrap.dropdown']);
 
 })();
 
@@ -399,9 +397,7 @@
                         return;
                     }
 
-                    if (angular.isArray(modelValue)) {
-                        _selectedOptions = modelValue;
-                    }
+                    _selectedOptions = angular.isArray(modelValue) ? modelValue : [];
 
                     exposeOptions();
                 }, true);
