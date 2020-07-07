@@ -2,5 +2,3 @@
 node_modules
 src/dist/**/*.css
 src/dist/**/*.js
-.idea
-package-lock.json
