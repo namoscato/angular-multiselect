@@ -19,6 +19,7 @@ describe('amoMultiselect', function() {
 
     beforeEach(function() {
         amoMultiselectConfigSpy = {
+            conjunctionText: 'and',
             deselectAllText: 'Deselect All',
             filterText: 'Search...',
             isDeselectAllEnabled: true,
@@ -282,7 +283,7 @@ describe('amoMultiselect', function() {
                 });
             });
         });
-        
+
         describe('with an item selected', function() {
             beforeEach(function() {
                 compile(html, {
@@ -543,7 +544,7 @@ describe('amoMultiselect', function() {
         it('should set selected count to 2', function() {
             expect(target.getSelectedCount()).toEqual(2);
         });
-        
+
         it('should expose options', function() {
             expect(target.groupOptions).toEqual({
                 null: [
@@ -689,7 +690,7 @@ describe('amoMultiselect', function() {
                 'Blue'
             ]);
         });
-        
+
         it('should expose options', function() {
             expect(target.groupOptions).toEqual({
                 'Red': [
@@ -786,10 +787,13 @@ describe('amoMultiselect', function() {
             });
 
             it('should join labels', function() {
-                expect(amoMultiselectFormatServiceSpy.joinLabels).toHaveBeenCalledWith([
-                    'LABEL One',
-                    'LABEL Two'
-                ]);
+                expect(amoMultiselectFormatServiceSpy.joinLabels).toHaveBeenCalledWith(
+                    [
+                        'LABEL One',
+                        'LABEL Two'
+                    ],
+                    'and'
+                );
             });
 
             it('should display labels', function() {
@@ -973,7 +977,7 @@ describe('amoMultiselect', function() {
     /**
      * getSelectAllLabel
      */
-    
+
     describe('When getting the select/deselect all toggle text', function() {
         describe('and both options are enabled', function() {
             describe('and the "deselectAllText" attribute is set', function() {

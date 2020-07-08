@@ -1,7 +1,7 @@
 // AngularJS Multiselect
 // https://github.com/namoscato/angular-multiselect
-// 
-// Version: 1.3.5
+//
+// Version: 1.3.6
 // License: MIT
 
 (function() {
@@ -28,6 +28,7 @@
     angular
         .module('amo.multiselect')
         .constant('amoMultiselectConfig', {
+            conjunctionText: 'and',
             deselectAllText: 'Deselect All',
             filterText: 'Search...',
             isDeselectAllEnabled: true,
@@ -174,6 +175,7 @@
          * @param {Object} ngModelController
          */
         function link(parentScope, element, attrs, ngModelController) {
+            var _conjunctionText = getSettingValue('conjunctionText');
             var _exposeLabel = attrs.label ? $parse(attrs.label) : angular.noop;
             var _isDeselectAllEnabled = getSettingValue('isDeselectAllEnabled', true);
             var _isInternalChange;
@@ -440,7 +442,7 @@
                 } else if (!_isDeselectAllEnabled) { // Select All
                     return _selectedOptions.length === multiselect.getOptionsCount();
                 }
-                
+
                 return false;
             }
 
@@ -473,7 +475,7 @@
                 if (0 === _selectedOptions.length) {
                     label = attrs.selectText || amoMultiselectConfig.selectText;
                 } else if (_labels.length > 0 && angular.isDefined(_labels[0])) { // Support undefined labels
-                    label = amoMultiselectFormatService.joinLabels(_labels);
+                    label = amoMultiselectFormatService.joinLabels(_labels, _conjunctionText);
                 } else {
                     label = amoMultiselectFormatService.pluralize(
                         _selectedOptions.length,
@@ -748,31 +750,32 @@
 
         self.joinLabels = joinLabels;
         self.pluralize = pluralize;
-        
+
         /**
          * @ngdoc method
          * @name amoMultiselectFormatService#joinLabels
          * @description Joins the array of labels
          * @param {Array} labels
+         * @param {String} conjunctionText
          * @returns {String}
          */
-        function joinLabels(labels) {
-            var label,
-                lastLabel;
+        function joinLabels(labels, conjunctionText) {
+            var label;
+            var lastLabel;
 
             if (labels.length === 1) {
                 return labels[0];
             }
 
             lastLabel = labels.pop();
-            
+
             label = labels.join(', ');
 
             if (labels.length > 1) {
                 label += ',';
             }
 
-            return label + ' and ' + lastLabel;
+            return label + ' ' + conjunctionText + ' ' + lastLabel;
         }
 
         /**

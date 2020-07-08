@@ -11,11 +11,11 @@ describe('amoMultiselectFormatService', function() {
     /**
      * joinLabels
      */
-    
+
     describe('When joining', function() {
         describe('one label', function() {
             beforeEach(function() {
-                result = target.joinLabels(['ONE']);
+                result = target.joinLabels(['ONE'], 'and');
             });
 
             it('should return label', function() {
@@ -25,7 +25,7 @@ describe('amoMultiselectFormatService', function() {
 
         describe('two labels', function() {
             beforeEach(function() {
-                result = target.joinLabels(['ONE', 'TWO']);
+                result = target.joinLabels(['ONE', 'TWO'], 'and');
             });
 
             it('should return labels, joined by "and"', function() {
@@ -35,7 +35,7 @@ describe('amoMultiselectFormatService', function() {
 
         describe('three labels', function() {
             beforeEach(function() {
-                result = target.joinLabels(['ONE', 'TWO', 'THREE']);
+                result = target.joinLabels(['ONE', 'TWO', 'THREE'], 'and');
             });
 
             it('should return labels, joined by commands', function() {
@@ -47,7 +47,7 @@ describe('amoMultiselectFormatService', function() {
     /**
      * pluralize
      */
-    
+
     describe('When pluralizing', function() {
         describe('a single item', function() {
             describe('without a text override', function() {
