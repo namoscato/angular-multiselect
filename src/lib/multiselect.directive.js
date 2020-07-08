@@ -34,6 +34,7 @@
          * @param {Object} ngModelController
          */
         function link(parentScope, element, attrs, ngModelController) {
+            var _conjunctionText = getSettingValue('conjunctionText');
             var _exposeLabel = attrs.label ? $parse(attrs.label) : angular.noop;
             var _isDeselectAllEnabled = getSettingValue('isDeselectAllEnabled', true);
             var _isInternalChange;
@@ -300,7 +301,7 @@
                 } else if (!_isDeselectAllEnabled) { // Select All
                     return _selectedOptions.length === multiselect.getOptionsCount();
                 }
-                
+
                 return false;
             }
 
@@ -333,7 +334,7 @@
                 if (0 === _selectedOptions.length) {
                     label = attrs.selectText || amoMultiselectConfig.selectText;
                 } else if (_labels.length > 0 && angular.isDefined(_labels[0])) { // Support undefined labels
-                    label = amoMultiselectFormatService.joinLabels(_labels);
+                    label = amoMultiselectFormatService.joinLabels(_labels, _conjunctionText);
                 } else {
                     label = amoMultiselectFormatService.pluralize(
                         _selectedOptions.length,

@@ -1,7 +1,7 @@
 describe('AmoMultiselectFactory', function() {
-    var result,
-        target,
-        targetConstructor;
+    var result;
+    var target;
+    var targetConstructor;
 
     beforeEach(module('amo.multiselect'));
 

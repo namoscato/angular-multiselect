@@ -16,31 +16,32 @@
 
         self.joinLabels = joinLabels;
         self.pluralize = pluralize;
-        
+
         /**
          * @ngdoc method
          * @name amoMultiselectFormatService#joinLabels
          * @description Joins the array of labels
          * @param {Array} labels
+         * @param {String} conjunctionText
          * @returns {String}
          */
-        function joinLabels(labels) {
-            var label,
-                lastLabel;
+        function joinLabels(labels, conjunctionText) {
+            var label;
+            var lastLabel;
 
             if (labels.length === 1) {
                 return labels[0];
             }
 
             lastLabel = labels.pop();
-            
+
             label = labels.join(', ');
 
             if (labels.length > 1) {
                 label += ',';
             }
 
-            return label + ' and ' + lastLabel;
+            return label + ' ' + conjunctionText + ' ' + lastLabel;
         }
 
         /**

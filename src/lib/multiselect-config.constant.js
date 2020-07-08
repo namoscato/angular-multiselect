@@ -10,6 +10,7 @@
     angular
         .module('amo.multiselect')
         .constant('amoMultiselectConfig', {
+            conjunctionText: 'and',
             deselectAllText: 'Deselect All',
             filterText: 'Search...',
             isDeselectAllEnabled: true,

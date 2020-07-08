@@ -57,6 +57,7 @@ The following settings can be set on a per-instance basis via _dasherized_ `<amo
 
 | Name | Type | Global | Default | Description |
 | ---- | ---- |:------:| ------- | ----------- |
+| `conjunctionText` | `@string` | Yes | and | Coordinating conjunction text used to join option labels |
 | `deselectAllText` | `@string` | Yes | Deselect&nbsp;All | Deselect all option label text |
 | `filterText` | `@string` | Yes | Search... | Search filter input placeholder text |
 | `isDeselectAllEnabled` | `<boolean` | Yes | `true` | State of deselect all functionality |
