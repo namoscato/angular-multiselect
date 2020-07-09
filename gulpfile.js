@@ -118,7 +118,8 @@ gulp.task('serve', 'Run a local webserver', function() {
         .pipe(gulpWebserver({
             fallback: 'index.html',
             livereload: false,
-            open: true
+            open: true,
+            path: '/angular-multiselect/'
         }));
 });
 
