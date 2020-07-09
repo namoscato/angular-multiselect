@@ -92,6 +92,7 @@
         ];
 
         self.addObject = addObject;
+        self.clear = clear;
         self.onChange = onChange;
         self.onToggleDropdown = onToggleDropdown;
 
@@ -105,6 +106,15 @@
                 id: self.optionsObject.length + 1,
                 label: 'Option ' + (self.optionsObject.length + 1)
             });
+        }
+
+        /**
+         * @ngdoc method
+         * @name AppController#clear
+         * @description Clears the model
+         */
+        function clear() {
+            self.modelObjectProperty = null;
         }
 
         /**

@@ -1,8 +1,0 @@
-language: node_js
-node_js:
-- '5'
-before_install:
-- npm install -g gulp
-sudo: required
-addons:
-  chrome: stable

@@ -1,16 +1,16 @@
 <!doctype html>
 <html>
     <head>
-        <base href="/angular-multiselect/"></base>
+        <base href="/angular-multiselect/">
         <meta charset="utf-8">
         <title>AngularJS Multiselect</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-        <link rel="stylesheet" href="src/dist/css/app.css" />
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+        <link rel="stylesheet" href="dist/css/app.css" />
     </head>
     <body ng-app="multiselectDemo">
         <div ng-controller="AppController as app">
             <h1>AngularJS Multiselect</h1>
-            <p class="lead">AngularJS multiselect component based off <a href="https://docs.angularjs.org/api/ng/directive/ngOptions" target="_blank">ngOptions</a>.</p>
+            <p class="lead">AngularJS multiselect component based off <a href="//docs.angularjs.org/api/ng/directive/ngOptions" target="_blank">ngOptions</a>.</p>
             <div class="panel panel-default">
                 <div class="panel-heading">Simple Array of Strings</div>
                 <div class="panel-body">
@@ -120,6 +120,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <amo-multiselect
+                                conjunction-text="or"
                                 deselect-all-text="Deselect Everything"
                                 is-disabled="app.isDisabled"
                                 label="app.label"
@@ -143,10 +144,11 @@
                         <div class="col-md-6">
                             <pre>{{ app.label }}</pre>
                             <button
-                                type="button"
                                 class="btn btn-default"
-                                ng-disabled="app.form.$invalid">
-                                Button
+                                ng-click="app.clear()"
+                                ng-disabled="app.form.$invalid"
+                                type="button">
+                                Clear
                             </button>
                         </div>
                     </div>
@@ -154,7 +156,7 @@
             </div>
         </div>
 
-        <script type="text/javascript" src="src/dist/js/vendor.min.js"></script>
-        <script type="text/javascript" src="src/dist/js/app.min.js"></script>
+        <script type="text/javascript" src="dist/js/vendor.min.js"></script>
+        <script type="text/javascript" src="dist/js/app.min.js"></script>
     </body>
 </html>
