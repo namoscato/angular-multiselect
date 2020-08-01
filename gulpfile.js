@@ -51,7 +51,6 @@ gulp.task('all', 'Build application', [
     'css:app',
     'js:app',
     'js:libs',
-    'js:lint'
 ]);
 
 gulp.task('dist', 'Build multiselect', [
@@ -108,9 +107,13 @@ gulp.task('js:libs', 'Compile third party JavaScript', function() {
 });
 
 gulp.task('js:lint', 'Run JSHint to check for JavaScript code quality', function() {
-    gulp.src(js.src.app)
+    gulp.src(js.src.app.concat([
+        '*.js',
+        'tests/**/*.js'
+    ]))
         .pipe(gulpJshint())
-        .pipe(gulpJshint.reporter('default'));
+        .pipe(gulpJshint.reporter('default'))
+        .pipe(gulpJshint.reporter('fail'));
 });
 
 gulp.task('serve', 'Run a local webserver', function() {

@@ -314,7 +314,7 @@ describe('AmoMultiselectFactory', function() {
                     expect(result).toEqual({
                         key: 2,
                         group: 'A'
-                    })
+                    });
                 });
             });
 
@@ -327,7 +327,7 @@ describe('AmoMultiselectFactory', function() {
                     expect(result).toEqual({
                         key: 1,
                         group: 'B'
-                    })
+                    });
                 });
             });
 
@@ -340,7 +340,7 @@ describe('AmoMultiselectFactory', function() {
                     expect(result).toEqual({
                         key: 3,
                         group: 'B'
-                    })
+                    });
                 });
             });
         });

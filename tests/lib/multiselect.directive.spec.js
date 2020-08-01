@@ -69,11 +69,11 @@ describe('amoMultiselect', function() {
         amoMultiselectFactoryInstanceSpy.getOptionsExpression.and.returnValue('options');
 
         amoMultiselectFactoryInstanceSpy.getLabel.and.callFake(function(option) {
-            return 'LABEL ' + option
+            return 'LABEL ' + option;
         });
 
         amoMultiselectFactoryInstanceSpy.getValue.and.callFake(function(option) {
-            return 'VALUE ' + option
+            return 'VALUE ' + option;
         });
     });
 
