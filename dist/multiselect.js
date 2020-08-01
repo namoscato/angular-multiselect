@@ -515,7 +515,7 @@
 
         /**
          * @name AmoMultiselectFactory#_optionsRegularExpression
-         * 
+         *
          * @description
          * Options attribute value regular expression
          *
