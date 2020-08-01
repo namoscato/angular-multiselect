@@ -5,7 +5,7 @@ AngularJS multiselect component based off [`ngOptions`](https://docs.angularjs.o
 ## Dependencies
 
 * [AngularJS](https://angularjs.org/) v1.x
-* [Bootstrap CSS](http://getbootstrap.com/) v3.3.x for dropdown styles
+* [Bootstrap CSS](http://getbootstrap.com/) v3.x for dropdown styles
 * [UI Bootstrap](http://angular-ui.github.io/bootstrap/) v1.3.x for dropdown functionality
 
 ## Installation
