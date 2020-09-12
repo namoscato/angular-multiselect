@@ -1,4 +1,6 @@
-# AngularJS Multiselect [![Build Status](https://travis-ci.org/namoscato/angular-multiselect.svg?branch=master)](https://travis-ci.org/namoscato/angular-multiselect)
+![js](https://github.com/namoscato/angular-multiselect/workflows/js/badge.svg) [![npm version](https://badge.fury.io/js/amo-angular-multiselect.svg)](https://www.npmjs.com/package/amo-angular-multiselect)
+
+# AngularJS Multiselect
 
 AngularJS multiselect component based off [`ngOptions`](https://docs.angularjs.org/api/ng/directive/ngOptions).
 
