@@ -34,7 +34,7 @@
     "gulp-jshint": "^2.1.0",
     "gulp-ng-annotate": "^2.1.0",
     "gulp-rename": "^2.0.0",
-    "gulp-sass": "^4.0.1",
+    "gulp-sass": "^5.0.0",
     "gulp-uglify": "^3.0.1",
     "gulp-webserver": "^0.9.1",
     "jasmine-core": "^3.2.1",
